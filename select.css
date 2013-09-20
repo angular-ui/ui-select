@@ -1,0 +1,20 @@
+.select {
+  
+  position: relative;
+}
+.select ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+.select.open ul {
+  display: block;
+}
+
+/* user defined styles */
+
+.select .highlight {
+  background: lightblue;
+  
+}
