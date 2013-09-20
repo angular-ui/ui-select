@@ -9,7 +9,7 @@ Requires ui.keypress from ui-utils
 ### Prototype usage:
 
 ```html
-<ui-select ng-model="data.custom" data.items>
+<ui-select ng-model="data.custom">
   <li 
     ng-repeat="item in data.items | filter : $search" 
     ng-class="{highlight:highlight==$index}" 
