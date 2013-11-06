@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="DemoApp">
+<head>
+    <meta charset="utf-8">
+    <title>Angular ui-select</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+
+    <!-- https://github.com/angular-ui/ui-utils/blob/master/modules/keypress/keypress.js -->
+    <script src="keypress.js"></script>
+    
+    <script src="../select.js"></script>
+    <script src="demo.js"></script>
+
+    <link rel="stylesheet" href="../select.css"/>
+
+</head>
+<body ng-controller="MainCtrl">
+
+    <ui-select ng-model="data.custom">
+      <li 
+        ng-repeat="item in data.items | filter : $search" 
+        ng-class="{highlight:highlight==$index}" 
+        ng-click="$select(item)" 
+        ng-mouseover="$parent.highlight=$index">
+        <h4>{{item.title}}</h4>
+      </li>
+    </ui-select>
+
+</body>
+</html>
