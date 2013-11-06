@@ -1,15 +1,20 @@
 angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function(){
   return {
     restrict: 'E',
+    /* jshint multistr: true */
     template: '<div class="select" ng-class="{open:open}"> \
-      <input type="{{type}}" ui-keydown="keybindings" ng-model="$search" ng-click="activate()"> \
+      <input type="{{type}}" ui-keydown="{up: \'up()\', down: \'down()\'}" ng-model="$search" ng-click="activate()"> \
       <ul ng-transclude></ul> \
     </div>',
     replace: true,
     require: 'ngModel',
     transclude: true,
     link: function($scope, $elm, $attrs, ngModel){
-      $scope.keybindings = {up: 'up()', down: 'down()'};
+
+      //Setting keybindings to scope wasn't working, since ui-keydown directive
+      //from the template is $compiling before getting here, so no bindings created
+      //$scope.keybindings = {up: 'up()', down: 'down()'};
+
       input = $elm.find('input');
       $scope.type = 'button';
       $scope.activate = function(){
