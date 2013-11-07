@@ -3,7 +3,7 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
     restrict: 'E',
     /* jshint multistr: true */
     template: '<div class="select" ng-class="{open:open}"> \
-      <input type="{{type}}" ui-keydown="{up: \'up()\', down: \'down()\', esc: \'close()\', enter: \'$select((data.items|filter: $select.search)[$select.index].title)\'}" ng-model="$select.search" ng-click="activate()"> \
+      <input type="{{type}}" ui-keydown="{up: \'up()\', down: \'down()\', enter: \'$select((data.items|filter: $select.search)[$select.index].title)\'}" ng-model="$select.search" ng-click="activate()"> \
       <ul ng-transclude></ul> \
     </div>',
     replace: true,
