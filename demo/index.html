@@ -18,15 +18,20 @@
 </head>
 <body ng-controller="MainCtrl">
 
+    <p>
+    Selected: {{data.custom}}
+    </p>
+
     <ui-select ng-model="data.custom">
       <li 
-        ng-repeat="item in data.items | filter : $search" 
-        ng-class="{highlight:highlight==$index}" 
-        ng-click="$select(item)" 
-        ng-mouseover="$parent.highlight=$index">
+        ng-repeat="item in data.items | filter : $select.search" 
+        ng-class="{highlight:$select.index==$index}" 
+        ng-click="$select(item.title)" 
+        ng-mouseover="$select.index=$index">
         <h4>{{item.title}}</h4>
       </li>
     </ui-select>
+
 
 </body>
 </html>

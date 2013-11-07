@@ -3,12 +3,13 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function(){
     restrict: 'E',
     /* jshint multistr: true */
     template: '<div class="select" ng-class="{open:open}"> \
-      <input type="{{type}}" ui-keydown="{up: \'up()\', down: \'down()\'}" ng-model="$search" ng-click="activate()"> \
+      <input type="{{type}}" ui-keydown="{up: \'up()\', down: \'down()\', enter: \'$select((data.items|filter: $select.search)[$select.index].title)\'}" ng-model="$select.search" ng-click="activate()"> \
       <ul ng-transclude></ul> \
     </div>',
     replace: true,
     require: 'ngModel',
     transclude: true,
+    // scope: true,
     link: function($scope, $elm, $attrs, ngModel){
 
       //Setting keybindings to scope wasn't working, since ui-keydown directive
@@ -22,30 +23,33 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function(){
         $scope.type = 'text';
         input.focus();
       };
-      $scope.$watch('$search', function(){
-        $scope.highlight = 0;
+      $scope.$watch('$select.search', function(){
+        $scope.$select.index = 0;
       });
       $scope.up = function(){
-        if ($scope.highlight > 0)
-          $scope.highlight--;
+        if ($scope.$select.index > 0)
+          $scope.$select.index--;
       };
       $scope.down = function(){
         items = $elm.find('ul').children().length;
-        if ($scope.highlight < items) {
-          $scope.highlight++;
+        if ($scope.$select.index < items) {
+          $scope.$select.index++;
         } else {
-          $scope.highlight = items;
+          $scope.$select.index = items;
         }
       };
-      $scope.select = function(item){
+      $scope.$select = function(item){
         ngModel.$setViewValue(item);
+        ngModel.$render(item);
+        $scope.close();
+      };
+      $scope.close = function() {
+        $scope.open = false;
+        $scope.type = 'button';
       };
       ngModel.$render = function(){
-        $scope.$search = ngModel.$viewValue;
+        $scope.$select.search = ngModel.$viewValue;
       };
-      input.bind('blur', function(){
-        $scope.$apply('open=false;type="button"');
-      });
     }
   };
 });
