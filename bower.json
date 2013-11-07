@@ -1,0 +1,23 @@
+{
+  "name": "ui-select",
+  "version": "0.0.1-SNAPSHOT",
+  "homepage": "https://github.com/angular-ui/ui-select",
+  "authors": [
+    "AngularUI"
+  ],
+  "description": "AngularJS-native implementation of Select2",
+  "main": "select.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.0.8",
+    "angular-mocks": "~1.0.8",
+    "jquery": "~2.0.3"
+  }
+}
