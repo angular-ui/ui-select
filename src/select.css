@@ -1,20 +1,40 @@
 .select {
-  
   position: relative;
 }
 .select ul {
-  display: none;
-  position: absolute;
+  /*display: none;*/
+  /*position: absolute;*/
   top: 100%;
   left: 0;
 }
-.select.open ul {
-  display: block;
+.select.open .ui-select-drop {
+  display: inherit;
+}
+.ui-select-drop {
+	display: none;
 }
 
 /* user defined styles */
 
 .select .highlight {
   background: lightblue;
-  
 }
+
+.select {
+	width: 200px;
+}
+
+.ui-select-search {
+	width: 90%;
+	margin: 5px;
+}
+
+.select button {
+	line-height: 26px;
+	width: 200px;
+}
+.ui-select-drop {
+	border: solid 1px gray;
+	width: 200px;
+}
+

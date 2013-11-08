@@ -1,9 +1,13 @@
-angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($document){
+angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($document,$timeout){
   return {
     restrict: 'E',
     /* jshint multistr: true */
-    template: '<div class="select" ng-class="{open:open}"> \
-      <input type="{{type}}" ui-keydown="{up: \'up()\', down: \'down()\', esc: \'close()\', enter: \'$select((data.items|filter: $select.search)[$select.index].title)\'}" ng-model="$select.search" ng-click="activate()"> \
+    template:
+    '<div class="select" ng-class="{open:open}"> \
+      <button type="button" ng-click="activate()">{{$select.selected.title || \'Select Me \' }}</button> \
+      <div class="ui-select-drop"> \
+        <input class="ui-select-search" type="text" ui-keydown="{up: \'up()\', down: \'down()\', esc: \'close()\', enter: \'$select((data.items|filter: $select.search)[$select.index])\'}" ng-model="$select.search"> \
+      </div> \
     </div>',
     replace: true,
     require: 'ngModel',
@@ -12,14 +16,18 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
     compile: function(tElement, tAttrs, transcludeFn) {
       return function($scope, $elm, $attrs, ngModel){
         transcludeFn($scope, function(clone) {
+
+          var dropDiv = tElement.find('div.ui-select-drop');
           var choices = $("<ul/>").append(clone);
-          tElement.append(choices);
+          dropDiv.append(choices);
+
           input = $elm.find('input');
-          $scope.type = 'button';
           $scope.activate = function(){
             $scope.open = true;
-            $scope.type = 'text';
-            input.focus();
+            //Give it time to appear before focus
+            $timeout(function(){
+              input.focus();
+            });
           };
           $scope.$watch('$select.search', function(){
             $scope.$select.index = 0;
@@ -37,15 +45,17 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
             }
           };
           $scope.$select = function(item){
+            $scope.$select.selected = item;
             ngModel.$setViewValue(item);
             ngModel.$render(item);
             $scope.close();
           };
           $scope.close = function() {
             $scope.open = false;
-            $scope.type = 'button';
+            $scope.$select.search = "";
           };
           var dismissClickHandler = function (evt) {
+            //FIXME
             if ($elm[0] !== evt.target.parentElement) {
               $scope.close();
               $scope.$digest();
@@ -53,7 +63,7 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
           };
           $document.bind('click', dismissClickHandler);
           ngModel.$render = function(){
-            $scope.$select.search = ngModel.$viewValue;
+            //$scope.$select.search = ngModel.$viewValue;
           };
         });
       };
