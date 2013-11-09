@@ -26,7 +26,7 @@
       <li 
         ng-repeat="item in data.items | filter : $select.search" 
         ng-class="{highlight:$select.index==$index}" 
-        ng-click="$select(item.title)" 
+        ng-click="$select(item)" 
         ng-mouseover="$select.index=$index">
         <h4>{{item.title}}</h4>
       </li>
