@@ -7,6 +7,7 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
       <button type="button" ng-click="activate()">{{$select.selected.title || \'Select Me \' }}</button> \
       <div class="ui-select-drop"> \
         <input class="ui-select-search" type="text" ui-keydown="{up: \'up()\', down: \'down()\', esc: \'close()\', enter: \'$select((data.items|filter: $select.search)[$select.index])\'}" ng-model="$select.search"> \
+        <ul class="ui-select-choices" /> \
       </div> \
     </div>',
     replace: true,
@@ -18,7 +19,7 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
         transcludeFn($scope, function(clone) {
 
           var dropDiv = tElement.find('div.ui-select-drop');
-          var choices = $("<ul/>").append(clone);
+          var choices = tElement.find('ul.ui-select-choices').append(clone);
           dropDiv.append(choices);
 
           input = $elm.find('input');
