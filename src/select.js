@@ -18,16 +18,27 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
       return function($scope, $elm, $attrs, ngModel){
         transcludeFn($scope, function(clone) {
 
-          var dropDiv = tElement.find('div.ui-select-drop');
-          var choices = tElement.find('ul.ui-select-choices').append(clone);
+          var getElementsByClassName = (function() {
+            //To support IE8
+            return document.getElementsByClassdName ?
+              function(context, className) {
+               return angular.element(context.getElementsByClassName(className));
+              } :
+              function(context, className) {
+               return angular.element(context.querySelectorAll('.' + className));
+              };
+          })();
+
+          var dropDiv = getElementsByClassName(tElement[0],'ui-select-drop');
+          var choices = getElementsByClassName(tElement[0],'ui-select-choices').append(clone);
           dropDiv.append(choices);
 
-          input = $elm.find('input');
+          var input = $elm.find('input');
           $scope.activate = function(){
             $scope.open = true;
             //Give it time to appear before focus
             $timeout(function(){
-              input.focus();
+              input[0].focus();
             });
           };
           $scope.$watch('$select.search', function(){
