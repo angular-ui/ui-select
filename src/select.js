@@ -3,11 +3,16 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
     restrict: 'E',
     /* jshint multistr: true */
     template:
-    '<div class="select" ng-class="{open:open}"> \
-      <button type="button" ng-click="activate()">{{$select.selected.title || \'Select Me \' }}</button> \
-      <div class="ui-select-drop"> \
-        <input class="ui-select-search" type="text" ui-keydown="{up: \'up()\', down: \'down()\', esc: \'close()\', enter: \'$select((data.items|filter: $select.search)[$select.index])\'}" ng-model="$select.search"> \
-        <ul class="ui-select-choices" /> \
+    '<div class="ui-select-container" ng-class="{\'ui-select-container-active ui-select-dropdown-open\':open}"> \
+      <a href="javascript:void(0)" class="ui-select-choice" ng-click="activate()"> \
+        <span class="select2-chosen">{{$select.selected.title || \'Select Me \' }}</span> \
+        <span class="ui-select-arrow"><b></b></span> \
+      </a> \
+      <div ng-class="{\'ui-select-display-none\':!open}" class="ui-select-drop ui-select-with-searchbox ui-select-drop-active"> \
+        <div class="ui-select-search"> \
+          <input class="ui-select-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ui-keydown="{up: \'up()\', down: \'down()\', esc: \'close()\', enter: \'$select((data.items|filter: $select.search)[$select.index])\'}" ng-model="$select.search"> \
+        </div> \
+        <ul class="ui-select-results" /> \
       </div> \
     </div>',
     replace: true,
@@ -17,6 +22,8 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
     compile: function(tElement, tAttrs, transcludeFn) {
       return function($scope, $elm, $attrs, ngModel){
         transcludeFn($scope, function(clone) {
+
+          $scope.open = false;
 
           var getElementsByClassName = (function() {
             //To support IE8
@@ -29,9 +36,7 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
               };
           })();
 
-          var dropDiv = getElementsByClassName(tElement[0],'ui-select-drop');
-          var choices = getElementsByClassName(tElement[0],'ui-select-choices').append(clone);
-          dropDiv.append(choices);
+          getElementsByClassName(tElement[0],'ui-select-results').append(clone);
 
           var input = $elm.find('input');
           $scope.activate = function(){
@@ -66,9 +71,10 @@ angular.module('ui.select', ['ui.keypress']).directive('uiSelect', function($doc
             $scope.open = false;
             $scope.$select.search = "";
           };
+          var choiceArrow = getElementsByClassName(tElement[0],'ui-select-arrow');
+          var searchDiv = getElementsByClassName(tElement[0],'ui-select-search');
           var dismissClickHandler = function (evt) {
-            //FIXME
-            if ($elm[0] !== evt.target.parentElement) {
+            if ($elm[0] !== evt.target.parentElement && choiceArrow[0] !== evt.target.parentElement && searchDiv[0] !== evt.target.parentElement) {
               $scope.close();
               $scope.$digest();
             }
