@@ -3,28 +3,36 @@ angular.module('DemoApp', ['ui.select'])
 
     $scope.data = {};
     $scope.data.items = [
-      {title: "ActionScript" },
-      {title: "AppleScript" },
-      {title: "Asp" },
-      {title: "BASIC" },
-      {title: "C" },
-      {title: "C++" },
-      {title: "Clojure" },
-      {title: "COBOL" },
-      {title: "ColdFusion" },
-      {title: "Erlang" },
-      {title: "Fortran" },
-      {title: "Groovy" },
-      {title: "Haskell" },
-      {title: "Java" },
-      {title: "JavaScript" },
-      {title: "Lisp" },
-      {title: "Perl" },
-      {title: "PHP" },
-      {title: "Python" },
-      {title: "Ruby" },
-      {title: "Scala" },
-      {title: "Scheme" }
+      {
+        "id": 1,
+        "name": "Wladimir Coka",
+        "email": "wcoka@email.com",
+      },
+      {
+        "id": 2,
+        "name": "Samantha Smith",
+        "email": "sam@email.com",
+      },
+      {
+        "id": 3,
+        "name": "Estefanía Smith",
+        "email": "esmith@email.com",
+      },
+      {
+        "id": 4,
+        "name": "Natasha Jones",
+        "email": "ncoka@email.com",
+      },
+      {
+        "id": 5,
+        "name": "Nicole Smith",
+        "email": "nicky@email.com",
+      },
+      {
+        "id": 6,
+        "name": "Adrian Jones",
+        "email": "asmith@email.com",
+      },
     ];
 
-  }]);
+}]);

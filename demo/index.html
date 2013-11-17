@@ -26,19 +26,17 @@
 
 </head>
 <body ng-controller="MainCtrl">
-
+        
     <p>
-    Selected: {{data.custom}}
+    Selected: {{data.custom.name}}
     </p>
 
     <ui-select ng-model="data.custom" style="width:300px">
-      <li 
-        ng-repeat="item in data.items | filter : $select.search" 
-        ng-class="{'ui-select-highlighted':$select.index==$index}" 
-        ng-click="$select(item)" 
-        ng-mouseover="$select.index=$index">
-        <div class="ui-select-result-label">{{item.title}}</div>
-      </li>
+      <match placeholder="Pick one...">{{$select.selected.name}}</match>
+      <choices data="item in data.items | filter : $select.search">
+          <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"/></div>
+          <div> {{item.email}} </div>
+      </choices>
     </ui-select>
 
 </body>
