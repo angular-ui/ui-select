@@ -41,3 +41,8 @@
 .ui-select-match {
 	cursor: pointer;
 }
+
+.ui-select-highlight {
+	font-weight: bold;
+}
+
