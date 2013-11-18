@@ -38,3 +38,6 @@
 	width: 200px;
 }
 
+.ui-select-match {
+	cursor: pointer;
+}
