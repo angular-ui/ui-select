@@ -12,25 +12,32 @@
     <script src="../src/select.js"></script>
     <script src="demo.js"></script>
 
-    <link rel="stylesheet" href="../src/select.css"/>
+    <!-- <link rel="stylesheet" href="../src/select.css"/> -->
+    <link rel="stylesheet" href="../src/select2.css"/>
+    
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            color: #333;
+        }
+    </style>
 
 </head>
 <body ng-controller="MainCtrl">
-
+        
     <p>
-    Selected: {{data.custom}}
+    Selected: {{data.custom.name}}
     </p>
 
-    <ui-select ng-model="data.custom">
-      <li 
-        ng-repeat="item in data.items | filter : $select.search" 
-        ng-class="{highlight:$select.index==$index}" 
-        ng-click="$select(item)" 
-        ng-mouseover="$select.index=$index">
-        <h4>{{item.title}}</h4>
-      </li>
+    <ui-select ng-model="data.custom" style="width:300px">
+      <match placeholder="Pick one...">{{$select.selected.name}}</match>
+      <choices data="item in data.items | filter : $select.search">
+          <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"/></div>
+          <div> {{item.email}} </div>
+      </choices>
     </ui-select>
-
 
 </body>
 </html>
