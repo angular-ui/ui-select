@@ -5,10 +5,9 @@ angular.module('ui.select', ['ui.keypress'])
   defaultPlaceholder: 'Select Item',
 })
 
-.directive('uiSelect', function($document,$timeout,uiSelectConfig){
+.directive('uiSelect', function($document,$timeout,uiSelectConfig,uiSelectElements){
   return {
     restrict: 'E',
-    /* jshint multistr: true */
     templateUrl: function(tElement, tAttrs) {
       var theme = tAttrs.theme || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/select.tpl.html';
@@ -21,23 +20,13 @@ angular.module('ui.select', ['ui.keypress'])
       return function($scope, $elm, $attrs, ngModel){
         transcludeFn($scope, function(clone) {
           $scope.open = false;
-          var getElementsByClassName = (function() {
-            //To support IE8
-            return document.getElementsByClassdName ?
-              function(context, className) {
-               return angular.element(context.getElementsByClassName(className));
-              } :
-              function(context, className) {
-               return angular.element(context.querySelectorAll('.' + className));
-              };
-          })();
 
           //Set transcluded elements to their correct position on template
           var transcluded = angular.element('<div/>').append(clone);
-          var transMatch = getElementsByClassName(transcluded[0],'ui-select-match');
-          var transChoices = getElementsByClassName(transcluded[0],'ui-select-choices');
-          getElementsByClassName($elm[0],'ui-select-match').replaceWith(transMatch);
-          getElementsByClassName($elm[0],'ui-select-choices').replaceWith(transChoices);
+          var transMatch = uiSelectElements.byClassName(transcluded[0],'ui-select-match');
+          var transChoices = uiSelectElements.byClassName(transcluded[0],'ui-select-choices');
+          uiSelectElements.byClassName($elm[0],'ui-select-match').replaceWith(transMatch);
+          uiSelectElements.byClassName($elm[0],'ui-select-choices').replaceWith(transChoices);
 
           var input = $elm.find('input');
           $scope.activate = function($event){
@@ -58,7 +47,7 @@ angular.module('ui.select', ['ui.keypress'])
             }
           };
           $scope.down = function(){
-            items = $elm.find('ul').children().length -1;
+            items = uiSelectElements.byClassName($elm[0],'ui-select-choices-row').length -1;
             if ($scope.$select.index < items) {
               $scope.$select.index++;
               $scope.ensureHighlightVisible();
@@ -90,7 +79,7 @@ angular.module('ui.select', ['ui.keypress'])
   };
 })
 
-.directive('choices', function($sce,uiSelectConfig) {
+.directive('choices', function($sce,uiSelectConfig,uiSelectElements) {
   return {
     // require: '^uiSelect',
     restrict: 'E',
@@ -102,20 +91,20 @@ angular.module('ui.select', ['ui.keypress'])
       return '../src/' + theme + '/choices.tpl.html';
     },
     compile: function(tElement, tAttrs, transcludeFn) {
-      tElement.find("li").attr("ng-repeat", tAttrs.data);
+      uiSelectElements.byClassName(tElement[0],'ui-select-choices-row').attr("ng-repeat", tAttrs.data);
       return function(scope, element, attrs){
         scope.trustAsHtml = function(value) {
           return $sce.trustAsHtml(value);
         };
+        var container = element.hasClass('ui-select-choices-content') ? element[0] : uiSelectElements.byClassName(element[0],'ui-select-choices-content')[0];
         scope.ensureHighlightVisible = function(){
-          var highlighted = element[0].children[scope.$select.index],
-              ul = element[0],
-              posY = highlighted.offsetTop + highlighted.clientHeight - ul.scrollTop,
-              maxHeight = 200; //Same as css
+          var highlighted = uiSelectElements.byClassName(element[0],'ui-select-choices-row')[scope.$select.index],
+              posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
+              maxHeight = 200; //TODO Need to get this value from container.max-height 
           if (posY>maxHeight){
-            ul.scrollTop += posY-maxHeight;
+            container.scrollTop += posY-maxHeight;
           }else if (posY<highlighted.clientHeight){
-            ul.scrollTop -= highlighted.clientHeight-posY;
+            container.scrollTop -= highlighted.clientHeight-posY;
           }
         };
       };
@@ -150,5 +139,26 @@ angular.module('ui.select', ['ui.keypress'])
   }
   return function(matchItem, query) {
     return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
+  };
+})
+
+.factory('uiSelectElements', function () {
+
+  var getElementsByClassName = (function() {
+    //To support IE8
+    return document.getElementsByClassName ?
+      function(context, className) {
+       return angular.element(context.getElementsByClassName(className));
+      } :
+      function(context, className) {
+       return angular.element(context.querySelectorAll('.' + className));
+      };
+  })();
+
+  return {
+    byClassName:function (context, className) {
+      return getElementsByClassName(context, className);
+    }
+    
   };
 });
