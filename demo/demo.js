@@ -1,4 +1,10 @@
 angular.module('DemoApp', ['ui.select'])
+
+  .config(function(uiSelectConfig){
+    // uiSelectConfig.defaultTheme = 'select2';
+    // uiSelectConfig.defaultTheme = 'selectize';
+  })
+
   .controller('MainCtrl', ['$scope', function ($scope) {
 
     $scope.data = {};
