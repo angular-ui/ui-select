@@ -16,8 +16,8 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.0.8",
-    "angular-mocks": "~1.0.8",
+    "angular": "~1.2.0",
+    "angular-mocks": "~1.2.0",
     "jquery": "~2.0.3"
   }
 }
