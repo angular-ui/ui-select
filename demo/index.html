@@ -4,11 +4,8 @@
     <meta charset="utf-8">
     <title>Angular ui-select</title>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
 
-    <!-- https://github.com/angular-ui/ui-utils/blob/master/modules/keypress/keypress.js -->
-    <script src="keypress.js"></script>
-    
     <script src="../src/select.js"></script>
     <script src="demo.js"></script>
 
@@ -40,7 +37,7 @@
 
     <ui-select ng-model="data.custom" style="width:300px">
       <match placeholder="Pick one...">{{$select.selected.name}}</match>
-      <choices data="item in data.items | filter : $select.search">
+      <choices data="data.items | filter : $select.search">
           <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"/></div>
           <div> {{item.email}} </div>
       </choices>

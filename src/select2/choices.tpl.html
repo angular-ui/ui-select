@@ -1,5 +1,5 @@
 <ul class="ui-select-choices ui-select-choices-content select2-results">
-  <li class="ui-select-choices-row" ng-class="{'select2-highlighted':$select.index==$index}" ng-click="$select(item)" ng-mouseenter="$select.index=$index">
+  <li class="ui-select-choices-row" ng-class="{'select2-highlighted':$select.activeIdx==$index}">
     <div class="select2-result-label" ng-transclude></div>
   </li>
 </ul>

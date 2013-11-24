@@ -2,7 +2,7 @@
   <div class="ui-select-match"></div>
   <div ng-class="{'select2-display-none':!open}" class="select2-drop select2-with-searchbox select2-drop-active">
     <div class="select2-search">
-      <input class="ui-select-search select2-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ui-keydown="{up:'up()', down:'down()', esc:'close()', enter:'$select((data.items|filter: $select.search)[$select.index])'}" ng-model="$select.search">
+      <input class="ui-select-search select2-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model="$select.search">
     </div>
     <div class="ui-select-choices" />
   </div>

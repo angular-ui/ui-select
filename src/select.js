@@ -1,4 +1,4 @@
-angular.module('ui.select', ['ui.keypress'])
+angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
   defaultTheme: 'select2',
@@ -13,75 +13,86 @@ angular.module('ui.select', ['ui.keypress'])
       return '../src/' + theme + '/select.tpl.html';
     },
     replace: true,
-    require: 'ngModel',
+    require: ['uiSelect', 'ngModel'],
     transclude: true,
     scope: true,
-    compile: function(tElement, tAttrs, transcludeFn) {
-      return function($scope, $elm, $attrs, ngModel){
-        transcludeFn($scope, function(clone) {
-          $scope.open = false;
+    controller: ['$scope', '$element', '$attrs',
+      function uiSelectCtrl($scope, $element, $attrs) {
 
-          //Set transcluded elements to their correct position on template
-          var transcluded = angular.element('<div/>').append(clone);
-          var transMatch = uiSelectElements.byClassName(transcluded[0],'ui-select-match');
-          var transChoices = uiSelectElements.byClassName(transcluded[0],'ui-select-choices');
-          uiSelectElements.byClassName($elm[0],'ui-select-match').replaceWith(transMatch);
-          uiSelectElements.byClassName($elm[0],'ui-select-choices').replaceWith(transChoices);
+        var ctrl = this;
 
-          var input = $elm.find('input');
-          $scope.activate = function($event){
-            if ($event) $event.stopPropagation(); // Prevent bubbling
-            $scope.open = true;
-            //Give it time to appear before focus
-            $timeout(function(){
-              input[0].focus();
-            });
-          };
-          $scope.$watch('$select.search', function(){
-            $scope.$select.index = 0;
+        this.activate = function($event){
+          if ($event) $event.stopPropagation(); // Prevent bubbling
+          $scope.open = true;
+          //Give it time to appear before focus
+          $timeout(function(){
+            ctrl.input[0].focus();
           });
-          $scope.up = function(){
-            if ($scope.$select.index > 0){
-              $scope.$select.index--;
-              $scope.ensureHighlightVisible();
-            }
-          };
-          $scope.down = function(){
-            items = uiSelectElements.byClassName($elm[0],'ui-select-choices-row').length -1;
-            if ($scope.$select.index < items) {
-              $scope.$select.index++;
-              $scope.ensureHighlightVisible();
-            } else {
-              $scope.$select.index = items;
-            }
-          };
-          $scope.$select = function(item){
-            $scope.$select.selected = item;
-            ngModel.$setViewValue(item);
-            ngModel.$render(item);
-            $scope.close();
-          };
-          $scope.close = function() {
-            $scope.open = false;
-            $scope.$select.search = "";
-          };
-          var dismissClickHandler = function (evt) {
-            if (angular.element(evt.target).hasClass('ui-select-search')){
-              return;
-            }
-            $scope.close();
-            $scope.$digest();
-          };
-          $document.bind('click', dismissClickHandler);
-        });
-      };
+        };
+
+        this.select = function(item){
+          $scope.$select.selected = item;
+          this.close();
+          // Using a watch instead of $scope.ngModel.$setViewValue(item)
+        };
+
+        this.close = function() {
+          $scope.open = false;
+          $scope.$select.search = "";
+        };
+
+        this.input = $element.find('input'); //TODO could break if input is at other template
+
+    }],
+    controllerAs: 'uiSelectCtrl',
+    link: function(scope, element, attrs, controllers, transcludeFn){
+
+      scope.open = false;
+      scope.$select = {}; //Namespace
+
+      var uiSelectCtrl = controllers[0];
+      var ngModelCtrl = controllers[1];
+
+      scope.$watch('$select.selected',function(newVal,oldVal){
+        ngModelCtrl.$setViewValue(newVal);
+      });
+
+      $document.bind('click', function (evt) {
+        if (angular.element(evt.target).hasClass('ui-select-search')){
+          return;
+        }
+        uiSelectCtrl.close(); //Close if clicking outside
+        scope.$digest();
+      });
+
+      //Move transcluded elements to their correct position on main template
+      transcludeFn(scope, function(clone) {
+
+        var transcluded = angular.element('<div/>').append(clone);
+
+        //Child directives could be uncompiled at this point, so we check both alternatives,
+        //first for compiled version (by class) or uncompiled (by tag). We place the directives
+        //at the insertion points that are marked with ui-select-* classes at select.tpl.html
+        //TODO: If we change directive restrict attribute to EA, we should do some changes here.
+
+        var transMatch = uiSelectElements.byClassName(transcluded[0],'ui-select-match');
+        transMatch = !transMatch.length ? transcluded.find('match') : transMatch;
+        uiSelectElements.byClassName(element[0],'ui-select-match').replaceWith(transMatch);
+
+        var transChoices = uiSelectElements.byClassName(transcluded[0],'ui-select-choices');
+        transChoices = !transChoices.length ? transcluded.find('choices') : transChoices;
+        uiSelectElements.byClassName(element[0],'ui-select-choices').replaceWith(transChoices);
+
+      });
+
     }
   };
 })
 
 .directive('choices', function($sce,uiSelectConfig,uiSelectElements) {
+  var HOT_KEYS = [9, 13, 27, 38, 40];
   return {
-    // require: '^uiSelect',
+    require: '^uiSelect',
     restrict: 'E',
     transclude: true,
     replace: true,
@@ -90,23 +101,71 @@ angular.module('ui.select', ['ui.keypress'])
       var theme = tElement[0].parentElement.getAttribute('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/choices.tpl.html';
     },
-    compile: function(tElement, tAttrs, transcludeFn) {
-      uiSelectElements.byClassName(tElement[0],'ui-select-choices-row').attr("ng-repeat", tAttrs.data);
-      return function(scope, element, attrs){
+    compile: function(tElement, tAttrs) {
+
+      uiSelectElements.byClassName(tElement[0],'ui-select-choices-row')
+        .attr("ng-repeat", 'item in ' + tAttrs.data)
+        .attr("ng-mouseenter", '$select.activeIdx=$index')
+        .attr("ng-click", 'uiSelectCtrl.select(item)');
+
+      return function(scope, element, attrs, uiSelectCtrl){
+
         scope.trustAsHtml = function(value) {
           return $sce.trustAsHtml(value);
         };
+
         var container = element.hasClass('ui-select-choices-content') ? element[0] : uiSelectElements.byClassName(element[0],'ui-select-choices-content')[0];
-        scope.ensureHighlightVisible = function(){
-          var highlighted = uiSelectElements.byClassName(element[0],'ui-select-choices-row')[scope.$select.index],
+        var ensureHighlightVisible = function(){
+          var rows = uiSelectElements.byClassName(element[0],'ui-select-choices-row');
+          if (!rows.length) return; //In case its empty
+          var highlighted = rows[scope.$select.activeIdx],
               posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
               maxHeight = 200; //TODO Need to get this value from container.max-height 
-          if (posY>maxHeight){
+          if (posY > maxHeight){
             container.scrollTop += posY-maxHeight;
-          }else if (posY<highlighted.clientHeight){
+          }else if (posY < highlighted.clientHeight){
             container.scrollTop -= highlighted.clientHeight-posY;
           }
         };
+
+        scope.$watch('$select.search', function(){
+          scope.$select.activeIdx = 0;
+          ensureHighlightVisible();
+        });
+
+        //Bind keyboard events related to choices
+        uiSelectCtrl.input.bind('keydown', function (evt) {
+
+          if (HOT_KEYS.indexOf(evt.which) === -1) return; //Exit on regular key
+          evt.preventDefault();
+
+          var rows = uiSelectElements.byClassName(element[0],'ui-select-choices-row');
+
+          if (evt.which === 40) { // down(40)
+            if (scope.$select.activeIdx < rows.length) {
+              scope.$select.activeIdx = (scope.$select.activeIdx + 1) % rows.length || rows.length - 1 ;
+              ensureHighlightVisible();
+              scope.$digest();
+            }
+
+          } else if (evt.which === 38) { // up(38)
+            if (scope.$select.activeIdx > 0){
+              scope.$select.activeIdx--;
+              ensureHighlightVisible();
+              scope.$digest();
+            }
+
+          } else if (evt.which === 13 || evt.which === 9) { // enter(13) and tab(9)
+              rows[scope.$select.activeIdx].click();
+
+          } else if (evt.which === 27) { // esc(27)
+            evt.stopPropagation();
+            uiSelectCtrl.close();
+            scope.$digest();
+
+          }
+        });
+
       };
     }
   };
@@ -122,13 +181,8 @@ angular.module('ui.select', ['ui.keypress'])
       var theme = tElement[0].parentElement.getAttribute('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/match.tpl.html';
     },
-    compile: function(tElement, tAttrs, transcludeFn) {
-      return function($scope, $elm, $attrs, ngModel){
-        transcludeFn($scope, function(clone) {
-          $scope.placeholder = tAttrs.placeholder || uiSelectConfig.defaultPlaceholder;
-          $elm.append(clone);
-        });
-      };
+    link: function(scope, element, attrs){
+      scope.placeholder = attrs.placeholder || uiSelectConfig.defaultPlaceholder;
     }
   };
 })
