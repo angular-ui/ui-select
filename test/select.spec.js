@@ -60,4 +60,15 @@ describe('ui-select tests', function() {
 
     });
 
+    it('should correctly render initial state', function () {
+
+      scope.selection = scope.matches[0];
+
+      var el = uiSelectElInstance1();
+      var matchLabel = $('.ui-select-match > div[ng-transclude]', el).text();
+
+      expect(matchLabel).toEqual('Wladimir Coka');
+
+    });
+
 });

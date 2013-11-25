@@ -54,8 +54,12 @@ angular.module('ui.select', [])
       var ngModelCtrl = controllers[1];
 
       scope.$watch('$select.selected',function(newVal,oldVal){
-        ngModelCtrl.$setViewValue(newVal);
+        if (ngModelCtrl.$viewValue != newVal) ngModelCtrl.$setViewValue(newVal);
       });
+
+      ngModelCtrl.$render = function() {
+        scope.$select.selected = ngModelCtrl.$viewValue;
+      };
 
       $document.bind('click', function (evt) {
         if (angular.element(evt.target).hasClass('ui-select-search')){
