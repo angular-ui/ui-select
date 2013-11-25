@@ -1,4 +1,4 @@
-ui-select
+ui-select [![Build Status](https://travis-ci.org/angular-ui/ui-select.png)](https://travis-ci.org/angular-ui/ui-select)
 =========
 
 A native version of select2.
