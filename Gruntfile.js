@@ -2,6 +2,7 @@ var bower = require('bower');
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-conventional-changelog');
 
   grunt.registerTask('bower', 'Install Bower packages.', function () {
     var done = this.async();
@@ -28,6 +29,11 @@ module.exports = function(grunt) {
       travis: {
         singleRun: true,
         browsers: ['PhantomJS', 'Firefox']
+      }
+    },
+    changelog: {
+      options: {
+        dest: 'CHANGELOG.md'
       }
     }
   });
