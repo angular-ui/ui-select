@@ -1,0 +1,8 @@
+<div ng-show="open" class="ui-select-choices selectize-dropdown single" style="width: 300px; top: 36px; left: 0px; visibility: visible;">
+  <div class="ui-select-choices-content selectize-dropdown-content">
+	  <div class="ui-select-choices-row" ng-class="{'active':$select.index==$index}" 
+	  	ng-click="$select(item)" ng-mouseenter="$select.index=$index">
+    	<div class="option" data-selectable ng-transclude></div>
+    </div>
+  </div>
+</div>

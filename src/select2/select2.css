@@ -2,7 +2,7 @@
 Based on https://github.com/ivaynberg/select2/blob/master/select2.css
 */
 
-.ui-select-container {
+.select2-container {
     margin: 0;
     position: relative;
     display: inline-block;
@@ -12,10 +12,10 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     vertical-align: middle;
 }
 
-.ui-select-container,
-.ui-select-drop,
-.ui-select-search,
-.ui-select-search input {
+.select2-container,
+.select2-drop,
+.select2-search,
+.select2-search input {
   /*
     Force border-box so that % widths fit the parent
     container without overlap because of margin/padding.
@@ -26,7 +26,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
           box-sizing: border-box; /* css3 */
 }
 
-.ui-select-container .ui-select-choice {
+.select2-container .select2-choice {
     display: block;
     height: 26px;
     padding: 0 0 0 8px;
@@ -57,7 +57,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background-image: linear-gradient(top, #fff 0%, #eee 50%);
 }
 
-.ui-select-container.ui-select-drop-above .ui-select-choice {
+.select2-container.select2-drop-above .select2-choice {
     border-bottom-color: #aaa;
 
     border-radius: 0 0 4px 4px;
@@ -69,11 +69,11 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background-image: linear-gradient(top, #eee 0%, #fff 90%);
 }
 
-.ui-select-container.ui-select-allowclear .ui-select-choice .ui-select-chosen {
+.select2-container.select2-allowclear .select2-choice .select2-chosen {
     margin-right: 42px;
 }
 
-.ui-select-container .ui-select-choice > .ui-select-chosen {
+.select2-container .select2-choice > .select2-chosen {
     margin-right: 26px;
     display: block;
     overflow: hidden;
@@ -83,7 +83,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     text-overflow: ellipsis;
 }
 
-.ui-select-container .ui-select-choice abbr {
+.select2-container .select2-choice abbr {
     display: none;
     width: 12px;
     height: 12px;
@@ -100,16 +100,16 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     outline: 0;
 }
 
-.ui-select-container.ui-select-allowclear .ui-select-choice abbr {
+.select2-container.select2-allowclear .select2-choice abbr {
     display: inline-block;
 }
 
-.ui-select-container .ui-select-choice abbr:hover {
+.select2-container .select2-choice abbr:hover {
     background-position: right -11px;
     cursor: pointer;
 }
 
-.ui-select-drop-mask {
+.select2-drop-mask {
     border: 0;
     margin: 0;
     padding: 0;
@@ -127,7 +127,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     filter: alpha(opacity=0);
 }
 
-.ui-select-drop {
+.select2-drop {
     width: 100%;
     margin-top: -1px;
     position: absolute;
@@ -145,7 +145,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
             box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
 }
 
-.ui-select-drop.ui-select-drop-above {
+.select2-drop.select2-drop-above {
     margin-top: 1px;
     border-top: 1px solid #aaa;
     border-bottom: 0;
@@ -156,25 +156,25 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
             box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
 }
 
-.ui-select-drop-active {
+.select2-drop-active {
     border: 1px solid #5897fb;
     border-top: none;
 }
 
-.ui-select-drop.ui-select-drop-above.ui-select-drop-active {
+.select2-drop.select2-drop-above.select2-drop-active {
     border-top: 1px solid #5897fb;
 }
 
-.ui-select-drop-auto-width {
+.select2-drop-auto-width {
     border-top: 1px solid #aaa;
     width: auto;
 }
 
-.ui-select-drop-auto-width .ui-select-search {
+.select2-drop-auto-width .select2-search {
     padding-top: 4px;
 }
 
-.ui-select-container .ui-select-choice .ui-select-arrow {
+.select2-container .select2-choice .select2-arrow {
     display: inline-block;
     width: 18px;
     height: 100%;
@@ -195,14 +195,14 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background-image: linear-gradient(top, #ccc 0%, #eee 60%);
 }
 
-.ui-select-container .ui-select-choice .ui-select-arrow b {
+.select2-container .select2-choice .select2-arrow b {
     display: block;
     width: 100%;
     height: 100%;
     background: url('select2.png') no-repeat 0 1px;
 }
 
-.ui-select-search {
+.select2-search {
     display: inline-block;
     width: 100%;
     min-height: 26px;
@@ -216,7 +216,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     white-space: nowrap;
 }
 
-.ui-select-search input {
+.select2-search input {
     width: 100%;
     height: auto !important;
     min-height: 26px;
@@ -240,11 +240,11 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background: url('select2.png') no-repeat 100% -22px, linear-gradient(top, #fff 85%, #eee 99%);
 }
 
-.ui-select-drop.ui-select-drop-above .ui-select-search input {
+.select2-drop.select2-drop-above .select2-search input {
     margin-top: 4px;
 }
 
-.ui-select-search input.ui-select-active {
+.select2-search input.select2-active {
     background: #fff url('select2-spinner.gif') no-repeat 100%;
     background: url('select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
     background: url('select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
@@ -252,8 +252,8 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background: url('select2-spinner.gif') no-repeat 100%, linear-gradient(top, #fff 85%, #eee 99%);
 }
 
-.ui-select-container-active .ui-select-choice,
-.ui-select-container-active .ui-select-choices {
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices {
     border: 1px solid #5897fb;
     outline: none;
 
@@ -261,7 +261,7 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
             box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
 
-.ui-select-dropdown-open .ui-select-choice {
+.select2-dropdown-open .select2-choice {
     border-bottom-color: transparent;
     -webkit-box-shadow: 0 1px 0 #fff inset;
             box-shadow: 0 1px 0 #fff inset;
@@ -277,8 +277,8 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background-image: linear-gradient(top, #fff 0%, #eee 50%);
 }
 
-.ui-select-dropdown-open.ui-select-drop-above .ui-select-choice,
-.ui-select-dropdown-open.ui-select-drop-above .ui-select-choices {
+.select2-dropdown-open.select2-drop-above .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choices {
     border: 1px solid #5897fb;
     border-top-color: transparent;
 
@@ -289,17 +289,17 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     background-image: linear-gradient(bottom, #fff 0%, #eee 50%);
 }
 
-.ui-select-dropdown-open .ui-select-choice .ui-select-arrow {
+.select2-dropdown-open .select2-choice .select2-arrow {
     background: transparent;
     border-left: none;
     filter: none;
 }
-.ui-select-dropdown-open .ui-select-choice .ui-select-arrow b {
+.select2-dropdown-open .select2-choice .select2-arrow b {
     background-position: -18px 1px;
 }
 
 /* results */
-.ui-select-results {
+.select2-results {
     max-height: 200px;
     padding: 0 0 0 4px;
     margin: 4px 4px 4px 0;
@@ -309,30 +309,30 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.ui-select-results ul.ui-select-result-sub {
+.select2-results ul.select2-result-sub {
     margin: 0;
     padding-left: 0;
 }
 
-.ui-select-results ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 20px }
-.ui-select-results ul.ui-select-result-sub ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 40px }
-.ui-select-results ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 60px }
-.ui-select-results ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 80px }
-.ui-select-results ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 100px }
-.ui-select-results ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 110px }
-.ui-select-results ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub ul.ui-select-result-sub > li .ui-select-result-label { padding-left: 120px }
+.select2-results ul.select2-result-sub > li .select2-result-label { padding-left: 20px }
+.select2-results ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 40px }
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 60px }
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 80px }
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 100px }
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 110px }
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 120px }
 
-.ui-select-results li {
+.select2-results li {
     list-style: none;
     display: list-item;
     background-image: none;
 }
 
-.ui-select-results li.ui-select-result-with-children > .ui-select-result-label {
+.select2-results li.select2-result-with-children > .select2-result-label {
     font-weight: bold;
 }
 
-.ui-select-results .ui-select-result-label {
+.select2-results .select2-result-label {
     padding: 3px 7px 4px;
     margin: 0;
     cursor: pointer;
@@ -346,29 +346,29 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
               user-select: none;
 }
 
-.ui-select-results .ui-select-highlighted {
+.select2-results .select2-highlighted {
     background: #3875d7;
     color: #fff;
 }
 
-.ui-select-results li em {
+.select2-results li em {
     background: #feffde;
     font-style: normal;
 }
 
-.ui-select-results .ui-select-highlighted em {
+.select2-results .select2-highlighted em {
     background: transparent;
 }
 
-.ui-select-results .ui-select-highlighted ul {
+.select2-results .select2-highlighted ul {
     background: #fff;
     color: #000;
 }
 
 
-.ui-select-results .ui-select-no-results,
-.ui-select-results .ui-select-searching,
-.ui-select-results .ui-select-selection-limit {
+.select2-results .select2-no-results,
+.select2-results .select2-searching,
+.select2-results .select2-selection-limit {
     background: #f4f4f4;
     display: list-item;
 }
@@ -376,54 +376,54 @@ Based on https://github.com/ivaynberg/select2/blob/master/select2.css
 /*
 disabled look for disabled choices in the results dropdown
 */
-.ui-select-results .ui-select-disabled.ui-select-highlighted {
+.select2-results .select2-disabled.select2-highlighted {
     color: #666;
     background: #f4f4f4;
     display: list-item;
     cursor: default;
 }
-.ui-select-results .ui-select-disabled {
+.select2-results .select2-disabled {
   background: #f4f4f4;
   display: list-item;
   cursor: default;
 }
 
-.ui-select-results .ui-select-selected {
+.select2-results .select2-selected {
     display: none;
 }
 
-.ui-select-more-results.ui-select-active {
+.select2-more-results.select2-active {
     background: #f4f4f4 url('select2-spinner.gif') no-repeat 100%;
 }
 
-.ui-select-more-results {
+.select2-more-results {
     background: #f4f4f4;
     display: list-item;
 }
 
 /* disabled styles */
 
-.ui-select-container.ui-select-container-disabled .ui-select-choice {
+.select2-container.select2-container-disabled .select2-choice {
     background-color: #f4f4f4;
     background-image: none;
     border: 1px solid #ddd;
     cursor: default;
 }
 
-.ui-select-container.ui-select-container-disabled .ui-select-choice .ui-select-arrow {
+.select2-container.select2-container-disabled .select2-choice .select2-arrow {
     background-color: #f4f4f4;
     background-image: none;
     border-left: 0;
 }
 
-.ui-select-container.ui-select-container-disabled .ui-select-choice abbr {
+.select2-container.select2-container-disabled .select2-choice abbr {
     display: none;
 }
 
 
 /* multiselect */
 
-.ui-select-container-multi .ui-select-choices {
+.select2-container-multi .select2-choices {
     height: auto !important;
     height: 1%;
     margin: 0;
@@ -441,36 +441,36 @@ disabled look for disabled choices in the results dropdown
     background-image: linear-gradient(top, #eee 1%, #fff 15%);
 }
 
-.ui-select-locked {
+.select2-locked {
   padding: 3px 5px 3px 5px !important;
 }
 
-.ui-select-container-multi .ui-select-choices {
+.select2-container-multi .select2-choices {
     min-height: 26px;
 }
 
-.ui-select-container-multi.ui-select-container-active .ui-select-choices {
+.select2-container-multi.select2-container-active .select2-choices {
     border: 1px solid #5897fb;
     outline: none;
 
     -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
             box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
-.ui-select-container-multi .ui-select-choices li {
+.select2-container-multi .select2-choices li {
     float: left;
     list-style: none;
 }
-html[dir="rtl"] .ui-select-container-multi .ui-select-choices li
+html[dir="rtl"] .select2-container-multi .select2-choices li
 {
     float: right;
 }
-.ui-select-container-multi .ui-select-choices .ui-select-search-field {
+.select2-container-multi .select2-choices .select2-search-field {
     margin: 0;
     padding: 0;
     white-space: nowrap;
 }
 
-.ui-select-container-multi .ui-select-choices .ui-select-search-field input {
+.select2-container-multi .select2-choices .select2-search-field input {
     padding: 5px;
     margin: 1px 0;
 
@@ -484,15 +484,15 @@ html[dir="rtl"] .ui-select-container-multi .ui-select-choices li
     background: transparent !important;
 }
 
-.ui-select-container-multi .ui-select-choices .ui-select-search-field input.ui-select-active {
+.select2-container-multi .select2-choices .select2-search-field input.select2-active {
     background: #fff url('select2-spinner.gif') no-repeat 100% !important;
 }
 
-.ui-select-default {
+.select2-default {
     color: #999 !important;
 }
 
-.ui-select-container-multi .ui-select-choices .ui-select-search-choice {
+.select2-container-multi .select2-choices .select2-search-choice {
     padding: 3px 5px 3px 18px;
     margin: 3px 0 3px 5px;
     position: relative;
@@ -522,19 +522,19 @@ html[dir="rtl"] .ui-select-container-multi .ui-select-choices li
     background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
     background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
 }
-html[dir="rtl"] .ui-select-container-multi .ui-select-choices .ui-select-search-choice
+html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
 {
     margin-left: 0;
     margin-right: 5px;
 }
-.ui-select-container-multi .ui-select-choices .ui-select-search-choice .ui-select-chosen {
+.select2-container-multi .select2-choices .select2-search-choice .select2-chosen {
     cursor: default;
 }
-.ui-select-container-multi .ui-select-choices .ui-select-search-choice-focus {
+.select2-container-multi .select2-choices .select2-search-choice-focus {
     background: #d4d4d4;
 }
 
-.ui-select-search-choice-close {
+.select2-search-choice-close {
     display: block;
     width: 12px;
     height: 13px;
@@ -546,49 +546,49 @@ html[dir="rtl"] .ui-select-container-multi .ui-select-choices .ui-select-search-
     outline: none;
     background: url('select2.png') right top no-repeat;
 }
-html[dir="rtl"] .ui-select-search-choice-close {
+html[dir="rtl"] .select2-search-choice-close {
     right: auto;
     left: 3px;
 }
 
-.ui-select-container-multi .ui-select-search-choice-close {
+.select2-container-multi .select2-search-choice-close {
     left: 3px;
 }
 
-.ui-select-container-multi .ui-select-choices .ui-select-search-choice .ui-select-search-choice-close:hover {
+.select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover {
   background-position: right -11px;
 }
-.ui-select-container-multi .ui-select-choices .ui-select-search-choice-focus .ui-select-search-choice-close {
+.select2-container-multi .select2-choices .select2-search-choice-focus .select2-search-choice-close {
     background-position: right -11px;
 }
 
 /* disabled styles */
-.ui-select-container-multi.ui-select-container-disabled .ui-select-choices {
+.select2-container-multi.select2-container-disabled .select2-choices {
     background-color: #f4f4f4;
     background-image: none;
     border: 1px solid #ddd;
     cursor: default;
 }
 
-.ui-select-container-multi.ui-select-container-disabled .ui-select-choices .ui-select-search-choice {
+.select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice {
     padding: 3px 5px 3px 5px;
     border: 1px solid #ddd;
     background-image: none;
     background-color: #f4f4f4;
 }
 
-.ui-select-container-multi.ui-select-container-disabled .ui-select-choices .ui-select-search-choice .ui-select-search-choice-close {    display: none;
+.select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice .select2-search-choice-close {    display: none;
     background: none;
 }
 /* end multiselect */
 
 
-.ui-select-result-selectable .ui-select-match,
-.ui-select-result-unselectable .ui-select-match {
+.select2-result-selectable .select2-match,
+.select2-result-unselectable .select2-match {
     text-decoration: underline;
 }
 
-.ui-select-offscreen, .ui-select-offscreen:focus {
+.select2-offscreen, .select2-offscreen:focus {
     clip: rect(0 0 0 0) !important;
     width: 1px !important;
     height: 1px !important;
@@ -602,11 +602,11 @@ html[dir="rtl"] .ui-select-search-choice-close {
     top: 0px !important;
 }
 
-.ui-select-display-none {
+.select2-display-none {
     display: none;
 }
 
-.ui-select-measure-scrollbar {
+.select2-measure-scrollbar {
     position: absolute;
     top: -10000px;
     left: -10000px;
@@ -617,12 +617,12 @@ html[dir="rtl"] .ui-select-search-choice-close {
 /* Retina-ize icons */
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi)  {
-  .ui-select-search input, .ui-select-search-choice-close, .ui-select-container .ui-select-choice abbr, .ui-select-container .ui-select-choice .ui-select-arrow b {
+  .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
       background-image: url('select2x2.png') !important;
       background-repeat: no-repeat !important;
       background-size: 60px 40px !important;
   }
-  .ui-select-search input {
+  .select2-search input {
       background-position: 100% -21px !important;
   }
 }

@@ -14,11 +14,13 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'bower_components/jquery/jquery.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/jquery/jquery.js',
+
       'src/select.js',
-      'test/**/*.spec.js'
+      'test/**/*.spec.js',
+      '**/*.tpl.html'
     ],
 
 
@@ -27,6 +29,14 @@ module.exports = function(config) {
       
     ],
 
+    preprocessors: {
+      '**/*.tpl.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      // stripPrefix: 'public/',
+      prependPrefix: '../'
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'

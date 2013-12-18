@@ -3,19 +3,14 @@ ui-select [![Build Status](https://travis-ci.org/angular-ui/ui-select.png)](http
 
 A native version of select2.
 
-Requires ui.keypress from ui-utils
-
-
 ### Prototype usage:
 
 ```html
-<ui-select ng-model="data.custom">
-  <li 
-    ng-repeat="item in data.items | filter : $search" 
-    ng-class="{highlight:highlight==$index}" 
-    ng-click="$select(item)" 
-    ng-mouseover="$parent.highlight=$index">
-    <h4>{{item.title}}</h4>
-  </li>
+<ui-select ng-model="data.custom" style="width:300px">
+  <match placeholder="Pick one...">{{$select.selected.name}}</match>
+  <choices data="data.items | filter : $select.search">
+      <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"/></div>
+      <div> {{item.email}} </div>
+  </choices>
 </ui-select>
 ```

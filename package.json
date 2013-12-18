@@ -13,7 +13,8 @@
     "karma-firefox-launcher": "~0.1.0",
     "karma-jasmine": "~0.1.3",
     "karma-phantomjs-launcher": "~0.1.0",
-    "grunt-conventional-changelog": "~1.0.0"
+    "grunt-conventional-changelog": "~1.0.0",
+    "karma-ng-html2js-preprocessor": "~0.1.0"
   },
   "scripts": {
     "test": "grunt test"
