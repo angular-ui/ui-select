@@ -1,6 +1,6 @@
 angular.module('DemoApp', ['ui.select'])
 
-  .config(function(uiSelectConfig){
+  .config(function(uiSelectConfig) {
     // uiSelectConfig.defaultTheme = 'select2';
     // uiSelectConfig.defaultTheme = 'selectize';
   })
@@ -12,32 +12,32 @@ angular.module('DemoApp', ['ui.select'])
       {
         "id": 1,
         "name": "Wladimir Coka",
-        "email": "wcoka@email.com",
+        "email": "wcoka@email.com"
       },
       {
         "id": 2,
         "name": "Samantha Smith",
-        "email": "sam@email.com",
+        "email": "sam@email.com"
       },
       {
         "id": 3,
         "name": "Estefanía Smith",
-        "email": "esmith@email.com",
+        "email": "esmith@email.com"
       },
       {
         "id": 4,
         "name": "Natasha Jones",
-        "email": "ncoka@email.com",
+        "email": "ncoka@email.com"
       },
       {
         "id": 5,
         "name": "Nicole Smith",
-        "email": "nicky@email.com",
+        "email": "nicky@email.com"
       },
       {
         "id": 6,
         "name": "Adrian Jones",
-        "email": "asmith@email.com",
+        "email": "asmith@email.com"
       },
     ];
 
