@@ -124,7 +124,7 @@ angular.module('ui.select', [])
           if (!rows.length) return; //In case its empty
           var highlighted = rows[scope.$select.activeIdx],
               posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
-              maxHeight = 200; //TODO Need to get this value from container.max-height 
+              maxHeight = 200; //TODO Need to get this value from container.max-height
           if (posY > maxHeight){
             container.scrollTop += posY-maxHeight;
           }else if (posY < highlighted.clientHeight){
@@ -217,6 +217,6 @@ angular.module('ui.select', [])
     byClassName:function (context, className) {
       return getElementsByClassName(context, className);
     }
-    
+
   };
 });
