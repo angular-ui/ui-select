@@ -61,7 +61,7 @@ angular.module('ui.select', [])
         scope.$select.selected = ngModelCtrl.$viewValue;
       };
 
-      $document.bind('click', function (evt) {
+      $document.bind('click', function(evt) {
         if (angular.element(evt.target).hasClass('ui-select-search')) {
           return;
         }
@@ -119,7 +119,8 @@ angular.module('ui.select', [])
         };
 
         var container = element.hasClass('ui-select-choices-content') ? element[0] : uiSelectElements.byClassName(element[0], 'ui-select-choices-content')[0];
-        var ensureHighlightVisible = function() {
+
+        function ensureHighlightVisible() {
           var rows = uiSelectElements.byClassName(element[0], 'ui-select-choices-row');
           if (!rows.length) return; //In case its empty
           var highlighted = rows[scope.$select.activeIdx],
@@ -127,10 +128,10 @@ angular.module('ui.select', [])
               maxHeight = 200; //TODO Need to get this value from container.max-height
           if (posY > maxHeight) {
             container.scrollTop += posY-maxHeight;
-          }else if (posY < highlighted.clientHeight) {
+          } else if (posY < highlighted.clientHeight) {
             container.scrollTop -= highlighted.clientHeight-posY;
           }
-        };
+        }
 
         scope.$watch('$select.search', function() {
           scope.$select.activeIdx = 0;
@@ -138,7 +139,7 @@ angular.module('ui.select', [])
         });
 
         //Bind keyboard events related to choices
-        uiSelectCtrl.input.bind('keydown', function (evt) {
+        uiSelectCtrl.input.bind('keydown', function(evt) {
 
           if (HOT_KEYS.indexOf(evt.which) === -1) return; //Exit on regular key
           evt.preventDefault();
@@ -200,7 +201,7 @@ angular.module('ui.select', [])
   };
 })
 
-.factory('uiSelectElements', function () {
+.factory('uiSelectElements', function() {
 
   var getElementsByClassName = (function() {
     //To support IE8
@@ -214,7 +215,7 @@ angular.module('ui.select', [])
   })();
 
   return {
-    byClassName:function (context, className) {
+    byClassName:function(context, className) {
       return getElementsByClassName(context, className);
     }
 
