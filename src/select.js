@@ -33,37 +33,36 @@ angular.module('ui.select', [])
     require: ['uiSelect', 'ngModel'],
     transclude: true,
     scope: true,
-    controller: ['$scope', '$element', '$attrs',
-      function uiSelectCtrl($scope, $element, $attrs) {
 
-        var ctrl = this;
+    controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
+      var ctrl = this;
 
-        this.activate = function($event) {
-          if ($event) $event.stopPropagation(); // Prevent bubbling
-          $scope.open = true;
-          //Give it time to appear before focus
-          $timeout(function() {
-            ctrl.input[0].focus();
-          });
-        };
+      this.activate = function($event) {
+        if ($event) $event.stopPropagation(); // Prevent bubbling
+        $scope.open = true;
+        //Give it time to appear before focus
+        $timeout(function() {
+          ctrl.input[0].focus();
+        });
+      };
 
-        this.select = function(item) {
-          $scope.$select.selected = item;
-          this.close();
-          // Using a watch instead of $scope.ngModel.$setViewValue(item)
-        };
+      this.select = function(item) {
+        $scope.$select.selected = item;
+        this.close();
+        // Using a watch instead of $scope.ngModel.$setViewValue(item)
+      };
 
-        this.close = function() {
-          $scope.open = false;
-          $scope.$select.search = "";
-        };
+      this.close = function() {
+        $scope.open = false;
+        $scope.$select.search = "";
+      };
 
-        this.input = $element.find('input'); //TODO could break if input is at other template
-
+      this.input = $element.find('input'); //TODO could break if input is at other template
     }],
-    controllerAs: 'uiSelectCtrl',
-    link: function(scope, element, attrs, controllers, transcludeFn) {
 
+    controllerAs: 'uiSelectCtrl',
+
+    link: function(scope, element, attrs, controllers, transcludeFn) {
       scope.open = false;
       scope.$select = {}; //Namespace
 
@@ -178,7 +177,7 @@ angular.module('ui.select', [])
             }
 
           } else if (evt.which === 13 || evt.which === 9) { // enter(13) and tab(9)
-              rows[scope.$select.activeIdx].click();
+            rows[scope.$select.activeIdx].click();
 
           } else if (evt.which === 27) { // esc(27)
             evt.stopPropagation();
