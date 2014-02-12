@@ -77,7 +77,7 @@ angular.module('ui.select', [])
         scope.$select.selected = ngModelCtrl.$viewValue;
       };
 
-      $document.bind('click', function(evt) {
+      $document.on('click', function(evt) {
         if (angular.element(evt.target).hasClass('ui-select-search')) {
           return;
         }
@@ -155,7 +155,7 @@ angular.module('ui.select', [])
         });
 
         // Bind keyboard events related to choices
-        uiSelectCtrl.input.bind('keydown', function(evt) {
+        uiSelectCtrl.input.on('keydown', function(evt) {
 
           if (HOT_KEYS.indexOf(evt.which) === -1) return; // Exit on regular key
           evt.preventDefault();
