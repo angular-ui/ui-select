@@ -102,7 +102,7 @@ angular.module('ui.select', [])
     replace: true,
     templateUrl: function(tElement, tAttrs) {
       //Gets theme attribute from parent (ui-select)
-      var theme = tElement[0].parentElement.getAttribute('theme') || uiSelectConfig.defaultTheme;
+      var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/choices.tpl.html';
     },
     compile: function(tElement, tAttrs) {
@@ -183,7 +183,7 @@ angular.module('ui.select', [])
     replace: true,
     templateUrl: function(tElement, tAttrs) {
       //Gets theme attribute from parent (ui-select)
-      var theme = tElement[0].parentElement.getAttribute('theme') || uiSelectConfig.defaultTheme;
+      var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/match.tpl.html';
     },
     link: function(scope, element, attrs) {
