@@ -177,7 +177,13 @@ angular.module('ui.select', [])
             }
 
           } else if (evt.which === 13 || evt.which === 9) { // enter(13) and tab(9)
-            rows[scope.$select.activeIdx].click();
+            if (window.jQuery) {
+              // Firefox 3.6 does not support element.click()
+              // See HTMLElement.click https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.click
+              $(rows[scope.$select.activeIdx]).click();
+            } else {
+              rows[scope.$select.activeIdx].click();
+            }
 
           } else if (evt.which === 27) { // esc(27)
             evt.stopPropagation();

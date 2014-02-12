@@ -1,57 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="DemoApp">
 <head>
-    <meta charset="utf-8">
-    <title>AngularJS ui-select</title>
+  <meta charset="utf-8">
+  <title>AngularJS ui-select</title>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+  <!-- IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie -->
+  <!--[if lt IE 9]>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+    <script>
+      document.createElement('ui-select');
+      document.createElement('match');
+      document.createElement('choices');
+    </script>
+  <![endif]-->
 
-    <script src="../src/select.js"></script>
-    <script src="demo.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
 
-    <!-- Select2 Theme -->
-    <link rel="stylesheet" href="../src/select2/select2.css"/>
+  <script src="../src/select.js"></script>
+  <script src="demo.js"></script>
 
-    <!-- Selectize (Default) Theme -->
-    <link rel="stylesheet" href="../src/selectize/selectize.default.css"/>
-    <!-- <link rel="stylesheet" href="../src/selectize/selectize.bootstrap2.css"/> -->
-    <!-- <link rel="stylesheet" href="../src/selectize/selectize.bootstrap3.css"/> -->
+  <!-- Select2 Theme -->
+  <link rel="stylesheet" href="../src/select2/select2.css">
 
-    <link rel="stylesheet" href="../src/select.css"/>
+  <!-- Selectize (Default) Theme -->
+  <link rel="stylesheet" href="../src/selectize/selectize.default.css">
+  <!-- <link rel="stylesheet" href="../src/selectize/selectize.bootstrap2.css"> -->
+  <!-- <link rel="stylesheet" href="../src/selectize/selectize.bootstrap3.css"> -->
 
-    <style>
-        body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            line-height: 20px;
-            color: #333;
-        }
-    </style>
+  <link rel="stylesheet" href="../src/select.css">
+
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #333;
+    }
+  </style>
 
 </head>
 <body ng-controller="MainCtrl">
 
-    <p>
-    Selected: {{data.custom.name}}
-    </p>
+  <p>
+  Selected: {{data.custom.name}}
+  </p>
 
-    <p>Select2 theme (default):</p>
-    <ui-select ng-model="data.custom" style="width:300px">
-      <match placeholder="Pick one...">{{$select.selected.name}}</match>
-      <choices data="data.items | filter : $select.search">
-          <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div>
-          <div> {{item.email}} </div>
-      </choices>
-    </ui-select>
+  <p>Select2 theme (default):</p>
+  <ui-select ng-model="data.custom" style="width:300px">
+    <match placeholder="Pick one...">{{$select.selected.name}}</match>
+    <choices data="data.items | filter : $select.search">
+      <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div>
+      <div> {{item.email}} </div>
+    </choices>
+  </ui-select>
 
-    <p>Selectize theme:</p>
-    <ui-select ng-model="data.custom" theme="selectize" style="width:300px">
-        <match placeholder="Pick one...">{{$select.selected.name}}</match>
-        <choices data="data.items | filter : $select.search">
-            <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div>
-            <div> {{item.email}} </div>
-        </choices>
-    </ui-select>
+  <p>Selectize theme:</p>
+  <ui-select ng-model="data.custom" theme="selectize" style="width:300px">
+    <match placeholder="Pick one...">{{$select.selected.name}}</match>
+    <choices data="data.items | filter : $select.search">
+      <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div>
+      <div> {{item.email}} </div>
+    </choices>
+  </ui-select>
 
 </body>
 </html>
