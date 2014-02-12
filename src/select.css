@@ -11,7 +11,7 @@
   display: inherit;
 }
 .ui-select-drop {
-	display: none;
+  display: none;
 }
 
 /* user defined styles */
@@ -21,28 +21,28 @@
 }
 
 .select {
-	width: 200px;
+  width: 200px;
 }
 
 .ui-select-search {
-	width: 90%;
-	margin: 5px;
+  width: 90%;
+  margin: 5px;
 }
 
 .select button {
-	line-height: 26px;
-	width: 200px;
+  line-height: 26px;
+  width: 200px;
 }
 .ui-select-drop {
-	border: solid 1px gray;
-	width: 200px;
+  border: solid 1px gray;
+  width: 200px;
 }
 
 .ui-select-match {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .ui-select-highlight {
-	font-weight: bold;
+  font-weight: bold;
 }
 

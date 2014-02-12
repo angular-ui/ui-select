@@ -215,7 +215,7 @@ angular.module('ui.select', [])
   })();
 
   return {
-    byClassName:function(context, className) {
+    byClassName: function(context, className) {
       return getElementsByClassName(context, className);
     }
 

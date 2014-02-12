@@ -31,7 +31,7 @@ describe('ui-select tests', function() {
         '<ui-select ng-model="selection" style="width:300px"> \
           <match placeholder="Pick one...">{{$select.selected.name}}</match> \
           <choices data="matches | filter : $select.search"> \
-              <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"/></div> \
+              <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div> \
               <div> {{item.email}} </div> \
           </choices> \
         </ui-select> \
