@@ -1,6 +1,6 @@
 {
   "name": "ui-select",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "0.0.1",
   "homepage": "https://github.com/angular-ui/ui-select",
   "authors": [
     "AngularUI"
@@ -12,12 +12,11 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "test"
   ],
   "dependencies": {
     "angular": "~1.2.0",
     "angular-mocks": "~1.2.0",
-    "jquery": "~2.0.3"
+    "jquery": "~2.1.0"
   }
 }
