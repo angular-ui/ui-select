@@ -2,7 +2,7 @@
     <div class="selectize-input" ng-class="{'input-active dropdown-active':open}" ng-click="uiSelectCtrl.activate($event)">
         <div class="ui-select-match"></div>
         <input class="ui-select-search" type="text" autocomplete="off" tabindex="" placeholder="{{placeholder}}"
-        ui-keydown="{up:'up()', down:'down()', esc:'close()', enter:'$select((data.items|filter: $select.search)[$select.index])'}" ng-model="$select.search" ng-hide="$select.selected && !open">
+               ng-model="$select.search" ng-hide="$select.selected && !open">
     </div>
     <div class="ui-select-choices"></div>
 </div>
