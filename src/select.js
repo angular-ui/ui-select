@@ -1,3 +1,20 @@
+'use strict';
+
+/**
+ * Add querySelectorAll() to jqLite.
+ *
+ * jqLite find() is limited to lookups by tag name.
+ * TODO This will change with AngularJS 1.3, to be removed when this happens
+ *
+ * See jqLite.find - why not use querySelectorAll? https://github.com/angular/angular.js/issues/3586
+ * See feat(jqLite): use querySelectorAll instead of getElementsByTagName in jqLite.find https://github.com/angular/angular.js/pull/3598
+ */
+if (angular.element.prototype.querySelectorAll === undefined) {
+  angular.element.prototype.querySelectorAll = function(selector) {
+    return angular.element(this[0].querySelectorAll(selector));
+  }
+}
+
 angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
@@ -5,7 +22,7 @@ angular.module('ui.select', [])
   defaultPlaceholder: 'Select Item'
 })
 
-.directive('uiSelect', function($document, $timeout, uiSelectConfig, uiSelectElements) {
+.directive('uiSelect', function($document, $timeout, uiSelectConfig) {
   return {
     restrict: 'E',
     templateUrl: function(tElement, tAttrs) {
@@ -79,13 +96,13 @@ angular.module('ui.select', [])
         //at the insertion points that are marked with ui-select-* classes at select.tpl.html
         //TODO: If we change directive restrict attribute to EA, we should do some changes here.
 
-        var transMatch = uiSelectElements.byClassName(transcluded[0], 'ui-select-match');
+        var transMatch = transcluded.querySelectorAll('.ui-select-match');
         transMatch = !transMatch.length ? transcluded.find('match') : transMatch;
-        uiSelectElements.byClassName(element[0], 'ui-select-match').replaceWith(transMatch);
+        element.querySelectorAll('.ui-select-match').replaceWith(transMatch);
 
-        var transChoices = uiSelectElements.byClassName(transcluded[0], 'ui-select-choices');
+        var transChoices = transcluded.querySelectorAll('.ui-select-choices');
         transChoices = !transChoices.length ? transcluded.find('choices') : transChoices;
-        uiSelectElements.byClassName(element[0], 'ui-select-choices').replaceWith(transChoices);
+        element.querySelectorAll('.ui-select-choices').replaceWith(transChoices);
 
       });
 
@@ -93,7 +110,7 @@ angular.module('ui.select', [])
   };
 })
 
-.directive('choices', function($sce, uiSelectConfig, uiSelectElements) {
+.directive('choices', function($sce, uiSelectConfig) {
   var HOT_KEYS = [9, 13, 27, 38, 40];
   return {
     require: '^uiSelect',
@@ -107,7 +124,7 @@ angular.module('ui.select', [])
     },
     compile: function(tElement, tAttrs) {
 
-      uiSelectElements.byClassName(tElement[0], 'ui-select-choices-row')
+      tElement.querySelectorAll('.ui-select-choices-row')
         .attr("ng-repeat", 'item in ' + tAttrs.data)
         .attr("ng-mouseenter", '$select.activeIdx=$index')
         .attr("ng-click", 'uiSelectCtrl.select(item)');
@@ -118,18 +135,18 @@ angular.module('ui.select', [])
           return $sce.trustAsHtml(value);
         };
 
-        var container = element.hasClass('ui-select-choices-content') ? element[0] : uiSelectElements.byClassName(element[0], 'ui-select-choices-content')[0];
+        var container = element.hasClass('ui-select-choices-content') ? element : element.querySelectorAll('.ui-select-choices-content');
 
         function ensureHighlightVisible() {
-          var rows = uiSelectElements.byClassName(element[0], 'ui-select-choices-row');
+          var rows = element.querySelectorAll('.ui-select-choices-row');
           if (!rows.length) return; //In case its empty
           var highlighted = rows[scope.$select.activeIdx],
               posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
               maxHeight = 200; //TODO Need to get this value from container.max-height
           if (posY > maxHeight) {
-            container.scrollTop += posY-maxHeight;
+            container[0].scrollTop += posY-maxHeight;
           } else if (posY < highlighted.clientHeight) {
-            container.scrollTop -= highlighted.clientHeight-posY;
+            container[0].scrollTop -= highlighted.clientHeight-posY;
           }
         }
 
@@ -144,7 +161,7 @@ angular.module('ui.select', [])
           if (HOT_KEYS.indexOf(evt.which) === -1) return; //Exit on regular key
           evt.preventDefault();
 
-          var rows = uiSelectElements.byClassName(element[0], 'ui-select-choices-row');
+          var rows = element.querySelectorAll('.ui-select-choices-row');
 
           if (evt.which === 40) { // down(40)
             if (scope.$select.activeIdx < rows.length) {
@@ -200,24 +217,3 @@ angular.module('ui.select', [])
     return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
   };
 })
-
-.factory('uiSelectElements', function() {
-
-  var getElementsByClassName = (function() {
-    //To support IE8
-    return document.getElementsByClassName ?
-      function(context, className) {
-       return angular.element(context.getElementsByClassName(className));
-      } :
-      function(context, className) {
-       return angular.element(context.querySelectorAll('.' + className));
-      };
-  })();
-
-  return {
-    byClassName: function(context, className) {
-      return getElementsByClassName(context, className);
-    }
-
-  };
-});
