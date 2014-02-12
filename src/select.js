@@ -88,7 +88,7 @@ angular.module('ui.select', [])
       // Move transcluded elements to their correct position on main template
       transcludeFn(scope, function(clone) {
 
-        var transcluded = angular.element('<div/>').append(clone);
+        var transcluded = angular.element('<div>').append(clone);
 
         // Child directives could be uncompiled at this point, so we check both alternatives,
         // first for compiled version (by class) or uncompiled (by tag). We place the directives
