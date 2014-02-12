@@ -40,7 +40,7 @@ angular.module('ui.select', [])
       this.activate = function($event) {
         if ($event) $event.stopPropagation(); // Prevent bubbling
         $scope.open = true;
-        //Give it time to appear before focus
+        // Give it time to appear before focus
         $timeout(function() {
           ctrl.input[0].focus();
         });
@@ -57,14 +57,14 @@ angular.module('ui.select', [])
         $scope.$select.search = "";
       };
 
-      this.input = $element.find('input'); //TODO could break if input is at other template
+      this.input = $element.find('input'); // TODO could break if input is at other template
     }],
 
     controllerAs: 'uiSelectCtrl',
 
     link: function(scope, element, attrs, controllers, transcludeFn) {
       scope.open = false;
-      scope.$select = {}; //Namespace
+      scope.$select = {}; // Namespace
 
       var uiSelectCtrl = controllers[0];
       var ngModelCtrl = controllers[1];
@@ -81,19 +81,19 @@ angular.module('ui.select', [])
         if (angular.element(evt.target).hasClass('ui-select-search')) {
           return;
         }
-        uiSelectCtrl.close(); //Close if clicking outside
+        uiSelectCtrl.close(); // Close if clicking outside
         scope.$digest();
       });
 
-      //Move transcluded elements to their correct position on main template
+      // Move transcluded elements to their correct position on main template
       transcludeFn(scope, function(clone) {
 
         var transcluded = angular.element('<div/>').append(clone);
 
-        //Child directives could be uncompiled at this point, so we check both alternatives,
-        //first for compiled version (by class) or uncompiled (by tag). We place the directives
-        //at the insertion points that are marked with ui-select-* classes at select.tpl.html
-        //TODO: If we change directive restrict attribute to EA, we should do some changes here.
+        // Child directives could be uncompiled at this point, so we check both alternatives,
+        // first for compiled version (by class) or uncompiled (by tag). We place the directives
+        // at the insertion points that are marked with ui-select-* classes at select.tpl.html
+        // TODO: If we change directive restrict attribute to EA, we should do some changes here.
 
         var transMatch = transcluded.querySelectorAll('.ui-select-match');
         transMatch = !transMatch.length ? transcluded.find('match') : transMatch;
@@ -117,7 +117,7 @@ angular.module('ui.select', [])
     transclude: true,
     replace: true,
     templateUrl: function(tElement, tAttrs) {
-      //Gets theme attribute from parent (ui-select)
+      // Gets theme attribute from parent (ui-select)
       var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/choices.tpl.html';
     },
@@ -138,10 +138,10 @@ angular.module('ui.select', [])
 
         function ensureHighlightVisible() {
           var rows = element.querySelectorAll('.ui-select-choices-row');
-          if (!rows.length) return; //In case its empty
+          if (!rows.length) return; // In case its empty
           var highlighted = rows[scope.$select.activeIdx],
               posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
-              maxHeight = 200; //TODO Need to get this value from container.max-height
+              maxHeight = 200; // TODO Need to get this value from container.max-height
           if (posY > maxHeight) {
             container[0].scrollTop += posY-maxHeight;
           } else if (posY < highlighted.clientHeight) {
@@ -154,10 +154,10 @@ angular.module('ui.select', [])
           ensureHighlightVisible();
         });
 
-        //Bind keyboard events related to choices
+        // Bind keyboard events related to choices
         uiSelectCtrl.input.bind('keydown', function(evt) {
 
-          if (HOT_KEYS.indexOf(evt.which) === -1) return; //Exit on regular key
+          if (HOT_KEYS.indexOf(evt.which) === -1) return; // Exit on regular key
           evt.preventDefault();
 
           var rows = element.querySelectorAll('.ui-select-choices-row');
@@ -198,7 +198,7 @@ angular.module('ui.select', [])
     transclude: true,
     replace: true,
     templateUrl: function(tElement, tAttrs) {
-      //Gets theme attribute from parent (ui-select)
+      // Gets theme attribute from parent (ui-select)
       var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/match.tpl.html';
     },

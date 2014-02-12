@@ -19,7 +19,7 @@ describe('ui-select tests', function() {
         ];
     }));
 
-    //Utility functions
+    // Utility functions
     var prepareUiSelectEl = function(inputTpl) {
         var el = $compile(angular.element(inputTpl))(scope);
         scope.$digest();
