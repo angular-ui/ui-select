@@ -2,10 +2,10 @@ angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
   defaultTheme: 'select2',
-  defaultPlaceholder: 'Select Item',
+  defaultPlaceholder: 'Select Item'
 })
 
-.directive('uiSelect', function($document,$timeout,uiSelectConfig,uiSelectElements){
+.directive('uiSelect', function($document, $timeout, uiSelectConfig, uiSelectElements) {
   return {
     restrict: 'E',
     templateUrl: function(tElement, tAttrs) {
@@ -21,16 +21,16 @@ angular.module('ui.select', [])
 
         var ctrl = this;
 
-        this.activate = function($event){
+        this.activate = function($event) {
           if ($event) $event.stopPropagation(); // Prevent bubbling
           $scope.open = true;
           //Give it time to appear before focus
-          $timeout(function(){
+          $timeout(function() {
             ctrl.input[0].focus();
           });
         };
 
-        this.select = function(item){
+        this.select = function(item) {
           $scope.$select.selected = item;
           this.close();
           // Using a watch instead of $scope.ngModel.$setViewValue(item)
@@ -45,7 +45,7 @@ angular.module('ui.select', [])
 
     }],
     controllerAs: 'uiSelectCtrl',
-    link: function(scope, element, attrs, controllers, transcludeFn){
+    link: function(scope, element, attrs, controllers, transcludeFn) {
 
       scope.open = false;
       scope.$select = {}; //Namespace
@@ -53,7 +53,7 @@ angular.module('ui.select', [])
       var uiSelectCtrl = controllers[0];
       var ngModelCtrl = controllers[1];
 
-      scope.$watch('$select.selected',function(newVal,oldVal){
+      scope.$watch('$select.selected', function(newVal, oldVal) {
         if (ngModelCtrl.$viewValue != newVal) ngModelCtrl.$setViewValue(newVal);
       });
 
@@ -61,8 +61,8 @@ angular.module('ui.select', [])
         scope.$select.selected = ngModelCtrl.$viewValue;
       };
 
-      $document.bind('click', function (evt) {
-        if (angular.element(evt.target).hasClass('ui-select-search')){
+      $document.bind('click', function(evt) {
+        if (angular.element(evt.target).hasClass('ui-select-search')) {
           return;
         }
         uiSelectCtrl.close(); //Close if clicking outside
@@ -79,13 +79,13 @@ angular.module('ui.select', [])
         //at the insertion points that are marked with ui-select-* classes at select.tpl.html
         //TODO: If we change directive restrict attribute to EA, we should do some changes here.
 
-        var transMatch = uiSelectElements.byClassName(transcluded[0],'ui-select-match');
+        var transMatch = uiSelectElements.byClassName(transcluded[0], 'ui-select-match');
         transMatch = !transMatch.length ? transcluded.find('match') : transMatch;
-        uiSelectElements.byClassName(element[0],'ui-select-match').replaceWith(transMatch);
+        uiSelectElements.byClassName(element[0], 'ui-select-match').replaceWith(transMatch);
 
-        var transChoices = uiSelectElements.byClassName(transcluded[0],'ui-select-choices');
+        var transChoices = uiSelectElements.byClassName(transcluded[0], 'ui-select-choices');
         transChoices = !transChoices.length ? transcluded.find('choices') : transChoices;
-        uiSelectElements.byClassName(element[0],'ui-select-choices').replaceWith(transChoices);
+        uiSelectElements.byClassName(element[0], 'ui-select-choices').replaceWith(transChoices);
 
       });
 
@@ -93,7 +93,7 @@ angular.module('ui.select', [])
   };
 })
 
-.directive('choices', function($sce,uiSelectConfig,uiSelectElements) {
+.directive('choices', function($sce, uiSelectConfig, uiSelectElements) {
   var HOT_KEYS = [9, 13, 27, 38, 40];
   return {
     require: '^uiSelect',
@@ -101,49 +101,50 @@ angular.module('ui.select', [])
     transclude: true,
     replace: true,
     templateUrl: function(tElement, tAttrs) {
-      //Gets theme atribute from parent (ui-select)
+      //Gets theme attribute from parent (ui-select)
       var theme = tElement[0].parentElement.getAttribute('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/choices.tpl.html';
     },
     compile: function(tElement, tAttrs) {
 
-      uiSelectElements.byClassName(tElement[0],'ui-select-choices-row')
+      uiSelectElements.byClassName(tElement[0], 'ui-select-choices-row')
         .attr("ng-repeat", 'item in ' + tAttrs.data)
         .attr("ng-mouseenter", '$select.activeIdx=$index')
         .attr("ng-click", 'uiSelectCtrl.select(item)');
 
-      return function(scope, element, attrs, uiSelectCtrl){
+      return function(scope, element, attrs, uiSelectCtrl) {
 
         scope.trustAsHtml = function(value) {
           return $sce.trustAsHtml(value);
         };
 
-        var container = element.hasClass('ui-select-choices-content') ? element[0] : uiSelectElements.byClassName(element[0],'ui-select-choices-content')[0];
-        var ensureHighlightVisible = function(){
-          var rows = uiSelectElements.byClassName(element[0],'ui-select-choices-row');
+        var container = element.hasClass('ui-select-choices-content') ? element[0] : uiSelectElements.byClassName(element[0], 'ui-select-choices-content')[0];
+
+        function ensureHighlightVisible() {
+          var rows = uiSelectElements.byClassName(element[0], 'ui-select-choices-row');
           if (!rows.length) return; //In case its empty
           var highlighted = rows[scope.$select.activeIdx],
               posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
-              maxHeight = 200; //TODO Need to get this value from container.max-height 
-          if (posY > maxHeight){
+              maxHeight = 200; //TODO Need to get this value from container.max-height
+          if (posY > maxHeight) {
             container.scrollTop += posY-maxHeight;
-          }else if (posY < highlighted.clientHeight){
+          } else if (posY < highlighted.clientHeight) {
             container.scrollTop -= highlighted.clientHeight-posY;
           }
-        };
+        }
 
-        scope.$watch('$select.search', function(){
+        scope.$watch('$select.search', function() {
           scope.$select.activeIdx = 0;
           ensureHighlightVisible();
         });
 
         //Bind keyboard events related to choices
-        uiSelectCtrl.input.bind('keydown', function (evt) {
+        uiSelectCtrl.input.bind('keydown', function(evt) {
 
           if (HOT_KEYS.indexOf(evt.which) === -1) return; //Exit on regular key
           evt.preventDefault();
 
-          var rows = uiSelectElements.byClassName(element[0],'ui-select-choices-row');
+          var rows = uiSelectElements.byClassName(element[0], 'ui-select-choices-row');
 
           if (evt.which === 40) { // down(40)
             if (scope.$select.activeIdx < rows.length) {
@@ -153,7 +154,7 @@ angular.module('ui.select', [])
             }
 
           } else if (evt.which === 38) { // up(38)
-            if (scope.$select.activeIdx > 0){
+            if (scope.$select.activeIdx > 0) {
               scope.$select.activeIdx--;
               ensureHighlightVisible();
               scope.$digest();
@@ -175,17 +176,17 @@ angular.module('ui.select', [])
   };
 })
 
-.directive('match', function($compile,uiSelectConfig) {
+.directive('match', function($compile, uiSelectConfig) {
   return {
     restrict: 'E',
     transclude: true,
     replace: true,
     templateUrl: function(tElement, tAttrs) {
-      //Gets theme atribute from parent (ui-select)
+      //Gets theme attribute from parent (ui-select)
       var theme = tElement[0].parentElement.getAttribute('theme') || uiSelectConfig.defaultTheme;
       return '../src/' + theme + '/match.tpl.html';
     },
-    link: function(scope, element, attrs){
+    link: function(scope, element, attrs) {
       scope.placeholder = attrs.placeholder || uiSelectConfig.defaultPlaceholder;
     }
   };
@@ -200,7 +201,7 @@ angular.module('ui.select', [])
   };
 })
 
-.factory('uiSelectElements', function () {
+.factory('uiSelectElements', function() {
 
   var getElementsByClassName = (function() {
     //To support IE8
@@ -214,9 +215,9 @@ angular.module('ui.select', [])
   })();
 
   return {
-    byClassName:function (context, className) {
+    byClassName:function(context, className) {
       return getElementsByClassName(context, className);
     }
-    
+
   };
 });

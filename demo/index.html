@@ -13,12 +13,12 @@
     <link rel="stylesheet" href="../src/select2/select2.css"/>
 
     <!-- Selectize (Default) Theme -->
-    <!-- <link rel="stylesheet" href="../src/selectize/selectize.default.css"/> -->
+    <link rel="stylesheet" href="../src/selectize/selectize.default.css"/>
     <!-- <link rel="stylesheet" href="../src/selectize/selectize.bootstrap2.css"/> -->
     <!-- <link rel="stylesheet" href="../src/selectize/selectize.bootstrap3.css"/> -->
 
     <link rel="stylesheet" href="../src/select.css"/>
-    
+
     <style>
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -30,17 +30,27 @@
 
 </head>
 <body ng-controller="MainCtrl">
-        
+
     <p>
     Selected: {{data.custom.name}}
     </p>
 
+    <p>Select2 theme (default):</p>
     <ui-select ng-model="data.custom" style="width:300px">
       <match placeholder="Pick one...">{{$select.selected.name}}</match>
       <choices data="data.items | filter : $select.search">
-          <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"/></div>
+          <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div>
           <div> {{item.email}} </div>
       </choices>
+    </ui-select>
+
+    <p>Selectize theme:</p>
+    <ui-select ng-model="data.custom" theme="selectize" style="width:300px">
+        <match placeholder="Pick one...">{{$select.selected.name}}</match>
+        <choices data="data.items | filter : $select.search">
+            <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div>
+            <div> {{item.email}} </div>
+        </choices>
     </ui-select>
 
 </body>
