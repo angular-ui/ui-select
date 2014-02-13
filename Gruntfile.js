@@ -21,7 +21,9 @@ module.exports = function(grunt) {
         configFile: 'karma.conf.js'
       },
       watch: {
-        background: true
+        // Does not work under Windows?
+        //background: true,
+        singleRun: false
       },
       once: {
         singleRun: true
@@ -31,6 +33,7 @@ module.exports = function(grunt) {
         browsers: ['PhantomJS', 'Firefox']
       }
     },
+
     changelog: {
       options: {
         dest: 'CHANGELOG.md'
