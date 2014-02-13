@@ -20,7 +20,7 @@ Starting from Internet Explorer 8 and Firefox 3.6 included.
 ## Installation using [Bower](http://bower.io/)
 
 - `bower install angular-ui-select`
-- Inside your HTML add `<script src="bower_components/ui-select/src/select.js"></script>`
+- Inside your HTML add `<script src="bower_components/ui-select/dist/select.js"></script>`
 - Add one of the themes supported by Select2 `<link rel="stylesheet" href=".../select2.css">` or Selectize `<link rel="stylesheet" href=".../selectize.*.css">`
 - Check the [online demo](http://plnkr.co/edit/GtOOWE?p=preview) to see how to use ui-select
 
@@ -34,5 +34,6 @@ bower update # Installs all ui-select dependencies (bower.json) inside bower_com
 
 To run the tests:
 ```
+grunt build # Build dist/select.js
 grunt test # Launches Karma
 ```

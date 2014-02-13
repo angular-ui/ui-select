@@ -4,6 +4,9 @@
   "devDependencies": {
     "bower": "~1.2.8",
     "grunt": "~0.4.2",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-concat": "~0.1.2",
+    "grunt-hustler": "~4.0.6",
     "grunt-karma": "~0.7.2",
     "karma": "~0.11.14",
     "karma-jasmine": "~0.1.5",

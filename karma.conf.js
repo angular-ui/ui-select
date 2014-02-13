@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function(config) {
   config.set({
 
@@ -15,7 +13,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
 
-      'src/select.js',
+      'dist/select.js',
       'test/**/*.spec.js'
     ],
 

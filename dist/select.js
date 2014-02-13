@@ -218,3 +218,12 @@ angular.module('ui.select', [])
     return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
   };
 });
+
+angular.module('ui.select').run(['$templateCache', function ($templateCache) {
+	$templateCache.put('select2/choices.tpl.html', '<ul class="ui-select-choices ui-select-choices-content select2-results"> <li class="ui-select-choices-row" ng-class="{\'select2-highlighted\': $select.activeIdx==$index}"> <div class="select2-result-label" ng-transclude></div> </li> </ul> ');
+	$templateCache.put('select2/match.tpl.html', '<a class="ui-select-match select2-choice" ng-click="uiSelectCtrl.activate($event)"> <span class="select2-arrow"><b></b></span> <div ng-hide="$select.selected">{{placeholder}}</div> <div ng-transclude></div> </a> ');
+	$templateCache.put('select2/select.tpl.html', '<div class="select2-container" ng-class="{\'select2-container-active select2-dropdown-open\': open}"> <div class="ui-select-match"></div> <div ng-class="{\'select2-display-none\': !open}" class="select2-drop select2-with-searchbox select2-drop-active"> <div class="select2-search"> <input type="text" class="ui-select-search select2-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model="$select.search"> </div> <div class="ui-select-choices"></div> </div> </div> ');
+	$templateCache.put('selectize/choices.tpl.html', '<div ng-show="open" class="ui-select-choices selectize-dropdown single" style="width: 100%; top: 36px;"> <div class="ui-select-choices-content selectize-dropdown-content"> <div class="ui-select-choices-row" ng-class="{\'active\': $select.activeIdx==$index}" ng-click="$select(item)" ng-mouseenter="$select.index=$index"> <div class="option" data-selectable ng-transclude></div> </div> </div> </div> ');
+	$templateCache.put('selectize/match.tpl.html', '<div ng-hide="open || !$select.selected" class="ui-select-match" ng-transclude></div> ');
+	$templateCache.put('selectize/select.tpl.html', '<div class="selectize-control single"> <div class="selectize-input" ng-class="{\'input-active dropdown-active\': open}" ng-click="uiSelectCtrl.activate($event)"> <div class="ui-select-match"></div> <input type="text" class="ui-select-search" autocomplete="off" tabindex="" placeholder="{{placeholder}}" ng-model="$select.search" ng-hide="$select.selected && !open"> </div> <div class="ui-select-choices"></div> </div> ');
+}]);
