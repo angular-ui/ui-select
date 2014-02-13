@@ -5,7 +5,7 @@
   "authors": [
     "AngularUI"
   ],
-  "description": "AngularJS-native implementation of Select2",
+  "description": "AngularJS ui-select",
   "main": "select.js",
   "license": "MIT",
   "ignore": [
@@ -15,8 +15,10 @@
     "test"
   ],
   "dependencies": {
-    "angular": "~1.2.0",
-    "angular-mocks": "~1.2.0",
-    "jquery": "~2.1.0"
+    "angular": "~1.2.0"
+  },
+  "devDependencies": {
+    "jquery": "~1.11.0",
+    "angular-mocks": "~1.2.0"
   }
 }

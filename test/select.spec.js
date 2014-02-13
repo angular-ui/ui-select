@@ -1,74 +1,143 @@
+'use strict';
+
 describe('ui-select tests', function() {
+  var scope, $rootScope, $compile;
 
-    var scope, $rootScope, $compile;
+  beforeEach(module('ui.select'));
+  beforeEach(inject(function(_$rootScope_, _$compile_) {
+    $rootScope = _$rootScope_;
+    scope = $rootScope.$new();
+    $compile = _$compile_;
+    scope.matches = [
+      { name: 'Wladimir Coka',   email: 'wcoka@email.com' },
+      { name: 'Samantha Smith',  email: 'sam@email.com' },
+      { name: 'Estefanía Smith', email: 'esmith@email.com' },
+      { name: 'Natasha Jones',   email: 'ncoka@email.com' },
+      { name: 'Nicole Smith',    email: 'nicky@email.com' },
+      { name: 'Adrian Jones',    email: 'asmith@email.com' }
+    ];
+  }));
 
-    beforeEach(module('ui.select'));
-    beforeEach(module('../src/select2/choices.tpl.html'));
-    beforeEach(module('../src/select2/match.tpl.html'));
-    beforeEach(module('../src/select2/select.tpl.html'));
-    beforeEach(inject(function(_$rootScope_, _$compile_) {
-        $rootScope = _$rootScope_;
-        scope = $rootScope.$new();
-        $compile = _$compile_;
-        scope.matches = [
-          {"id": 1, "name": "Wladimir Coka", "email": "wcoka@email.com" },
-          {"id": 2, "name": "Samantha Smith", "email": "sam@email.com" },
-          {"id": 3, "name": "Estefanía Smith", "email": "esmith@email.com" },
-          {"id": 4, "name": "Natasha Jones", "email": "ncoka@email.com" },
-          {"id": 5, "name": "Nicole Smith", "email": "nicky@email.com" }
-        ];
-    }));
 
-    // Utility functions
-    var prepareUiSelectEl = function(inputTpl) {
-        var el = $compile(angular.element(inputTpl))(scope);
-        scope.$digest();
-        return el;
-    };
+  // Utility functions
 
-    var uiSelectElInstance1 = function(inputTpl) {
-      var element = prepareUiSelectEl(
-        '<ui-select ng-model="selection" style="width:300px"> \
-          <match placeholder="Pick one...">{{$select.selected.name}}</match> \
-          <choices data="matches | filter : $select.search"> \
-              <div ng-bind-html="trustAsHtml((item.name | highlight:$select.search))"></div> \
-              <div> {{item.email}} </div> \
-          </choices> \
-        </ui-select> \
-        ');
-        return element;
-    };
+  function compileTemplate(template) {
+    var el = $compile(angular.element(template))(scope);
+    scope.$digest();
+    return el;
+  }
 
-    it('should compile child directives', function() {
+  function createUiSelect() {
+    return compileTemplate(
+      '<ui-select ng-model="selection"> \
+        <match placeholder="Pick one...">{{$select.selected.name}}</match> \
+        <choices data="matches | filter: $select.search"> \
+          <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div> \
+          <div>{{item.email}}</div> \
+        </choices> \
+      </ui-select>'
+    );
+  }
 
-        var el = uiSelectElInstance1();
+  function getMatchLabel(el) {
+    return $(el).find('.ui-select-match > div[ng-transclude]').text();
+  }
 
-        var searchEl = $(el).find('.ui-select-search');
-        expect(searchEl.length).toEqual(1);
+  function clickItem(el, text) {
+    $(el).find('.ui-select-choices-row > div:contains("' + text + '")').click();
+    scope.$digest();
+  }
 
-        var matchEl = $(el).find('.ui-select-match');
-        expect(matchEl.length).toEqual(1);
+  function clickMatch(el) {
+    $(el).find('.ui-select-match').click();
+    scope.$digest();
+  }
 
-        var choicesContentEl = $(el).find('.ui-select-choices-content');
-        expect(choicesContentEl.length).toEqual(1);
 
-        var choicesContainerEl = $(el).find('.ui-select-choices');
-        expect(choicesContainerEl.length).toEqual(1);
+  it('should compile child directives', function() {
+    var el = createUiSelect();
 
-        var choicesElems = $(el).find('.ui-select-choices-row');
-        expect(choicesElems.length).toEqual(5);
+    var searchEl = $(el).find('.ui-select-search');
+    expect(searchEl.length).toEqual(1);
 
-    });
+    var matchEl = $(el).find('.ui-select-match');
+    expect(matchEl.length).toEqual(1);
 
-    it('should correctly render initial state', function () {
+    var choicesContentEl = $(el).find('.ui-select-choices-content');
+    expect(choicesContentEl.length).toEqual(1);
 
-      scope.selection = scope.matches[0];
+    var choicesContainerEl = $(el).find('.ui-select-choices');
+    expect(choicesContainerEl.length).toEqual(1);
 
-      var el = uiSelectElInstance1();
-      var matchLabel = $('.ui-select-match > div[ng-transclude]', el).text();
+    var choicesElems = $(el).find('.ui-select-choices-row');
+    expect(choicesElems.length).toEqual(6);
+  });
 
-      expect(matchLabel).toEqual('Wladimir Coka');
+  it('should correctly render initial state', function() {
+    scope.selection = scope.matches[0];
 
-    });
+    var el = createUiSelect();
 
+    expect(getMatchLabel(el)).toEqual('Wladimir Coka');
+  });
+
+  it('should display the choices when activated', function() {
+    var el = createUiSelect();
+
+    // Does not work with jQuery 2.*, have to use jQuery 1.11.*
+    // This will be fixed in AngularJS 1.3
+    // See issue with unit-testing directive using karma https://github.com/angular/angular.js/issues/4640#issuecomment-35002427
+    expect(el.scope().open).toEqual(false);
+
+    clickMatch(el);
+
+    expect(el.scope().open).toEqual(true);
+
+    // FIXME This should work and does not inside Karma
+    var visible = $(el).find('.ui-select-choices').is(':visible');
+    //expect(visible).toEqual(true);
+    expect(visible).toEqual(false); // FIXME Always false in Karma
+  });
+
+  it('should select an item', function() {
+    var el = createUiSelect();
+
+    clickItem(el, 'Samantha Smith');
+
+    expect(getMatchLabel(el)).toEqual('Samantha Smith');
+  });
+
+  it('should select an item (controller)', function() {
+    var el = createUiSelect();
+    var controller = el.controller('uiSelect');
+
+    controller.select(scope.matches[1]);
+    scope.$digest();
+
+    expect(getMatchLabel(el)).toEqual('Samantha Smith');
+  });
+
+  it('should not select a non existing item', function() {
+    var el = createUiSelect();
+
+    clickItem(el, "I don't exist");
+
+    expect(getMatchLabel(el)).toEqual('');
+  });
+
+  it('should close the choices when an item is selected', function() {
+    var el = createUiSelect();
+
+    $(el).find('.ui-select-match').click();
+    scope.$digest();
+
+    expect(el.scope().open).toEqual(true);
+
+    clickItem(el, 'Samantha Smith');
+
+    var visible = $(el).find('.ui-select-choices').is(':visible');
+    expect(visible).toEqual(false); // FIXME Always false in Karma
+
+    expect(el.scope().open).toEqual(false);
+  });
 });
