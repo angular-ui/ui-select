@@ -69,7 +69,7 @@ angular.module('ui.select', [])
       var ngModelCtrl = controllers[1];
 
       scope.$watch('$select.selected', function(newVal, oldVal) {
-        if (ngModelCtrl.$viewValue != newVal) ngModelCtrl.$setViewValue(newVal);
+        if (ngModelCtrl.$viewValue !== newVal) ngModelCtrl.$setViewValue(newVal);
       });
 
       ngModelCtrl.$render = function() {
@@ -224,11 +224,11 @@ angular.module('ui.select', [])
   // Select2 theme
 
   $templateCache.put('select2/select.html',
-    '<div class="select2-container" ng-class="{\'select2-container-active select2-dropdown-open\':open}">' +
+    '<div class="select2-container" ng-class="{\'select2-container-active select2-dropdown-open\': open}">' +
       '<div class="ui-select-match"></div>' +
       '<div ng-class="{\'select2-display-none\': !open}" class="select2-drop select2-with-searchbox select2-drop-active">' +
         '<div class="select2-search">' +
-          '<input class="ui-select-search select2-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model="$select.search">' +
+          '<input type="text" class="ui-select-search select2-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ng-model="$select.search">' +
         '</div>' +
         '<div class="ui-select-choices"></div>' +
       '</div>' +
@@ -257,7 +257,7 @@ angular.module('ui.select', [])
     '<div class="selectize-control single">' +
       '<div class="selectize-input" ng-class="{\'input-active dropdown-active\': open}" ng-click="uiSelectCtrl.activate($event)">' +
         '<div class="ui-select-match"></div>' +
-        '<input class="ui-select-search" type="text" autocomplete="off" tabindex="" placeholder="{{placeholder}}" ng-model="$select.search" ng-hide="$select.selected && !open">' +
+        '<input type="text" class="ui-select-search" autocomplete="off" tabindex="" placeholder="{{placeholder}}" ng-model="$select.search" ng-hide="$select.selected && !open">' +
       '</div>' +
       '<div class="ui-select-choices"></div>' +
     '</div>'
@@ -268,9 +268,9 @@ angular.module('ui.select', [])
   );
 
   $templateCache.put('selectize/choices.html',
-    '<div ng-show="open" class="ui-select-choices selectize-dropdown single" style="width: 300px; top: 36px; left: 0; visibility: visible;">' +
+    '<div ng-show="open" class="ui-select-choices selectize-dropdown single" style="width: 100%; top: 36px;">' +
       '<div class="ui-select-choices-content selectize-dropdown-content">' +
-        '<div class="ui-select-choices-row" ng-class="{\'active\': $select.activeIdx == $index}" ng-click="$select(item)" ng-mouseenter="$select.index=$index">' +
+        '<div class="ui-select-choices-row" ng-class="{\'active\': $select.activeIdx == $index}" ng-click="$select(item)" ng-mouseenter="$select.index = $index">' +
           '<div class="option" data-selectable ng-transclude></div>' +
         '</div>' +
       '</div>' +
