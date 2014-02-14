@@ -27,7 +27,7 @@ Starting from Internet Explorer 8 and Firefox 3.6 included.
 - Add one of the supported themes:
   - Select2 (version ~3.4.5): `<link rel="stylesheet" href=".../select2.css">`
   - Selectize (version ~0.8.5): `<link rel="stylesheet" href=".../selectize.*.css">`
-- Check the [online demo](http://plnkr.co/edit/GtOOWE?p=preview) to see how to use ui-select
+- Check the [examples](https://github.com/angular-ui/ui-select/blob/master/examples) to see how to use ui-select
 
 ## Run the tests
 
@@ -44,5 +44,8 @@ grunt test # Launches Karma
 ```
 
 ## Contributing
+
+- Run the tests
+- Try the [examples](https://github.com/angular-ui/ui-select/blob/master/examples)
 
 When issuing a pull request, please exclude changes in the "dist" folder to avoid merge conflicts.

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS ui-select</title>
+
+  <!--
+    IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
+    For Firefox 3.6, you will need to include jQuery
+  -->
+  <!--[if lt IE 9]>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+    <script>
+      document.createElement('ui-select');
+      document.createElement('match');
+      document.createElement('choices');
+    </script>
+  <![endif]-->
+
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+
+  <!-- ui-select files -->
+  <script src="../dist/select.js"></script>
+  <link rel="stylesheet" href="../dist/select.css">
+
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
+
+  <!--
+    Selectize theme
+    Less versions are available at https://github.com/brianreavis/selectize.js/tree/master/dist/less
+  -->
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">
+
+  <style>
+    body {
+      padding: 15px;
+    }
+
+    .selectize-dropdown {
+      width: 100%;
+      top: 34px;
+    }
+
+    .selectize-control {
+      /* Selectize is positionned too high */
+      top: 2px;
+    }
+
+    /**
+     * Reset right rounded corners
+     * See Bootstrap input-groups.less
+     */
+    .input-group > .selectize-control > .selectize-input {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+  </style>
+</head>
+
+<body ng-controller="MainCtrl">
+  <script src="demo.js"></script>
+
+  <p>Selected: {{person.selected.name}}</p>
+
+  <form class="form-horizontal">
+    <fieldset>
+      <legend>ui-select inside a Bootstrap form</legend>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Default</label>
+        <div class="col-sm-6">
+
+          <ui-select ng-model="person.selected" theme="selectize">
+            <match placeholder="Pick one...">{{$select.selected.name}}</match>
+            <choices data="people | filter: $select.search">
+              <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
+              <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+            </choices>
+          </ui-select>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">With a clear button</label>
+        <div class="col-sm-6">
+          <div class="input-group">
+
+            <ui-select ng-model="person.selected" theme="selectize">
+              <match placeholder="Pick one...">{{$select.selected.name}}</match>
+              <choices data="people | filter: $select.search">
+                <span ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></span>
+                <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+              </choices>
+            </ui-select>
+
+            <span class="input-group-btn">
+              <button ng-click="person.selected = undefined" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+    </fieldset>
+  </form>
+
+</body>
+</html>
