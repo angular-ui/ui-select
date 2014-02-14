@@ -26,8 +26,8 @@ Starting from Internet Explorer 8 and Firefox 3.6 included.
   - select.js: `<script src="bower_components/ui-select/dist/select.js"></script>`
   - select.css: `<link rel="stylesheet" href="bower_components/ui-select/dist/select.css">`
 - Add one of the supported themes:
-  - Select2 (version ~3.4.5): `<link rel="stylesheet" href=".../select2.css">`
-  - Selectize (version ~0.8.5): `<link rel="stylesheet" href=".../selectize.*.css">`
+  - Select2 (version ~3.4.5): `<link rel="stylesheet" href="bower_components/select2/select2.css">`
+  - Selectize (version ~0.8.5): `<link rel="stylesheet" href="bower_components/selectize/selectize.css">`
 - Check the [examples](https://github.com/angular-ui/ui-select/blob/master/examples) to see how to use ui-select
 
 ## Run the tests
