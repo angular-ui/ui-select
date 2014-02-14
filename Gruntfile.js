@@ -3,6 +3,7 @@ var bower = require('bower');
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-hustler');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-conventional-changelog');
@@ -67,11 +68,20 @@ module.exports = function(grunt) {
         ],
         dest: 'dist/select.js'
       }
+    },
+
+    copy: {
+      dist: {
+        files: [{
+          src: 'src/select.css',
+          dest: 'dist/select.css'
+        }]
+      }
     }
   });
 
   grunt.registerTask('default', ['test']);
-  grunt.registerTask('build', ['bower', 'clean', 'ngTemplateCache', 'concat']);
+  grunt.registerTask('build', ['bower', 'clean', 'ngTemplateCache', 'concat', 'copy']);
   grunt.registerTask('test', ['build', 'karma:once']);
   grunt.registerTask('test:watch', ['build', 'karma:watch']);
   grunt.registerTask('test:travis', ['build', 'karma:travis']);
