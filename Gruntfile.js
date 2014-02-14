@@ -8,17 +8,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-conventional-changelog');
 
-  grunt.registerTask('bower', 'Install Bower packages.', function () {
-    var done = this.async();
-
-    bower.commands.install()
-      .on('log', function (result) {
-        grunt.log.ok('bower: ' + result.id + ' ' + result.data.endpoint.name);
-      })
-      .on('error', grunt.fail.warn.bind(grunt.fail))
-      .on('end', done);
-  });
-
   grunt.initConfig({
     karma: {
       options: {
@@ -81,7 +70,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['test']);
-  grunt.registerTask('build', ['bower', 'clean', 'ngTemplateCache', 'concat', 'copy']);
+  grunt.registerTask('build', ['clean', 'ngTemplateCache', 'concat', 'copy']);
   grunt.registerTask('test', ['build', 'karma:once']);
   grunt.registerTask('test:watch', ['build', 'karma:watch']);
   grunt.registerTask('test:travis', ['build', 'karma:travis']);
