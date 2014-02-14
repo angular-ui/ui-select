@@ -40,7 +40,7 @@ describe('ui-select tests', function() {
   }
 
   function getMatchLabel(el) {
-    return $(el).find('.ui-select-match > div[ng-transclude]').text();
+    return $(el).find('.ui-select-match > span[ng-transclude]').text();
   }
 
   function clickItem(el, text) {
