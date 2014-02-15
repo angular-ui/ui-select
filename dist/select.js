@@ -22,7 +22,10 @@ angular.module('ui.select', [])
   defaultPlaceholder: 'Select Item'
 })
 
-.directive('uiSelect', function($document, $timeout, uiSelectConfig) {
+.directive('uiSelect',
+  ['$document', '$timeout', 'uiSelectConfig',
+  function($document, $timeout, uiSelectConfig) {
+
   return {
     restrict: 'E',
     templateUrl: function(tElement, tAttrs) {
@@ -103,9 +106,9 @@ angular.module('ui.select', [])
       });
     }
   };
-})
+}])
 
-.directive('choices', function($sce, uiSelectConfig) {
+.directive('choices', ['$sce', 'uiSelectConfig', function($sce, uiSelectConfig) {
   var HOT_KEYS = [9, 13, 27, 38, 40];
   return {
     require: '^uiSelect',
@@ -117,6 +120,7 @@ angular.module('ui.select', [])
       var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
       return theme + '/choices.tpl.html';
     },
+
     compile: function(tElement, tAttrs) {
 
       tElement.querySelectorAll('.ui-select-choices-row')
@@ -192,9 +196,9 @@ angular.module('ui.select', [])
       };
     }
   };
-})
+}])
 
-.directive('match', function($compile, uiSelectConfig) {
+.directive('match', ['$compile', 'uiSelectConfig', function($compile, uiSelectConfig) {
   return {
     restrict: 'E',
     transclude: true,
@@ -208,7 +212,7 @@ angular.module('ui.select', [])
       scope.placeholder = attrs.placeholder || uiSelectConfig.defaultPlaceholder;
     }
   };
-})
+}])
 
 .filter('highlight', function() {
   function escapeRegexp(queryToEscape) {
