@@ -37,20 +37,16 @@
       padding: 15px;
     }
 
-    .selectize-dropdown {
-      width: 100%;
-      top: 34px;
-    }
-
     .selectize-control {
-      /* Selectize is positionned too high */
+      /* Align Selectize with input-group-btn */
       top: 2px;
     }
 
-    /**
-     * Reset right rounded corners
-     * See Bootstrap input-groups.less
-     */
+    .selectize-control > .selectize-dropdown {
+      top: 34px;
+    }
+
+    /* Reset right rounded corners, see Bootstrap input-groups.less */
     .input-group > .selectize-control > .selectize-input {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0;
@@ -73,7 +69,7 @@
         <div class="col-sm-6">
 
           <ui-select ng-model="person.selected" theme="selectize">
-            <match placeholder="Pick one...">{{$select.selected.name}}</match>
+            <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
             <choices data="people | filter: $select.search">
               <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
               <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
@@ -89,7 +85,7 @@
           <div class="input-group">
 
             <ui-select ng-model="person.selected" theme="selectize">
-              <match placeholder="Pick one...">{{$select.selected.name}}</match>
+              <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
               <choices data="people | filter: $select.search">
                 <span ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></span>
                 <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>

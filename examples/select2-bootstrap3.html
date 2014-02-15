@@ -28,8 +28,7 @@
 
   <!--
     Select2 theme
-    Bootstrap 3 theme from http://fk.github.io/select2-bootstrap-css/
-    GitHub project: https://github.com/fk/select2-bootstrap-css
+    Bootstrap 3 theme from https://github.com/fk/select2-bootstrap-css
   -->
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
   <link rel="stylesheet" href="http://fk.github.io/select2-bootstrap-css/css/select2-bootstrap.css">
@@ -55,7 +54,7 @@
         <div class="col-sm-6">
 
           <ui-select ng-model="person.selected" theme="select2" class="form-control">
-            <match placeholder="Pick one...">{{$select.selected.name}}</match>
+            <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
             <choices data="people | filter: $select.search">
               <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
               <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
@@ -71,7 +70,7 @@
           <div class="input-group select2-bootstrap-append">
 
             <ui-select ng-model="person.selected" theme="select2" class="form-control">
-              <match placeholder="Pick one...">{{$select.selected.name}}</match>
+              <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
               <choices data="people | filter: $select.search">
                 <span ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></span>
                 <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>

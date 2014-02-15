@@ -44,8 +44,7 @@
       color: #333;
     }
 
-    .selectize-dropdown {
-      width: 100%;
+    .selectize-control > .selectize-dropdown {
       top: 36px;
     }
   </style>
@@ -58,19 +57,19 @@
 
   <p>Select2 theme (default):</p>
   <ui-select ng-model="person.selected" style="width: 300px;">
-    <match placeholder="Pick one...">{{$select.selected.name}}</match>
+    <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
     <choices data="people | filter: $select.search">
       <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
-      <div>{{item.email}}</div>
+      <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
     </choices>
   </ui-select>
 
   <p>Selectize theme:</p>
   <ui-select ng-model="person.selected" theme="selectize" style="width: 300px;">
-    <match placeholder="Pick one...">{{$select.selected.name}}</match>
+    <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
     <choices data="people | filter: $select.search">
       <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
-      <div>{{item.email}}</div>
+      <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
     </choices>
   </ui-select>
 </body>
