@@ -21,14 +21,31 @@ Starting from Internet Explorer 8 and Firefox 3.6 included.
 
 ## Installation using [Bower](http://bower.io/)
 
+Check the [examples](https://github.com/angular-ui/ui-select/blob/master/examples).
+
 - `bower install angular-ui-select`
 - Inside your HTML add
   - select.js: `<script src="bower_components/ui-select/dist/select.js"></script>`
   - select.css: `<link rel="stylesheet" href="bower_components/ui-select/dist/select.css">`
-- Add one of the supported themes:
-  - Select2 (version ~3.4.5): `<link rel="stylesheet" href="bower_components/select2/select2.css">`
-  - Selectize (version ~0.8.5): `<link rel="stylesheet" href="bower_components/selectize/selectize.css">`
-- Check the [examples](https://github.com/angular-ui/ui-select/blob/master/examples) to see how to use ui-select
+
+### Select2 theme
+
+Bower:
+- `bower install select2#~3.4.5`
+- `<link rel="stylesheet" href="bower_components/select2/select2.css">`
+
+[cdnjs](http://cdnjs.com/):
+- `<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">`
+
+### Selectize theme
+
+Bower:
+- `bower install selectize#~0.8.5`
+- `<link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.default.css">`
+- Or the [LESS](http://lesscss.org/) version: `@import "bower_components/selectize/dist/less/selectize.default.less";`
+
+[cdnjs](http://cdnjs.com/):
+- `<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">`
 
 ## Run the tests
 
