@@ -97,6 +97,10 @@ angular.module('ui.select', [])
         }
       });
 
+      scope.$on('$destroy', function() {
+        $document.off('mousedown');
+      });
+
       // Move transcluded elements to their correct position on main template
       transcludeFn(scope, function(clone) {
         var transcluded = angular.element('<div>').append(clone);
@@ -201,6 +205,10 @@ angular.module('ui.select', [])
             scope.$digest();
 
           }
+        });
+
+        scope.$on('$destroy', function() {
+          uiSelectCtrl.input.off('keydown');
         });
 
       };
