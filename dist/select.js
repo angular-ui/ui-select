@@ -152,7 +152,7 @@ angular.module('ui.select', [])
 
         function ensureHighlightVisible() {
           var rows = element.querySelectorAll('.ui-select-choices-row');
-          if (!rows.length) return; // In case its empty
+          if (!rows.length) return;
           var highlighted = rows[scope.$select.activeIdx],
               posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
               maxHeight = 200; // TODO Need to get this value from container.max-height
@@ -191,13 +191,7 @@ angular.module('ui.select', [])
             }
 
           } else if (evt.which === 13 || evt.which === 9) { // enter(13) and tab(9)
-            if (window.jQuery) {
-              // Firefox 3.6 does not support element.click()
-              // See HTMLElement.click https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.click
-              $(rows[scope.$select.activeIdx]).click();
-            } else {
-              rows[scope.$select.activeIdx].click();
-            }
+            angular.element(rows[scope.$select.activeIdx]).triggerHandler('click');
 
           } else if (evt.which === 27) { // esc(27)
             evt.stopPropagation();
