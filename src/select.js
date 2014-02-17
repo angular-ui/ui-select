@@ -42,7 +42,6 @@ angular.module('ui.select', [])
       var ctrl = this;
 
       this.activate = function($event) {
-        if ($event) $event.stopPropagation(); // Prevent bubbling
         $scope.open = true;
         // Give it time to appear before focus
         $timeout(function() {
