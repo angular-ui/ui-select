@@ -79,12 +79,22 @@ angular.module('ui.select', [])
         scope.$select.selected = ngModelCtrl.$viewValue;
       };
 
-      $document.on('click', function(evt) {
-        if (angular.element(evt.target).hasClass('ui-select-search')) {
-          return;
+      // See Click everywhere but here event http://stackoverflow.com/questions/12931369/click-everywhere-but-here-event
+      $document.on('mousedown', function(evt) {
+        var contains = false;
+
+        if (window.jQuery) {
+          // Firefox 3.6 does not support element.contains()
+          // See Node.contains https://developer.mozilla.org/en-US/docs/Web/API/Node.contains
+          contains = $.contains(element[0], evt.target);
+        } else {
+          contains = element[0].contains(evt.target);
         }
-        uiSelectCtrl.close(); // Close if clicking outside
-        scope.$digest();
+
+        if (!contains) {
+          uiSelectCtrl.close();
+          scope.$digest();
+        }
       });
 
       // Move transcluded elements to their correct position on main template
