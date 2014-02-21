@@ -87,11 +87,11 @@ describe('ui-select tests', function() {
     // Does not work with jQuery 2.*, have to use jQuery 1.11.*
     // This will be fixed in AngularJS 1.3
     // See issue with unit-testing directive using karma https://github.com/angular/angular.js/issues/4640#issuecomment-35002427
-    expect(el.scope().open).toEqual(false);
+    expect(el.scope().$select.open).toEqual(false);
 
     clickMatch(el);
 
-    expect(el.scope().open).toEqual(true);
+    expect(el.scope().$select.open).toEqual(true);
 
     // FIXME This should work and does not inside Karma
     var visible = $(el).find('.ui-select-choices').is(':visible');
@@ -131,13 +131,13 @@ describe('ui-select tests', function() {
     $(el).find('.ui-select-match').click();
     scope.$digest();
 
-    expect(el.scope().open).toEqual(true);
+    expect(el.scope().$select.open).toEqual(true);
 
     clickItem(el, 'Samantha Smith');
 
     var visible = $(el).find('.ui-select-choices').is(':visible');
     expect(visible).toEqual(false); // FIXME Always false in Karma
 
-    expect(el.scope().open).toEqual(false);
+    expect(el.scope().$select.open).toEqual(false);
   });
 });

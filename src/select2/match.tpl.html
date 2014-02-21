@@ -5,7 +5,7 @@
 -->
 <a class="select2-choice ui-select-match"
    ng-class="{'select2-default': $select.selected == undefined}"
-   ng-click="uiSelectCtrl.activate($event)">
+   ng-click="$select.activate($event)">
   <span ng-hide="$select.selected" class="select2-chosen">{{placeholder}}</span>
   <span ng-show="$select.selected" class="select2-chosen" ng-transclude></span>
   <span class="select2-arrow"><b></b></span>

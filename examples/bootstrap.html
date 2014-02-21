@@ -62,7 +62,7 @@
         <label class="col-sm-3 control-label">Default</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="/src/bootstrap">
+          <ui-select ng-model="person.selected" theme="bootstrap">
             <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
             <choices data="people | filter: $select.search">
               <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>

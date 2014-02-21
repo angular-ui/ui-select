@@ -36,38 +36,37 @@ angular.module('ui.select', [])
     require: ['uiSelect', 'ngModel'],
     transclude: true,
     scope: true,
-    controllerAs: 'uiSelectCtrl',
+    controllerAs: '$select',
 
     controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
       var ctrl = this;
 
-      this.activate = function($event) {
-        $scope.open = true;
+      ctrl.open = false;
+
+      ctrl.activate = function($event) {
+        ctrl.open = true;
         // Give it time to appear before focus
         $timeout(function() {
           ctrl.input[0].focus();
         });
       };
 
-      this.select = function(item) {
-        $scope.$select.selected = item;
-        this.close();
+      ctrl.select = function(item) {
+        ctrl.selected = item;
+        ctrl.close();
         // Using a watch instead of $scope.ngModel.$setViewValue(item)
       };
 
-      this.close = function() {
-        $scope.open = false;
-        $scope.$select.search = "";
+      ctrl.close = function() {
+        ctrl.open = false;
+        ctrl.search = "";
       };
 
-      this.input = $element.find('input'); // TODO could break if input is at other template
+      ctrl.input = $element.find('input'); // TODO could break if input is at other template
     }],
 
     link: function(scope, element, attrs, controllers, transcludeFn) {
-      scope.open = false;
-      scope.$select = {}; // Namespace
-
-      var uiSelectCtrl = controllers[0];
+      var $select = controllers[0];
       var ngModelCtrl = controllers[1];
 
       scope.$watch('$select.selected', function(newVal, oldVal) {
@@ -75,7 +74,7 @@ angular.module('ui.select', [])
       });
 
       ngModelCtrl.$render = function() {
-        scope.$select.selected = ngModelCtrl.$viewValue;
+        $select.selected = ngModelCtrl.$viewValue;
       };
 
       // See Click everywhere but here event http://stackoverflow.com/questions/12931369/click-everywhere-but-here-event
@@ -91,7 +90,7 @@ angular.module('ui.select', [])
         }
 
         if (!contains) {
-          uiSelectCtrl.close();
+          $select.close();
           scope.$digest();
         }
       });
@@ -139,9 +138,9 @@ angular.module('ui.select', [])
       tElement.querySelectorAll('.ui-select-choices-row')
         .attr("ng-repeat", 'item in ' + tAttrs.data)
         .attr("ng-mouseenter", '$select.activeIdx=$index')
-        .attr("ng-click", 'uiSelectCtrl.select(item)');
+        .attr("ng-click", '$select.select(item)');
 
-      return function(scope, element, attrs, uiSelectCtrl) {
+      return function(scope, element, attrs, $select) {
 
         scope.trustAsHtml = function(value) {
           return $sce.trustAsHtml(value);
@@ -168,7 +167,7 @@ angular.module('ui.select', [])
         });
 
         // Bind keyboard events related to choices
-        uiSelectCtrl.input.on('keydown', function(evt) {
+        $select.input.on('keydown', function(evt) {
 
           if (HOT_KEYS.indexOf(evt.which) === -1) return; // Exit on regular key
           evt.preventDefault();
@@ -194,14 +193,14 @@ angular.module('ui.select', [])
 
           } else if (evt.which === 27) { // esc(27)
             evt.stopPropagation();
-            uiSelectCtrl.close();
+            $select.close();
             scope.$digest();
 
           }
         });
 
         scope.$on('$destroy', function() {
-          uiSelectCtrl.input.off('keydown');
+          $select.input.off('keydown');
         });
 
       };
