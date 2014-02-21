@@ -219,7 +219,9 @@ angular.module('ui.select', [])
       return theme + '/match.tpl.html';
     },
     link: function(scope, element, attrs) {
-      scope.placeholder = attrs.placeholder || uiSelectConfig.defaultPlaceholder;
+      attrs.$observe('placeholder', function(placeholder){
+        scope.$select.placeholder = placeholder || uiSelectConfig.defaultPlaceholder;
+      });
     }
   };
 }])
