@@ -1,0 +1,8 @@
+<a class="btn btn-default ui-select-match"
+   ng-hide="open"
+   ng-class="{'text-success': $select.selected == undefined}"
+   ng-click="uiSelectCtrl.activate($event)">
+  <span ng-hide="$select.selected" class="text-muted">{{placeholder}}</span>
+  <span ng-show="$select.selected" ng-transclude></span>
+  <span class="caret"></span>
+</a>

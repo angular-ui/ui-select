@@ -1,0 +1,8 @@
+<div class="dropdown" ng-class="{open:open}">
+  <div class="ui-select-match"
+    ng-click="uiSelectCtrl.activate($event)"></div>
+  <input type="text" class="form-control ui-select-search" autocomplete="off" tabindex="" placeholder="{{placeholder}}"
+    ng-model="$select.search"
+    ng-show="open">
+  <div class="ui-select-choices"></div>
+</div>
