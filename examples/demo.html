@@ -67,7 +67,7 @@
   <p>Selectize theme:</p>
   <ui-select ng-model="person.selected" theme="selectize" style="width: 300px;">
     <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-    <choices data="people | filter: $select.search">
+    <choices repeat="item in people | filter: $select.search">
       <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
       <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
     </choices>
