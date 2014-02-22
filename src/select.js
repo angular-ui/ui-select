@@ -18,8 +18,8 @@ if (angular.element.prototype.querySelectorAll === undefined) {
 angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
-  defaultTheme: 'select2',
-  defaultPlaceholder: 'Select Item'
+  theme: 'select2',
+  placeholder: 'Select Item'
 })
 
 .directive('uiSelect',
@@ -29,7 +29,7 @@ angular.module('ui.select', [])
   return {
     restrict: 'E',
     templateUrl: function(tElement, tAttrs) {
-      var theme = tAttrs.theme || uiSelectConfig.defaultTheme;
+      var theme = tAttrs.theme || uiSelectConfig.theme;
       return theme + '/select.tpl.html';
     },
     replace: true,
@@ -129,7 +129,7 @@ angular.module('ui.select', [])
     replace: true,
     templateUrl: function(tElement) {
       // Gets theme attribute from parent (ui-select)
-      var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
+      var theme = tElement.parent().attr('theme') || uiSelectConfig.theme;
       return theme + '/choices.tpl.html';
     },
 
@@ -215,12 +215,12 @@ angular.module('ui.select', [])
     replace: true,
     templateUrl: function(tElement) {
       // Gets theme attribute from parent (ui-select)
-      var theme = tElement.parent().attr('theme') || uiSelectConfig.defaultTheme;
+      var theme = tElement.parent().attr('theme') || uiSelectConfig.theme;
       return theme + '/match.tpl.html';
     },
     link: function(scope, element, attrs) {
       attrs.$observe('placeholder', function(placeholder){
-        scope.$select.placeholder = placeholder || uiSelectConfig.defaultPlaceholder;
+        scope.$select.placeholder = placeholder || uiSelectConfig.placeholder;
       });
     }
   };
