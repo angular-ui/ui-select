@@ -43,7 +43,7 @@ angular.module('ui.select', [])
 
       ctrl.open = false;
 
-      ctrl.activate = function($event) {
+      ctrl.activate = function() {
         ctrl.open = true;
         // Give it time to appear before focus
         $timeout(function() {
