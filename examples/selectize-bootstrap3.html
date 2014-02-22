@@ -70,7 +70,7 @@
 
           <ui-select ng-model="person.selected" theme="selectize">
             <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-            <choices data="people | filter: $select.search">
+            <choices repeat="item in people | filter: $select.search">
               <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
               <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
             </choices>
@@ -86,7 +86,7 @@
 
             <ui-select ng-model="person.selected" theme="selectize">
               <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-              <choices data="people | filter: $select.search">
+              <choices repeat="item in people | filter: $select.search">
                 <span ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></span>
                 <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
               </choices>

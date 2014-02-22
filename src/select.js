@@ -46,7 +46,7 @@ angular.module('ui.select', [])
       ctrl.activate = function() {
         ctrl.open = true;
         // Give it time to appear before focus
-        $timeout(function() {
+        setTimeout(function() {
           ctrl.input[0].focus();
         });
       };
@@ -59,7 +59,7 @@ angular.module('ui.select', [])
 
       ctrl.close = function() {
         ctrl.open = false;
-        ctrl.search = "";
+        ctrl.search = '';
       };
 
       ctrl.input = $element.find('input'); // TODO could break if input is at other template
@@ -136,7 +136,7 @@ angular.module('ui.select', [])
     compile: function(tElement, tAttrs) {
 
       tElement.querySelectorAll('.ui-select-choices-row')
-        .attr("ng-repeat", 'item in ' + tAttrs.data)
+        .attr("ng-repeat", tAttrs.repeat)
         .attr("ng-mouseenter", '$select.activeIdx=$index')
         .attr("ng-click", '$select.select(item)');
 

@@ -31,7 +31,7 @@ describe('ui-select tests', function() {
     return compileTemplate(
       '<ui-select ng-model="selection"> \
         <match placeholder="Pick one...">{{$select.selected.name}}</match> \
-        <choices data="matches | filter: $select.search"> \
+        <choices repeat="item in matches | filter: $select.search"> \
           <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div> \
           <div>{{item.email}}</div> \
         </choices> \
