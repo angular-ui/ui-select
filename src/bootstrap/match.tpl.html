@@ -2,7 +2,7 @@
    ng-hide="$select.open"
    ng-class="{'text-success': $select.selected == undefined}"
    ng-click="$select.activate()">
-  <span ng-hide="$select.selected" class="text-muted">{{placeholder}}</span>
-  <span ng-show="$select.selected" ng-transclude></span>
+  <span ng-hide="$select.selected !== undefined" class="text-muted">{{placeholder}}</span>
+  <span ng-show="$select.selected !== undefined" ng-transclude></span>
   <span class="caret"></span>
 </a>
