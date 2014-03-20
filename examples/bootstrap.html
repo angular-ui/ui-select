@@ -72,6 +72,22 @@
 
         </div>
       </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Disabled</label>
+        <div class="col-sm-6">
+
+          <ui-select ng-model="person.selected" theme="bootstrap" ng-disabled="true">
+            <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
+            <choices repeat="item in people | filter: $select.search">
+              <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
+              <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+            </choices>
+          </ui-select>
+
+        </div>
+      </div>
+
     </fieldset>
   </form>
 

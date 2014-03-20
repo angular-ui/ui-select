@@ -1,6 +1,7 @@
 <a class="btn btn-default ui-select-match"
    ng-hide="$select.open"
    ng-class="{'text-success': $select.selected == undefined}"
+   ng-disabled="$select.disabled"
    ng-click="$select.activate()">
   <span ng-hide="$select.selected" class="text-muted">{{placeholder}}</span>
   <span ng-show="$select.selected" ng-transclude></span>
