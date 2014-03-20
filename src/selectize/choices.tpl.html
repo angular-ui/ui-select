@@ -1,7 +1,7 @@
 <div ng-show="$select.open" class="ui-select-choices selectize-dropdown single">
   <div class="ui-select-choices-content selectize-dropdown-content">
     <div class="ui-select-choices-row"
-         ng-class="{'active': $select.activeIdx == $index}">
+         ng-class="{'active': $select.activeIndex === $index}">
       <div class="option" data-selectable ng-transclude></div>
     </div>
   </div>

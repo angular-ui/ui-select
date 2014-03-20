@@ -8,6 +8,7 @@ describe('ui-select tests', function() {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
+
     scope.matches = [
       { name: 'Wladimir Coka',   email: 'wcoka@email.com' },
       { name: 'Samantha Smith',  email: 'sam@email.com' },
@@ -39,14 +40,14 @@ describe('ui-select tests', function() {
         <match placeholder="Pick one...">{{$select.selected.name}}</match> \
         <choices repeat="item in matches | filter: $select.search"> \
           <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div> \
-          <div>{{item.email}}</div> \
+          <div ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></div> \
         </choices> \
       </ui-select>'
     );
   }
 
   function getMatchLabel(el) {
-    return $(el).find('.ui-select-match > span[ng-transclude]').text();
+    return $(el).find('.ui-select-match > span[ng-transclude]:not(.ng-hide)').text();
   }
 
   function clickItem(el, text) {
@@ -98,11 +99,7 @@ describe('ui-select tests', function() {
     clickMatch(el);
 
     expect(el.scope().$select.open).toEqual(true);
-
-    // FIXME This should work and does not inside Karma
-    var visible = $(el).find('.ui-select-choices').is(':visible');
-    //expect(visible).toEqual(true);
-    expect(visible).toEqual(false); // FIXME Always false in Karma
+    expect($(el).find('.ui-select-choices').parent().hasClass('select2-display-none')).toEqual(false);
   });
 
   it('should select an item', function() {
@@ -115,9 +112,8 @@ describe('ui-select tests', function() {
 
   it('should select an item (controller)', function() {
     var el = createUiSelect();
-    var controller = el.controller('uiSelect');
 
-    controller.select(scope.matches[1]);
+    el.scope().$select.select(scope.matches[1]);
     scope.$digest();
 
     expect(getMatchLabel(el)).toEqual('Samantha Smith');
@@ -141,20 +137,44 @@ describe('ui-select tests', function() {
 
     clickItem(el, 'Samantha Smith');
 
-    var visible = $(el).find('.ui-select-choices').is(':visible');
-    expect(visible).toEqual(false); // FIXME Always false in Karma
-
     expect(el.scope().$select.open).toEqual(false);
+    expect($(el).find('.ui-select-choices').parent().hasClass('select2-display-none')).toEqual(true);
   });
 
   it('should be disabled if the attribute says so', function() {
     var el1 = createUiSelect({disabled: true});
     expect(el1.scope().$select.disabled).toEqual(true);
+    clickMatch(el1);
+    expect(el1.scope().$select.open).toEqual(false);
 
     var el2 = createUiSelect({disabled: false});
     expect(el2.scope().$select.disabled).toEqual(false);
+    clickMatch(el2);
+    expect(el2.scope().$select.open).toEqual(true);
 
     var el3 = createUiSelect();
     expect(el3.scope().$select.disabled).toEqual(false);
+    clickMatch(el3);
+    expect(el3.scope().$select.open).toEqual(true);
+  });
+
+  // See when an item that evaluates to false (such as "false" or "no") is selected, the placeholder is shown https://github.com/angular-ui/ui-select/pull/32
+  it('should not display the placeholder when item evaluates to false', function() {
+    scope.matches = [ 'false' ];
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection"> \
+        <match>{{$select.selected}}</match> \
+        <choices repeat="item in matches | filter: $select.search"> \
+          <div ng-bind-html="trustAsHtml((item | highlight: $select.search))"></div> \
+        </choices> \
+      </ui-select>'
+    );
+    expect(el.scope().$select.selected).toEqual(undefined);
+
+    clickItem(el, 'false');
+
+    expect(el.scope().$select.selected).toEqual('false');
+    expect(getMatchLabel(el)).toEqual('false');
   });
 });

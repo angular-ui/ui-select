@@ -19,7 +19,7 @@ angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
   theme: 'select2',
-  placeholder: 'Select Item'
+  placeholder: ''
 })
 
 .directive('uiSelect',
@@ -43,12 +43,14 @@ angular.module('ui.select', [])
 
       ctrl.open = false;
 
+      ctrl.input = $element.find('input'); // TODO could break if input is at other template
+
       // When the user clicks on ui-select, displays the dropdown list
       ctrl.activate = function() {
         if (ctrl.disabled === false) {
           ctrl.open = true;
           // Give it time to appear before focus
-          setTimeout(function() {
+          $timeout(function() {
             ctrl.input[0].focus();
           });
         }
@@ -65,8 +67,6 @@ angular.module('ui.select', [])
         ctrl.open = false;
         ctrl.search = '';
       };
-
-      ctrl.input = $element.find('input'); // TODO could break if input is at other template
     }],
 
     link: function(scope, element, attrs, controllers, transcludeFn) {
@@ -145,7 +145,7 @@ angular.module('ui.select', [])
 
       tElement.querySelectorAll('.ui-select-choices-row')
         .attr('ng-repeat', tAttrs.repeat)
-        .attr('ng-mouseenter', '$select.activeIdx = $index')
+        .attr('ng-mouseenter', '$select.activeIndex = $index')
         .attr('ng-click', '$select.select(item)');
 
       return function(scope, element, attrs, $select) {
@@ -155,7 +155,7 @@ angular.module('ui.select', [])
         };
 
         scope.$watch('$select.search', function() {
-          scope.$select.activeIdx = 0;
+          scope.$select.activeIndex = 0;
         });
 
         // Bind keyboard events related to choices
@@ -167,19 +167,19 @@ angular.module('ui.select', [])
           var rows = element.querySelectorAll('.ui-select-choices-row');
 
           if (evt.which === 40) { // down(40)
-            if (scope.$select.activeIdx < rows.length) {
-              scope.$select.activeIdx = (scope.$select.activeIdx + 1) % rows.length || rows.length - 1;
+            if (scope.$select.activeIndex < rows.length) {
+              scope.$select.activeIndex = (scope.$select.activeIndex + 1) % rows.length || rows.length - 1;
               scope.$digest();
             }
 
           } else if (evt.which === 38) { // up(38)
-            if (scope.$select.activeIdx > 0) {
-              scope.$select.activeIdx--;
+            if (scope.$select.activeIndex > 0) {
+              scope.$select.activeIndex--;
               scope.$digest();
             }
 
           } else if (evt.which === 13 || evt.which === 9) { // enter(13) and tab(9)
-            angular.element(rows[scope.$select.activeIdx]).triggerHandler('click');
+            angular.element(rows[scope.$select.activeIndex]).triggerHandler('click');
 
           } else if (evt.which === 27) { // esc(27)
             evt.stopPropagation();

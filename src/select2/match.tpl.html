@@ -4,7 +4,7 @@
   do not work: [class^="select2-choice"]
 -->
 <a class="select2-choice ui-select-match"
-   ng-class="{'select2-default': $select.selected == undefined}"
+   ng-class="{'select2-default': $select.selected === undefined}"
    ng-click="$select.activate()">
   <span ng-hide="$select.selected !== undefined" class="select2-chosen">{{$select.placeholder}}</span>
   <span ng-show="$select.selected !== undefined" class="select2-chosen" ng-transclude></span>
