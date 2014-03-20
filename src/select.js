@@ -144,9 +144,9 @@ angular.module('ui.select', [])
     compile: function(tElement, tAttrs) {
 
       tElement.querySelectorAll('.ui-select-choices-row')
-        .attr("ng-repeat", tAttrs.repeat)
-        .attr("ng-mouseenter", '$select.activeIdx=$index')
-        .attr("ng-click", '$select.select(item)');
+        .attr('ng-repeat', tAttrs.repeat)
+        .attr('ng-mouseenter', '$select.activeIdx = $index')
+        .attr('ng-click', '$select.select(item)');
 
       return function(scope, element, attrs, $select) {
 
@@ -154,24 +154,8 @@ angular.module('ui.select', [])
           return $sce.trustAsHtml(value);
         };
 
-        var container = element.hasClass('ui-select-choices-content') ? element : element.querySelectorAll('.ui-select-choices-content');
-
-        function ensureHighlightVisible() {
-          var rows = element.querySelectorAll('.ui-select-choices-row');
-          if (!rows.length) return;
-          var highlighted = rows[scope.$select.activeIdx],
-              posY = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop,
-              maxHeight = 200; // TODO Need to get this value from container.max-height
-          if (posY > maxHeight) {
-            container[0].scrollTop += posY-maxHeight;
-          } else if (posY < highlighted.clientHeight) {
-            container[0].scrollTop -= highlighted.clientHeight-posY;
-          }
-        }
-
         scope.$watch('$select.search', function() {
           scope.$select.activeIdx = 0;
-          ensureHighlightVisible();
         });
 
         // Bind keyboard events related to choices
@@ -184,15 +168,13 @@ angular.module('ui.select', [])
 
           if (evt.which === 40) { // down(40)
             if (scope.$select.activeIdx < rows.length) {
-              scope.$select.activeIdx = (scope.$select.activeIdx + 1) % rows.length || rows.length - 1 ;
-              ensureHighlightVisible();
+              scope.$select.activeIdx = (scope.$select.activeIdx + 1) % rows.length || rows.length - 1;
               scope.$digest();
             }
 
           } else if (evt.which === 38) { // up(38)
             if (scope.$select.activeIdx > 0) {
               scope.$select.activeIdx--;
-              ensureHighlightVisible();
               scope.$digest();
             }
 
