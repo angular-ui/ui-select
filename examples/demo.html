@@ -19,6 +19,7 @@
   <![endif]-->
 
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
 
   <!-- ui-select files -->
   <script src="../dist/select.js"></script>
@@ -39,9 +40,12 @@
 
   <style>
     body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      color: #333;
+      padding: 15px;
+    }
+
+    .select2 > .select2-choice.ui-select-match {
+      /* Because of the inclusion of Bootstrap */
+      height: 29px;
     }
 
     .selectize-control > .selectize-dropdown {
@@ -55,17 +59,28 @@
 
   <p>Selected: {{person.selected.name}}</p>
 
-  <p>Select2 theme (default):</p>
-  <ui-select ng-model="person.selected" style="width: 300px;">
+  <p>Select2 theme:</p>
+  <ui-select ng-model="person.selected" theme="select2" style="width: 300px;">
     <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
     <choices repeat="item in people | filter: $select.search">
       <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
       <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
     </choices>
   </ui-select>
+  <br><br>
 
   <p>Selectize theme:</p>
   <ui-select ng-model="person.selected" theme="selectize" style="width: 300px;">
+    <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
+    <choices repeat="item in people | filter: $select.search">
+      <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
+      <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+    </choices>
+  </ui-select>
+  <br>
+
+  <p>Bootstrap theme:</p>
+  <ui-select ng-model="person.selected" theme="bootstrap" style="width: 300px;">
     <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
     <choices repeat="item in people | filter: $select.search">
       <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
