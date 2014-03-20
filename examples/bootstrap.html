@@ -20,11 +20,11 @@
 
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
 
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
+
   <!-- ui-select files -->
   <script src="../dist/select.js"></script>
   <link rel="stylesheet" href="../dist/select.css">
-
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
 
   <style>
     body {
@@ -70,6 +70,29 @@
             </choices>
           </ui-select>
 
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">With a clear button</label>
+        <div class="col-sm-6">
+          <div class="input-group">
+
+            <ui-select ng-model="person.selected" theme="bootstrap">
+              <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
+              <choices repeat="item in people | filter: $select.search">
+                <span ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></span>
+                <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+              </choices>
+            </ui-select>
+
+            <span class="input-group-btn">
+              <button ng-click="person.selected = undefined" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </span>
+
+          </div>
         </div>
       </div>
 
