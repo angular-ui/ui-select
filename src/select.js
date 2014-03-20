@@ -69,6 +69,10 @@ angular.module('ui.select', [])
       var $select = controllers[0];
       var ngModelCtrl = controllers[1];
 
+      attrs.$observe('disabled', function() {
+        $select.disabled = attrs.disabled ? true : false;
+      });
+
       scope.$watch('$select.selected', function(newVal, oldVal) {
         if (ngModelCtrl.$viewValue !== newVal) ngModelCtrl.$setViewValue(newVal);
       });

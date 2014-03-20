@@ -27,9 +27,15 @@ describe('ui-select tests', function() {
     return el;
   }
 
-  function createUiSelect() {
+  function createUiSelect(attrs) {
+    var attrsHtml = '';
+    if (attrs !== undefined) {
+      if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
+      if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
+    }
+
     return compileTemplate(
-      '<ui-select ng-model="selection"> \
+      '<ui-select ng-model="selection"' + attrsHtml + '> \
         <match placeholder="Pick one...">{{$select.selected.name}}</match> \
         <choices repeat="item in matches | filter: $select.search"> \
           <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div> \
@@ -139,5 +145,16 @@ describe('ui-select tests', function() {
     expect(visible).toEqual(false); // FIXME Always false in Karma
 
     expect(el.scope().$select.open).toEqual(false);
+  });
+
+  it('should be disabled if the attribute says so', function() {
+    var el1 = createUiSelect({disabled: true});
+    expect(el1.scope().$select.disabled).toEqual(true);
+
+    var el2 = createUiSelect({disabled: false});
+    expect(el2.scope().$select.disabled).toEqual(false);
+
+    var el3 = createUiSelect();
+    expect(el3.scope().$select.disabled).toEqual(false);
   });
 });

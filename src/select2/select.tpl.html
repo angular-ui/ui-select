@@ -1,7 +1,8 @@
 <div class="select2 select2-container"
-     ng-class="{'select2-container-active select2-dropdown-open': $select.open}">
+     ng-class="{'select2-container-active select2-dropdown-open': $select.open && !$select.disabled,
+                'select2-container-disabled': $select.disabled}">
   <div class="ui-select-match"></div>
-  <div ng-class="{'select2-display-none': !$select.open}"
+  <div ng-class="{'select2-display-none': !$select.open || $select.disabled}"
        class="select2-drop select2-with-searchbox select2-drop-active">
     <div class="select2-search">
       <input type="text"
