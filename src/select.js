@@ -27,7 +27,7 @@ angular.module('ui.select', [])
   function($document, $timeout, uiSelectConfig) {
 
   return {
-    restrict: 'E',
+    restrict: 'EA',
     templateUrl: function(tElement, tAttrs) {
       var theme = tAttrs.theme || uiSelectConfig.theme;
       return theme + '/select.tpl.html';
@@ -124,7 +124,7 @@ angular.module('ui.select', [])
   var HOT_KEYS = [9, 13, 27, 38, 40];
   return {
     require: '^uiSelect',
-    restrict: 'E',
+    restrict: 'EA',
     transclude: true,
     replace: true,
     templateUrl: function(tElement) {
@@ -210,7 +210,7 @@ angular.module('ui.select', [])
 
 .directive('match', ['$compile', 'uiSelectConfig', function($compile, uiSelectConfig) {
   return {
-    restrict: 'E',
+    restrict: 'EA',
     transclude: true,
     replace: true,
     templateUrl: function(tElement) {
