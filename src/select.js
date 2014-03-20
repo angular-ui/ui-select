@@ -43,6 +43,7 @@ angular.module('ui.select', [])
 
       ctrl.open = false;
 
+      // When the user clicks on ui-select, displays the dropdown list
       ctrl.activate = function() {
         if (ctrl.disabled === false) {
           ctrl.open = true;
@@ -53,6 +54,7 @@ angular.module('ui.select', [])
         }
       };
 
+      // When the user clicks on an item inside the dropdown list
       ctrl.select = function(item) {
         ctrl.selected = item;
         ctrl.close();
