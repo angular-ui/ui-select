@@ -1,11 +1,14 @@
 <div class="selectize-control single">
   <div class="selectize-input"
-       ng-class="{'focus': $select.open}"
+       ng-class="{'focus': $select.open, 'disabled': $select.disabled}"
        ng-click="$select.activate()">
     <div class="ui-select-match"></div>
-    <input type="text" class="ui-select-search" autocomplete="off" tabindex="" placeholder="{{$select.placeholder}}"
+    <input type="text" autocomplete="off" tabindex=""
+           class="ui-select-search"
+           placeholder="{{$select.placeholder}}"
            ng-model="$select.search"
-           ng-hide="$select.selected && !$select.open">
+           ng-hide="$select.selected && !$select.open"
+           ng-disabled="$select.disabled">
   </div>
   <div class="ui-select-choices"></div>
 </div>

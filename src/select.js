@@ -44,11 +44,13 @@ angular.module('ui.select', [])
       ctrl.open = false;
 
       ctrl.activate = function() {
-        ctrl.open = true;
-        // Give it time to appear before focus
-        setTimeout(function() {
-          ctrl.input[0].focus();
-        });
+        if (ctrl.disabled === false) {
+          ctrl.open = true;
+          // Give it time to appear before focus
+          setTimeout(function() {
+            ctrl.input[0].focus();
+          });
+        }
       };
 
       ctrl.select = function(item) {
