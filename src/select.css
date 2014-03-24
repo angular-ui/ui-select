@@ -28,7 +28,7 @@
   position: static;
 }
 
-.input-group > .ui-select-bootstrap > .ui-select-search.form-control {
+.input-group > .ui-select-bootstrap > input.ui-select-search.form-control {
   border-radius: 4px;  /* FIXME hardcoded value :-/ */
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -47,4 +47,11 @@
 
 .ui-select-bootstrap > .ui-select-choices {
   width: 100%;
+}
+
+/* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */
+.ui-select-bootstrap > .ui-select-choices {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
 }

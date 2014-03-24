@@ -18,7 +18,8 @@
     </script>
   <![endif]-->
 
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.js"></script>
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
 
   <!-- ui-select files -->
@@ -54,37 +55,42 @@
   </style>
 </head>
 
-<body ng-controller="MainCtrl">
+<body ng-controller="DemoCtrl">
   <script src="demo.js"></script>
 
-  <p>Selected: {{person.selected.name}}</p>
+  <button class="btn btn-default btn-xs" ng-click="enable()">Enable ui-select</button>
+  <button class="btn btn-default btn-xs" ng-click="disable()">Disable ui-select</button>
+  <button class="btn btn-default btn-xs" ng-click="clear()">Clear ng-model</button>
 
-  <p>Select2 theme:</p>
-  <ui-select ng-model="person.selected" theme="select2" style="width: 300px;">
-    <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-    <choices repeat="item in people | filter: $select.search">
-      <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
-      <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+  <h3>Bootstrap theme</h3>
+  <p>Selected: {{address.selected.formatted_address}}</p>
+  <ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+    <match placeholder="Enter an address...">{{$select.selected.formatted_address}}</match>
+    <choices repeat="address in getAddress($select.search) track by $index">
+      <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
     </choices>
   </ui-select>
-  <br><br>
 
-  <p>Selectize theme:</p>
-  <ui-select ng-model="person.selected" theme="selectize" style="width: 300px;">
-    <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-    <choices repeat="item in people | filter: $select.search">
-      <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
-      <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+  <h3>Select2 theme</h3>
+  <p>Selected: {{person.selected}}</p>
+  <ui-select ng-model="person.selected" theme="select2" ng-disabled="disabled" style="width: 300px;">
+    <match placeholder="Select a person in the list or search his age...">{{$select.selected.name}}</match>
+    <choices repeat="person in people | filter: {age: $select.search}">
+      <div ng-bind-html="person.name | highlight: $select.search"></div>
+      <small>
+        email: {{person.email}}
+        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+      </small>
     </choices>
   </ui-select>
-  <br>
 
-  <p>Bootstrap theme:</p>
-  <ui-select ng-model="person.selected" theme="bootstrap" style="width: 300px;">
-    <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-    <choices repeat="item in people | filter: $select.search">
-      <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div>
-      <small ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></small>
+  <h3>Selectize theme</h3>
+  <p>Selected: {{country.selected}}</p>
+  <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" style="width: 300px;">
+    <match placeholder="Select or search a country in the list...">{{$select.selected.name}}</match>
+    <choices repeat="country in countries | filter: $select.search">
+      <span ng-bind-html="country.name | highlight: $select.search"></span>
+      <small ng-bind-html="country.code | highlight: $select.search"></small>
     </choices>
   </ui-select>
 </body>

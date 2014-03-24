@@ -3,19 +3,21 @@
 describe('ui-select tests', function() {
   var scope, $rootScope, $compile;
 
-  beforeEach(module('ui.select'));
+  beforeEach(module('ngSanitize', 'ui.select'));
   beforeEach(inject(function(_$rootScope_, _$compile_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
 
-    scope.matches = [
-      { name: 'Wladimir Coka',   email: 'wcoka@email.com' },
-      { name: 'Samantha Smith',  email: 'sam@email.com' },
-      { name: 'Estefanía Smith', email: 'esmith@email.com' },
-      { name: 'Natasha Jones',   email: 'ncoka@email.com' },
-      { name: 'Nicole Smith',    email: 'nicky@email.com' },
-      { name: 'Adrian Jones',    email: 'asmith@email.com' }
+    scope.people = [
+      { name: 'Adam',      email: 'adam@email.com',      age: 10 },
+      { name: 'Amalie',    email: 'amalie@email.com',    age: 12 },
+      { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30 },
+      { name: 'Samantha',  email: 'samantha@email.com',  age: 31 },
+      { name: 'Estefanía', email: 'estefanía@email.com', age: 16 },
+      { name: 'Natasha',   email: 'natasha@email.com',   age: 54 },
+      { name: 'Nicole',    email: 'nicole@email.com',    age: 43 },
+      { name: 'Adrian',    email: 'adrian@email.com',    age: 21 }
     ];
   }));
 
@@ -38,9 +40,9 @@ describe('ui-select tests', function() {
     return compileTemplate(
       '<ui-select ng-model="selection"' + attrsHtml + '> \
         <match placeholder="Pick one...">{{$select.selected.name}}</match> \
-        <choices repeat="item in matches | filter: $select.search"> \
-          <div ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></div> \
-          <div ng-bind-html="trustAsHtml((item.email | highlight: $select.search))"></div> \
+        <choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
         </choices> \
       </ui-select>'
     );
@@ -77,15 +79,15 @@ describe('ui-select tests', function() {
     expect(choicesContainerEl.length).toEqual(1);
 
     var choicesElems = $(el).find('.ui-select-choices-row');
-    expect(choicesElems.length).toEqual(6);
+    expect(choicesElems.length).toEqual(8);
   });
 
   it('should correctly render initial state', function() {
-    scope.selection = scope.matches[0];
+    scope.selection = scope.people[0];
 
     var el = createUiSelect();
 
-    expect(getMatchLabel(el)).toEqual('Wladimir Coka');
+    expect(getMatchLabel(el)).toEqual('Adam');
   });
 
   it('should display the choices when activated', function() {
@@ -105,18 +107,18 @@ describe('ui-select tests', function() {
   it('should select an item', function() {
     var el = createUiSelect();
 
-    clickItem(el, 'Samantha Smith');
+    clickItem(el, 'Samantha');
 
-    expect(getMatchLabel(el)).toEqual('Samantha Smith');
+    expect(getMatchLabel(el)).toEqual('Samantha');
   });
 
   it('should select an item (controller)', function() {
     var el = createUiSelect();
 
-    el.scope().$select.select(scope.matches[1]);
+    el.scope().$select.select(scope.people[1]);
     scope.$digest();
 
-    expect(getMatchLabel(el)).toEqual('Samantha Smith');
+    expect(getMatchLabel(el)).toEqual('Amalie');
   });
 
   it('should not select a non existing item', function() {
@@ -135,7 +137,7 @@ describe('ui-select tests', function() {
 
     expect(el.scope().$select.open).toEqual(true);
 
-    clickItem(el, 'Samantha Smith');
+    clickItem(el, 'Samantha');
 
     expect(el.scope().$select.open).toEqual(false);
     expect($(el).find('.ui-select-choices').parent().hasClass('select2-display-none')).toEqual(true);
@@ -160,13 +162,13 @@ describe('ui-select tests', function() {
 
   // See when an item that evaluates to false (such as "false" or "no") is selected, the placeholder is shown https://github.com/angular-ui/ui-select/pull/32
   it('should not display the placeholder when item evaluates to false', function() {
-    scope.matches = [ 'false' ];
+    scope.items = [ 'false' ];
 
     var el = compileTemplate(
       '<ui-select ng-model="selection"> \
         <match>{{$select.selected}}</match> \
-        <choices repeat="item in matches | filter: $select.search"> \
-          <div ng-bind-html="trustAsHtml((item | highlight: $select.search))"></div> \
+        <choices repeat="item in items | filter: $select.search"> \
+          <div ng-bind-html="item | highlight: $select.search"></div> \
         </choices> \
       </ui-select>'
     );

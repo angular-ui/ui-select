@@ -1,5 +1,6 @@
 <ul class="ui-select-choices ui-select-choices-content dropdown-menu"
-    role="menu" aria-labelledby="dLabel">
+    role="menu" aria-labelledby="dLabel"
+    ng-show="$select.items.length > 0">
   <li class="ui-select-choices-row" ng-class="{active: $select.activeIndex === $index}">
     <a href="javascript:void(0)" ng-transclude></a>
   </li>
