@@ -92,8 +92,10 @@ angular.module('ui.select', [])
 
   var ctrl = this;
 
+  var EMPTY_SEARCH = '';
+
   ctrl.placeholder = undefined;
-  ctrl.search = undefined;
+  ctrl.search = EMPTY_SEARCH;
   ctrl.activeIndex = 0;
   ctrl.items = [];
   ctrl.selected = undefined;
@@ -113,12 +115,38 @@ angular.module('ui.select', [])
     }
   };
 
-  ctrl.getItemsAsync = function(repeatAttr) {
+  var _repeatRhsIsCollection = null;
+  var _repeatRhsFn = null;
+
+  ctrl.parseRepeatAttr = function(repeatAttr) {
     var repeat = RepeatParser.parse(repeatAttr);
-    var getter = $parse(repeat.rhs);
-    $q.when(getter($scope)).then(function(items) {
-      ctrl.items = items;
-    });
+    _repeatRhsFn = $parse(repeat.rhs);
+
+    var collectionOrPromise = _repeatRhsFn($scope);
+
+    // Hackish :/
+    // Determine if the repeat expression (repeat.rhs) gives us a collection or a promise
+    // If it is a collection we need to $watch it in order to update ctrl.items
+    _repeatRhsIsCollection = angular.isArray(collectionOrPromise);
+
+    if (_repeatRhsIsCollection) {
+      // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
+      $scope.$watchCollection(repeat.rhs, function(items) {
+        ctrl.items = items;
+      });
+    }
+  };
+
+  ctrl.populateItems = function() {
+    if (!_repeatRhsIsCollection) {
+      var promise = _repeatRhsFn($scope);
+
+      // See https://github.com/angular-ui/bootstrap/blob/d0024931de/src/typeahead/typeahead.js#L109
+      // See https://github.com/mgcrea/angular-strap/blob/1529ab4bbc/src/helpers/parse-options.js#L35
+      $q.when(promise).then(function(items) {
+        ctrl.items = items;
+      });
+    }
   };
 
   // When the user clicks on an item inside the dropdown list
@@ -129,8 +157,14 @@ angular.module('ui.select', [])
   };
 
   ctrl.close = function() {
-    ctrl.open = false;
-    ctrl.search = '';
+    if (ctrl.open) {
+      ctrl.open = false;
+      if (_repeatRhsIsCollection) {
+        // This means if repeat.rhs is a promise, we keep the search term (ctrl.search)
+        // even after the dropdown being closed
+        ctrl.search = EMPTY_SEARCH;
+      }
+    }
   };
 
   var Key = {
@@ -289,9 +323,11 @@ angular.module('ui.select', [])
         .attr('ng-click', '$select.select(' + repeat.lhs + ')');
 
       return function link(scope, element, attrs, $select) {
+        $select.parseRepeatAttr(attrs.repeat);
+
         scope.$watch('$select.search', function() {
           $select.activeIndex = 0;
-          $select.getItemsAsync(attrs.repeat);
+          $select.populateItems(attrs.repeat);
         });
       };
     }
