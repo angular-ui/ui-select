@@ -46,9 +46,9 @@ angular.module('ui.select', [])
 
   /**
    * Example:
-   * expression = "address in getAddress($select.search) track by $index
+   * expression = "address in addresses | filter: {street: $select.search} track by $index"
    * lhs = "address",
-   * rhs = "getAddress($select.search)",
+   * rhs = "addresses | filter: {street: $select.search}",
    * trackByExp = "$index",
    * valueIdentifier = "address",
    * keyIdentifier = undefined
@@ -97,8 +97,8 @@ angular.module('ui.select', [])
  * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
  */
 .controller('uiSelectCtrl',
-  ['$scope', '$element', '$timeout', 'RepeatParser', '$parse', '$q', 'uiSelectMinErr',
-  function($scope, $element, $timeout, RepeatParser, $parse, $q, uiSelectMinErr) {
+  ['$scope', '$element', '$timeout', 'RepeatParser', '$parse', 'uiSelectMinErr',
+  function($scope, $element, $timeout, RepeatParser, $parse, uiSelectMinErr) {
 
   var ctrl = this;
 
@@ -128,44 +128,23 @@ angular.module('ui.select', [])
     }
   };
 
-  var _repeatRhsIsCollection = null;
-  var _repeatRhsFn = null;
-
   ctrl.parseRepeatAttr = function(repeatAttr) {
     var repeat = RepeatParser.parse(repeatAttr);
-    _repeatRhsFn = $parse(repeat.rhs);
+    var repeatRhsFn = $parse(repeat.rhs);
 
-    var collectionOrPromise = _repeatRhsFn($scope);
-
-    // Hackish :/
-    // Determine if the repeat expression (repeat.rhs) gives us a collection or a promise
-    // If it is a collection we need to $watch it in order to update ctrl.items
-    _repeatRhsIsCollection = angular.isArray(collectionOrPromise);
-
-    if (_repeatRhsIsCollection) {
-      // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
-      $scope.$watchCollection(repeat.rhs, function(items) {
-        ctrl.items = items;
-      });
+    var collection = repeatRhsFn($scope);
+    if (!angular.isArray(collection)) {
+      throw uiSelectMinErr('repeat', "Expected a collection but got '{0}'.", repeat.rhs);
     }
-  };
 
-  ctrl.populateItems = function() {
-    if (!_repeatRhsIsCollection) {
-      var promise = _repeatRhsFn($scope);
-
-      // See https://github.com/angular-ui/bootstrap/blob/d0024931de/src/typeahead/typeahead.js#L109
-      // See https://github.com/mgcrea/angular-strap/blob/1529ab4bbc/src/helpers/parse-options.js#L35
-      $q.when(promise).then(function(items) {
-        ctrl.items = items;
-      });
-    }
+    // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
+    $scope.$watchCollection(repeat.rhs, function(items) {
+      ctrl.items = items;
+    });
   };
 
   ctrl.refresh = function(refreshAttr) {
-    // Only works if the repeat expression (repeat.rhs) is a collection,
-    // does not make sense with a promise
-    if (refreshAttr !== undefined && _repeatRhsIsCollection) {
+    if (refreshAttr !== undefined) {
       $timeout(function() {
         $scope.$apply(refreshAttr);
       });
@@ -182,11 +161,7 @@ angular.module('ui.select', [])
   ctrl.close = function() {
     if (ctrl.open) {
       ctrl.open = false;
-      if (_repeatRhsIsCollection) {
-        // This means if repeat.rhs is a promise, we keep the search term (ctrl.search)
-        // even after the dropdown being closed
-        ctrl.search = EMPTY_SEARCH;
-      }
+      ctrl.search = EMPTY_SEARCH;
     }
   };
 
@@ -369,7 +344,6 @@ angular.module('ui.select', [])
         scope.$watch('$select.search', function() {
           $select.activeIndex = 0;
           $select.refresh(attrs.refresh);
-          $select.populateItems();
         });
       };
     }
