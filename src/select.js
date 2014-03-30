@@ -282,21 +282,20 @@ angular.module('ui.select', [])
         $document.off('mousedown');
       });
 
-      // Move transcluded elements to their correct position on main template
+      // Move transcluded elements to their correct position in main template
       transcludeFn(scope, function(clone) {
+        // See Transclude in AngularJS http://blog.omkarpatil.com/2012/11/transclude-in-angularjs.html
+
+        // One day jqLite will be replaced by jQuery and we will be able to write:
+        // var transcludedElement = clone.filter('.my-class')
+        // instead of creating a hackish DOM element:
         var transcluded = angular.element('<div>').append(clone);
 
-        // Child directives could be uncompiled at this point, so we check both alternatives,
-        // first for compiled version (by class) or uncompiled (by tag). We place the directives
-        // at the insertion points that are marked with ui-select-* classes inside the templates
+        var transcludedMatch = transcluded.querySelectorAll('.ui-select-match');
+        element.querySelectorAll('.ui-select-match').replaceWith(transcludedMatch);
 
-        var transMatch = transcluded.querySelectorAll('.ui-select-match');
-        transMatch = !transMatch.length ? transcluded.find('match') : transMatch;
-        element.querySelectorAll('.ui-select-match').replaceWith(transMatch);
-
-        var transChoices = transcluded.querySelectorAll('.ui-select-choices');
-        transChoices = !transChoices.length ? transcluded.find('choices') : transChoices;
-        element.querySelectorAll('.ui-select-choices').replaceWith(transChoices);
+        var transcludedChoices = transcluded.querySelectorAll('.ui-select-choices');
+        element.querySelectorAll('.ui-select-choices').replaceWith(transcludedChoices);
       });
     }
   };
