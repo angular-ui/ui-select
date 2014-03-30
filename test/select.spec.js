@@ -22,7 +22,7 @@ describe('ui-select tests', function() {
   }));
 
 
-  // Utility functions
+  // DSL (domain-specific language)
 
   function compileTemplate(template) {
     var el = $compile(angular.element(template))(scope);
@@ -53,7 +53,7 @@ describe('ui-select tests', function() {
   }
 
   function clickItem(el, text) {
-    $(el).find('.ui-select-choices-row > div:contains("' + text + '")').click();
+    $(el).find('.ui-select-choices-row div:contains("' + text + '")').click();
     scope.$digest();
   }
 
@@ -62,6 +62,15 @@ describe('ui-select tests', function() {
     scope.$digest();
   }
 
+  function isDropdownOpened(el) {
+    // Does not work with jQuery 2.*, have to use jQuery 1.11.*
+    // This will be fixed in AngularJS 1.3
+    // See issue with unit-testing directive using karma https://github.com/angular/angular.js/issues/4640#issuecomment-35002427
+    return el.scope().$select.open && el.hasClass('open');
+  }
+
+
+  // Tests
 
   it('should compile child directives', function() {
     var el = createUiSelect();
@@ -78,8 +87,8 @@ describe('ui-select tests', function() {
     var choicesContainerEl = $(el).find('.ui-select-choices');
     expect(choicesContainerEl.length).toEqual(1);
 
-    var choicesElems = $(el).find('.ui-select-choices-row');
-    expect(choicesElems.length).toEqual(8);
+    var choicesEls = $(el).find('.ui-select-choices-row');
+    expect(choicesEls.length).toEqual(8);
   });
 
   it('should correctly render initial state', function() {
@@ -93,15 +102,11 @@ describe('ui-select tests', function() {
   it('should display the choices when activated', function() {
     var el = createUiSelect();
 
-    // Does not work with jQuery 2.*, have to use jQuery 1.11.*
-    // This will be fixed in AngularJS 1.3
-    // See issue with unit-testing directive using karma https://github.com/angular/angular.js/issues/4640#issuecomment-35002427
-    expect(el.scope().$select.open).toEqual(false);
+    expect(isDropdownOpened(el)).toEqual(false);
 
     clickMatch(el);
 
-    expect(el.scope().$select.open).toEqual(true);
-    expect($(el).find('.ui-select-choices').parent().hasClass('select2-display-none')).toEqual(false);
+    expect(isDropdownOpened(el)).toEqual(true);
   });
 
   it('should select an item', function() {
@@ -132,37 +137,35 @@ describe('ui-select tests', function() {
   it('should close the choices when an item is selected', function() {
     var el = createUiSelect();
 
-    $(el).find('.ui-select-match').click();
-    scope.$digest();
+    clickMatch(el);
 
-    expect(el.scope().$select.open).toEqual(true);
+    expect(isDropdownOpened(el)).toEqual(true);
 
     clickItem(el, 'Samantha');
 
-    expect(el.scope().$select.open).toEqual(false);
-    expect($(el).find('.ui-select-choices').parent().hasClass('select2-display-none')).toEqual(true);
+    expect(isDropdownOpened(el)).toEqual(false);
   });
 
   it('should be disabled if the attribute says so', function() {
     var el1 = createUiSelect({disabled: true});
     expect(el1.scope().$select.disabled).toEqual(true);
     clickMatch(el1);
-    expect(el1.scope().$select.open).toEqual(false);
+    expect(isDropdownOpened(el1)).toEqual(false);
 
     var el2 = createUiSelect({disabled: false});
     expect(el2.scope().$select.disabled).toEqual(false);
     clickMatch(el2);
-    expect(el2.scope().$select.open).toEqual(true);
+    expect(isDropdownOpened(el2)).toEqual(true);
 
     var el3 = createUiSelect();
     expect(el3.scope().$select.disabled).toEqual(false);
     clickMatch(el3);
-    expect(el3.scope().$select.open).toEqual(true);
+    expect(isDropdownOpened(el3)).toEqual(true);
   });
 
   // See when an item that evaluates to false (such as "false" or "no") is selected, the placeholder is shown https://github.com/angular-ui/ui-select/pull/32
   it('should not display the placeholder when item evaluates to false', function() {
-    scope.items = [ 'false' ];
+    scope.items = ['false'];
 
     var el = compileTemplate(
       '<ui-select ng-model="selection"> \
