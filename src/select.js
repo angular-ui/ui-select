@@ -18,7 +18,7 @@ if (angular.element.prototype.querySelectorAll === undefined) {
 angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
-  theme: 'select2',
+  theme: 'bootstrap',
   placeholder: '' // Empty by default, like HTML tag <select>
 })
 
