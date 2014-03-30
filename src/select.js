@@ -97,8 +97,8 @@ angular.module('ui.select', [])
  * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
  */
 .controller('uiSelectCtrl',
-  ['$scope', '$element', '$timeout', 'RepeatParser', '$parse', '$q',
-  function($scope, $element, $timeout, RepeatParser, $parse, $q) {
+  ['$scope', '$element', '$timeout', 'RepeatParser', '$parse', '$q', 'uiSelectMinErr',
+  function($scope, $element, $timeout, RepeatParser, $parse, $q, uiSelectMinErr) {
 
   var ctrl = this;
 
@@ -113,6 +113,9 @@ angular.module('ui.select', [])
   ctrl.disabled = false;
 
   ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
+  if (ctrl.searchInput.length !== 1) {
+    throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", ctrl.searchInput.length);
+  }
 
   // When the user clicks on ui-select, displays the dropdown list
   ctrl.activate = function() {
@@ -218,7 +221,10 @@ angular.module('ui.select', [])
   };
 }])
 
-.directive('uiSelect', ['$document', 'uiSelectConfig', function($document, uiSelectConfig) {
+.directive('uiSelect',
+  ['$document', 'uiSelectConfig', 'uiSelectMinErr',
+  function($document, uiSelectConfig, uiSelectMinErr) {
+
   return {
     restrict: 'EA',
     templateUrl: function(tElement, tAttrs) {
@@ -254,6 +260,9 @@ angular.module('ui.select', [])
       function ensureHighlightVisible() {
         var container = element.querySelectorAll('.ui-select-choices-content');
         var rows = container.querySelectorAll('.ui-select-choices-row');
+        if (rows.length < 1) {
+          throw uiSelectMinErr('rows', "Expected multiple .ui-select-choices-row but got '{0}'.", rows.length);
+        }
 
         var highlighted = rows[$select.activeIndex];
         var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
@@ -312,16 +321,25 @@ angular.module('ui.select', [])
         var transcluded = angular.element('<div>').append(clone);
 
         var transcludedMatch = transcluded.querySelectorAll('.ui-select-match');
+        if (transcludedMatch.length !== 1) {
+          throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-match but got '{0}'.", transcludedMatch.length);
+        }
         element.querySelectorAll('.ui-select-match').replaceWith(transcludedMatch);
 
         var transcludedChoices = transcluded.querySelectorAll('.ui-select-choices');
+        if (transcludedChoices.length !== 1) {
+          throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-choices but got '{0}'.", transcludedChoices.length);
+        }
         element.querySelectorAll('.ui-select-choices').replaceWith(transcludedChoices);
       });
     }
   };
 }])
 
-.directive('choices', ['uiSelectConfig', 'RepeatParser', function(uiSelectConfig, RepeatParser) {
+.directive('choices',
+  ['uiSelectConfig', 'RepeatParser', 'uiSelectMinErr',
+  function(uiSelectConfig, RepeatParser, uiSelectMinErr) {
+
   return {
     restrict: 'EA',
     require: '^uiSelect',
@@ -336,10 +354,14 @@ angular.module('ui.select', [])
     compile: function(tElement, tAttrs) {
       var repeat = RepeatParser.parse(tAttrs.repeat);
 
-      tElement.querySelectorAll('.ui-select-choices-row')
-        .attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
-        .attr('ng-mouseenter', '$select.activeIndex = $index')
-        .attr('ng-click', '$select.select(' + repeat.lhs + ')');
+      var rows = tElement.querySelectorAll('.ui-select-choices-row');
+      if (rows.length !== 1) {
+        throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", rows.length);
+      }
+
+      rows.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
+          .attr('ng-mouseenter', '$select.activeIndex = $index')
+          .attr('ng-click', '$select.select(' + repeat.lhs + ')');
 
       return function link(scope, element, attrs, $select) {
         $select.parseRepeatAttr(attrs.repeat);
