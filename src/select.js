@@ -22,6 +22,16 @@ angular.module('ui.select', [])
   placeholder: '' // Empty by default, like HTML tag <select>
 })
 
+// See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
+.service('uiSelectMinErr', function() {
+  var minErr = angular.$$minErr('ui.select');
+  return function() {
+    var error = minErr.apply(this, arguments);
+    var message = error.message.replace(new RegExp('\nhttp://errors.angularjs.org/.*'), '');
+    return new Error(message);
+  }
+})
+
 /**
  * Parses "repeat" attribute.
  *
@@ -31,7 +41,7 @@ angular.module('ui.select', [])
  * Original discussion about parsing "repeat" attribute instead of fully relying on ng-repeat:
  * https://github.com/angular-ui/ui-select/commit/5dd63ad#commitcomment-5504697
  */
-.service('RepeatParser', function() {
+.service('RepeatParser', ['uiSelectMinErr', function(uiSelectMinErr) {
   var self = this;
 
   /**
@@ -47,8 +57,8 @@ angular.module('ui.select', [])
     var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
     if (!match) {
-      throw new Error("Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
-                      expression);
+      throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
+                           expression);
     }
 
     var lhs = match[1]; // Left-hand side
@@ -57,8 +67,8 @@ angular.module('ui.select', [])
 
     match = lhs.match(/^(?:([\$\w]+)|\(([\$\w]+)\s*,\s*([\$\w]+)\))$/);
     if (!match) {
-      throw new Error("'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
-                      lhs);
+      throw uiSelectMinErr('iidexp', "'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
+                           lhs);
     }
 
     var valueIdentifier = match[3] || match[1];
@@ -78,7 +88,7 @@ angular.module('ui.select', [])
     }
     return expression;
   };
-})
+}])
 
 /**
  * Contains ui-select "intelligence".
