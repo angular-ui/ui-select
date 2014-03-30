@@ -149,6 +149,16 @@ angular.module('ui.select', [])
     }
   };
 
+  ctrl.refresh = function(refreshAttr) {
+    // Only works if the repeat expression (repeat.rhs) is a collection,
+    // does not make sense with a promise
+    if (refreshAttr !== undefined && _repeatRhsIsCollection) {
+      $timeout(function() {
+        $scope.$apply(refreshAttr);
+      });
+    }
+  };
+
   // When the user clicks on an item inside the dropdown list
   ctrl.select = function(item) {
     ctrl.selected = item;
@@ -326,6 +336,7 @@ angular.module('ui.select', [])
 
         scope.$watch('$select.search', function() {
           $select.activeIndex = 0;
+          $select.refresh(attrs.refresh);
           $select.populateItems();
         });
       };
