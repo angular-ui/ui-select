@@ -326,7 +326,7 @@ angular.module('ui.select', [])
 
         scope.$watch('$select.search', function() {
           $select.activeIndex = 0;
-          $select.populateItems(attrs.repeat);
+          $select.populateItems();
         });
       };
     }
