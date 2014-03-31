@@ -110,17 +110,27 @@ angular.module('ui.select', [])
   ctrl.items = [];
   ctrl.selected = undefined;
   ctrl.open = false;
-  ctrl.disabled = false;
+  ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
+  ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
 
   ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
   if (ctrl.searchInput.length !== 1) {
     throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", ctrl.searchInput.length);
   }
 
+  // Most of the time the user does not want to empty the search input when in typeahead mode
+  function _resetSearchInput() {
+    if (ctrl.resetSearchInput) {
+      ctrl.search = EMPTY_SEARCH;
+    }
+  }
+
   // When the user clicks on ui-select, displays the dropdown list
   ctrl.activate = function() {
-    if (ctrl.disabled === false) {
+    if (!ctrl.disabled) {
+      _resetSearchInput();
       ctrl.open = true;
+
       // Give it time to appear before focus
       $timeout(function() {
         ctrl.searchInput[0].focus();
@@ -143,6 +153,11 @@ angular.module('ui.select', [])
     });
   };
 
+  /**
+   * Typeahead mode: lets the user refresh the collection using his own function.
+   *
+   * See Expose $select.search for external / remote filtering https://github.com/angular-ui/ui-select/pull/31
+   */
   ctrl.refresh = function(refreshAttr) {
     if (refreshAttr !== undefined) {
       $timeout(function() {
@@ -160,8 +175,8 @@ angular.module('ui.select', [])
 
   ctrl.close = function() {
     if (ctrl.open) {
+      _resetSearchInput();
       ctrl.open = false;
-      ctrl.search = EMPTY_SEARCH;
     }
   };
 
@@ -219,7 +234,14 @@ angular.module('ui.select', [])
       var ngModel = ctrls[1];
 
       attrs.$observe('disabled', function() {
-        $select.disabled = attrs.disabled ? true : false;
+        // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
+        $select.disabled = attrs.disabled !== undefined ? attrs.disabled : false;
+      });
+
+      attrs.$observe('resetSearchInput', function() {
+        // $eval() is needed otherwise we get a string instead of a boolean
+        var resetSearchInput = scope.$eval(attrs.resetSearchInput);
+        $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
       });
 
       scope.$watch('$select.selected', function(newValue, oldValue) {
