@@ -270,7 +270,7 @@ angular.module('ui.select', [])
         if (window.jQuery) {
           // Firefox 3.6 does not support element.contains()
           // See Node.contains https://developer.mozilla.org/en-US/docs/Web/API/Node.contains
-          contains = $.contains(element[0], e.target);
+          contains = window.jQuery.contains(element[0], e.target);
         } else {
           contains = element[0].contains(e.target);
         }
