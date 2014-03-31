@@ -363,7 +363,7 @@ angular.module('ui.select', [])
     },
     link: function(scope, element, attrs, $select) {
       attrs.$observe('placeholder', function(placeholder) {
-        $select.placeholder = placeholder || uiSelectConfig.placeholder;
+        $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
       });
     }
   };
