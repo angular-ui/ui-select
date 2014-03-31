@@ -19,7 +19,8 @@ angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
   theme: 'bootstrap',
-  placeholder: '' // Empty by default, like HTML tag <select>
+  placeholder: '', // Empty by default, like HTML tag <select>
+  refreshDelay: 1000 // In milliseconds
 })
 
 // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -112,6 +113,7 @@ angular.module('ui.select', [])
   ctrl.open = false;
   ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
   ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
+  ctrl.refreshDelay = undefined; // Initialized inside choices directive link function
 
   ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
   if (ctrl.searchInput.length !== 1) {
@@ -153,6 +155,8 @@ angular.module('ui.select', [])
     });
   };
 
+  var _refreshDelayPromise = undefined;
+
   /**
    * Typeahead mode: lets the user refresh the collection using his own function.
    *
@@ -160,9 +164,17 @@ angular.module('ui.select', [])
    */
   ctrl.refresh = function(refreshAttr) {
     if (refreshAttr !== undefined) {
-      $timeout(function() {
+
+      // Throttle / debounce
+      //
+      // See https://github.com/angular-ui/bootstrap/blob/0d4c2e21c3/src/typeahead/typeahead.js#L162
+      // FYI AngularStrap typeahead does not have debouncing: https://github.com/mgcrea/angular-strap/blob/1529ab4bbc/src/typeahead/typeahead.js#L172
+      if (_refreshDelayPromise) {
+        $timeout.cancel(_refreshDelayPromise);
+      }
+      _refreshDelayPromise = $timeout(function() {
         $scope.$apply(refreshAttr);
-      });
+      }, ctrl.refreshDelay);
     }
   };
 
@@ -366,6 +378,12 @@ angular.module('ui.select', [])
         scope.$watch('$select.search', function() {
           $select.activeIndex = 0;
           $select.refresh(attrs.refresh);
+        });
+
+        attrs.$observe('refreshDelay', function() {
+          // $eval() is needed otherwise we get a string instead of a number
+          var refreshDelay = scope.$eval(attrs.refreshDelay);
+          $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
         });
       };
     }
