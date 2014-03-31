@@ -98,8 +98,8 @@ angular.module('ui.select', [])
  * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
  */
 .controller('uiSelectCtrl',
-  ['$scope', '$element', '$timeout', 'RepeatParser', '$parse', 'uiSelectMinErr',
-  function($scope, $element, $timeout, RepeatParser, $parse, uiSelectMinErr) {
+  ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr',
+  function($scope, $element, $timeout, RepeatParser, uiSelectMinErr) {
 
   var ctrl = this;
 
@@ -142,12 +142,6 @@ angular.module('ui.select', [])
 
   ctrl.parseRepeatAttr = function(repeatAttr) {
     var repeat = RepeatParser.parse(repeatAttr);
-    var repeatRhsFn = $parse(repeat.rhs);
-
-    var collection = repeatRhsFn($scope);
-    if (!angular.isArray(collection)) {
-      throw uiSelectMinErr('repeat', "Expected a collection but got '{0}'.", repeat.rhs);
-    }
 
     // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
     $scope.$watchCollection(repeat.rhs, function(items) {
