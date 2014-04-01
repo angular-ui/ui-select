@@ -235,21 +235,25 @@ angular.module('ui.select', [])
   // Bind to keyboard shortcuts
   // Cannot specify a namespace: not supported by jqLite
   _searchInput.on('keydown', function(e) {
-    var key = e.which;
+    // Keyboard shortcuts are all about the items,
+    // does not make sense (and will crash) if ctrl.items is empty
+    if (ctrl.items.length > 0) {
+      var key = e.which;
 
-    $scope.$apply(function() {
-      var processed = _onKeydown(key);
-      if (processed) {
-        e.preventDefault();
-        e.stopPropagation();
+      $scope.$apply(function() {
+        var processed = _onKeydown(key);
+        if (processed) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+
+      switch (key) {
+        case Key.Down:
+        case Key.Up:
+          _ensureHighlightVisible();
+          break;
       }
-    });
-
-    switch (key) {
-      case Key.Down:
-      case Key.Up:
-        _ensureHighlightVisible();
-        break;
     }
   });
 
