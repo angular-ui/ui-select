@@ -182,7 +182,7 @@ angular.module('ui.select', [])
         $timeout.cancel(_refreshDelayPromise);
       }
       _refreshDelayPromise = $timeout(function() {
-        $scope.$apply(refreshAttr);
+        $scope.$eval(refreshAttr);
       }, ctrl.refreshDelay);
     }
   };
