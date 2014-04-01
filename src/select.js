@@ -37,7 +37,7 @@ angular.module('ui.select', [])
  * Parses "repeat" attribute.
  *
  * Taken from AngularJS ngRepeat source code
- * See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L211
+ * See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L211
  *
  * Original discussion about parsing "repeat" attribute instead of fully relying on ng-repeat:
  * https://github.com/angular-ui/ui-select/commit/5dd63ad#commitcomment-5504697
@@ -144,7 +144,7 @@ angular.module('ui.select', [])
   ctrl.parseRepeatAttr = function(repeatAttr) {
     var repeat = RepeatParser.parse(repeatAttr);
 
-    // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
+    // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
     $scope.$watchCollection(repeat.rhs, function(items) {
 
       if (items === undefined || items === null) {
@@ -176,8 +176,8 @@ angular.module('ui.select', [])
 
       // Throttle / debounce
       //
-      // See https://github.com/angular-ui/bootstrap/blob/0d4c2e21c3/src/typeahead/typeahead.js#L162
-      // FYI AngularStrap typeahead does not have debouncing: https://github.com/mgcrea/angular-strap/blob/1529ab4bbc/src/typeahead/typeahead.js#L172
+      // See https://github.com/angular-ui/bootstrap/blob/0.10.0/src/typeahead/typeahead.js#L155
+      // FYI AngularStrap typeahead does not have debouncing: https://github.com/mgcrea/angular-strap/blob/v2.0.0-rc.4/src/typeahead/typeahead.js#L177
       if (_refreshDelayPromise) {
         $timeout.cancel(_refreshDelayPromise);
       }
@@ -257,7 +257,7 @@ angular.module('ui.select', [])
     }
   });
 
-  // See https://github.com/ivaynberg/select2/blob/70873abe9d/select2.js#L1431
+  // See https://github.com/ivaynberg/select2/blob/3.4.6/select2.js#L1431
   function _ensureHighlightVisible() {
     var container = $element.querySelectorAll('.ui-select-choices-content');
     var rows = container.querySelectorAll('.ui-select-choices-row');
@@ -439,7 +439,7 @@ angular.module('ui.select', [])
  * Highlights text that matches $select.search.
  *
  * Taken from AngularUI Bootstrap Typeahead
- * See https://github.com/angular-ui/bootstrap/blob/d0024931de/src/typeahead/typeahead.js#L352
+ * See https://github.com/angular-ui/bootstrap/blob/0.10.0/src/typeahead/typeahead.js#L340
  */
 .filter('highlight', function() {
   function escapeRegexp(queryToEscape) {
