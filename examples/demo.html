@@ -6,7 +6,7 @@
 
   <!--
     IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
-    For Firefox 3.6, you will need to include jQuery
+    For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
   -->
   <!--[if lt IE 9]>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
@@ -64,9 +64,15 @@
 
   <h3>Bootstrap theme</h3>
   <p>Selected: {{address.selected.formatted_address}}</p>
-  <ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+  <ui-select ng-model="address.selected"
+             theme="bootstrap"
+             ng-disabled="disabled"
+             reset-search-input="false"
+             style="width: 300px;">
     <match placeholder="Enter an address...">{{$select.selected.formatted_address}}</match>
-    <choices repeat="address in getAddress($select.search) track by $index">
+    <choices repeat="address in addresses track by $index"
+             refresh="refreshAddresses($select.search)"
+             refresh-delay="0">
       <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
     </choices>
   </ui-select>
@@ -74,8 +80,8 @@
   <h3>Select2 theme</h3>
   <p>Selected: {{person.selected}}</p>
   <ui-select ng-model="person.selected" theme="select2" ng-disabled="disabled" style="min-width: 300px;">
-    <match placeholder="Select a person in the list or search his *age*...">{{$select.selected.name}}</match>
-    <choices repeat="person in people | filter: {age: $select.search}">
+    <match placeholder="Select a person in the list or search his name/age...">{{$select.selected.name}}</match>
+    <choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
       <small>
         email: {{person.email}}
