@@ -146,7 +146,21 @@ angular.module('ui.select', [])
 
     // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
     $scope.$watchCollection(repeat.rhs, function(items) {
-      ctrl.items = items;
+
+      if (items === undefined || items === null) {
+        // If the user specifies undefined or null => reset the collection
+        // Special case: items can be undefined if the user did not initialized the collection on the scope
+        // i.e $scope.addresses = [] is missing
+        ctrl.items = [];
+      } else {
+        if (!angular.isArray(items)) {
+          throw uiSelectMinErr('items', "Expected an array but got '{0}'.", items);
+        } else {
+          // Regular case
+          ctrl.items = items;
+        }
+      }
+
     });
   };
 
