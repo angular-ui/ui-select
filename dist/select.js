@@ -18,27 +18,38 @@ if (angular.element.prototype.querySelectorAll === undefined) {
 angular.module('ui.select', [])
 
 .constant('uiSelectConfig', {
-  theme: 'select2',
-  placeholder: '' // Empty by default, like HTML tag <select>
+  theme: 'bootstrap',
+  placeholder: '', // Empty by default, like HTML tag <select>
+  refreshDelay: 1000 // In milliseconds
+})
+
+// See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
+.service('uiSelectMinErr', function() {
+  var minErr = angular.$$minErr('ui.select');
+  return function() {
+    var error = minErr.apply(this, arguments);
+    var message = error.message.replace(new RegExp('\nhttp://errors.angularjs.org/.*'), '');
+    return new Error(message);
+  }
 })
 
 /**
  * Parses "repeat" attribute.
  *
  * Taken from AngularJS ngRepeat source code
- * See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L211
+ * See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L211
  *
  * Original discussion about parsing "repeat" attribute instead of fully relying on ng-repeat:
  * https://github.com/angular-ui/ui-select/commit/5dd63ad#commitcomment-5504697
  */
-.service('RepeatParser', function() {
+.service('RepeatParser', ['uiSelectMinErr', function(uiSelectMinErr) {
   var self = this;
 
   /**
    * Example:
-   * expression = "address in getAddress($select.search) track by $index
+   * expression = "address in addresses | filter: {street: $select.search} track by $index"
    * lhs = "address",
-   * rhs = "getAddress($select.search)",
+   * rhs = "addresses | filter: {street: $select.search}",
    * trackByExp = "$index",
    * valueIdentifier = "address",
    * keyIdentifier = undefined
@@ -47,8 +58,8 @@ angular.module('ui.select', [])
     var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
     if (!match) {
-      throw new Error("Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
-                      expression);
+      throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
+                           expression);
     }
 
     var lhs = match[1]; // Left-hand side
@@ -57,10 +68,11 @@ angular.module('ui.select', [])
 
     match = lhs.match(/^(?:([\$\w]+)|\(([\$\w]+)\s*,\s*([\$\w]+)\))$/);
     if (!match) {
-      throw new Error("'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
-                      lhs);
+      throw uiSelectMinErr('iidexp', "'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
+                           lhs);
     }
 
+    // Unused for now
     var valueIdentifier = match[3] || match[1];
     var keyIdentifier = match[2];
 
@@ -78,7 +90,7 @@ angular.module('ui.select', [])
     }
     return expression;
   };
-})
+}])
 
 /**
  * Contains ui-select "intelligence".
@@ -87,8 +99,8 @@ angular.module('ui.select', [])
  * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
  */
 .controller('uiSelectCtrl',
-  ['$scope', '$element', '$timeout', 'RepeatParser', '$parse', '$q',
-  function($scope, $element, $timeout, RepeatParser, $parse, $q) {
+  ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr',
+  function($scope, $element, $timeout, RepeatParser, uiSelectMinErr) {
 
   var ctrl = this;
 
@@ -100,70 +112,93 @@ angular.module('ui.select', [])
   ctrl.items = [];
   ctrl.selected = undefined;
   ctrl.open = false;
-  ctrl.disabled = false;
+  ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
+  ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
+  ctrl.refreshDelay = undefined; // Initialized inside choices directive link function
 
-  ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
+  var _searchInput = $element.querySelectorAll('input.ui-select-search');
+  if (_searchInput.length !== 1) {
+    throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", _searchInput.length);
+  }
+
+  // Most of the time the user does not want to empty the search input when in typeahead mode
+  function _resetSearchInput() {
+    if (ctrl.resetSearchInput) {
+      ctrl.search = EMPTY_SEARCH;
+    }
+  }
 
   // When the user clicks on ui-select, displays the dropdown list
   ctrl.activate = function() {
-    if (ctrl.disabled === false) {
+    if (!ctrl.disabled) {
+      _resetSearchInput();
       ctrl.open = true;
+
       // Give it time to appear before focus
       $timeout(function() {
-        ctrl.searchInput[0].focus();
+        _searchInput[0].focus();
       });
     }
   };
-
-  var _repeatRhsIsCollection = null;
-  var _repeatRhsFn = null;
 
   ctrl.parseRepeatAttr = function(repeatAttr) {
     var repeat = RepeatParser.parse(repeatAttr);
-    _repeatRhsFn = $parse(repeat.rhs);
 
-    var collectionOrPromise = _repeatRhsFn($scope);
+    // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
+    $scope.$watchCollection(repeat.rhs, function(items) {
 
-    // Hackish :/
-    // Determine if the repeat expression (repeat.rhs) gives us a collection or a promise
-    // If it is a collection we need to $watch it in order to update ctrl.items
-    _repeatRhsIsCollection = angular.isArray(collectionOrPromise);
+      if (items === undefined || items === null) {
+        // If the user specifies undefined or null => reset the collection
+        // Special case: items can be undefined if the user did not initialized the collection on the scope
+        // i.e $scope.addresses = [] is missing
+        ctrl.items = [];
+      } else {
+        if (!angular.isArray(items)) {
+          throw uiSelectMinErr('items', "Expected an array but got '{0}'.", items);
+        } else {
+          // Regular case
+          ctrl.items = items;
+        }
+      }
 
-    if (_repeatRhsIsCollection) {
-      // See https://github.com/angular/angular.js/blob/55848a9139/src/ng/directive/ngRepeat.js#L259
-      $scope.$watchCollection(repeat.rhs, function(items) {
-        ctrl.items = items;
-      });
+    });
+  };
+
+  var _refreshDelayPromise = undefined;
+
+  /**
+   * Typeahead mode: lets the user refresh the collection using his own function.
+   *
+   * See Expose $select.search for external / remote filtering https://github.com/angular-ui/ui-select/pull/31
+   */
+  ctrl.refresh = function(refreshAttr) {
+    if (refreshAttr !== undefined) {
+
+      // Throttle / debounce
+      //
+      // See https://github.com/angular-ui/bootstrap/blob/0.10.0/src/typeahead/typeahead.js#L155
+      // FYI AngularStrap typeahead does not have debouncing: https://github.com/mgcrea/angular-strap/blob/v2.0.0-rc.4/src/typeahead/typeahead.js#L177
+      if (_refreshDelayPromise) {
+        $timeout.cancel(_refreshDelayPromise);
+      }
+      _refreshDelayPromise = $timeout(function() {
+        $scope.$apply(refreshAttr);
+      }, ctrl.refreshDelay);
     }
   };
 
-  ctrl.populateItems = function() {
-    if (!_repeatRhsIsCollection) {
-      var promise = _repeatRhsFn($scope);
-
-      // See https://github.com/angular-ui/bootstrap/blob/d0024931de/src/typeahead/typeahead.js#L109
-      // See https://github.com/mgcrea/angular-strap/blob/1529ab4bbc/src/helpers/parse-options.js#L35
-      $q.when(promise).then(function(items) {
-        ctrl.items = items;
-      });
-    }
-  };
-
-  // When the user clicks on an item inside the dropdown list
+  // When the user clicks on an item inside the dropdown
   ctrl.select = function(item) {
     ctrl.selected = item;
     ctrl.close();
     // Using a watch instead of $scope.ngModel.$setViewValue(item)
   };
 
+  // Closes the dropdown
   ctrl.close = function() {
     if (ctrl.open) {
+      _resetSearchInput();
       ctrl.open = false;
-      if (_repeatRhsIsCollection) {
-        // This means if repeat.rhs is a promise, we keep the search term (ctrl.search)
-        // even after the dropdown being closed
-        ctrl.search = EMPTY_SEARCH;
-      }
     }
   };
 
@@ -175,7 +210,7 @@ angular.module('ui.select', [])
     Escape: 27
   };
 
-  ctrl.onKeydown = function(key) {
+  function _onKeydown(key) {
     var processed = true;
     switch (key) {
       case Key.Down:
@@ -195,10 +230,61 @@ angular.module('ui.select', [])
         processed = false;
     }
     return processed;
-  };
+  }
+
+  // Bind to keyboard shortcuts
+  // Cannot specify a namespace: not supported by jqLite
+  _searchInput.on('keydown', function(e) {
+    // Keyboard shortcuts are all about the items,
+    // does not make sense (and will crash) if ctrl.items is empty
+    if (ctrl.items.length > 0) {
+      var key = e.which;
+
+      $scope.$apply(function() {
+        var processed = _onKeydown(key);
+        if (processed) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+
+      switch (key) {
+        case Key.Down:
+        case Key.Up:
+          _ensureHighlightVisible();
+          break;
+      }
+    }
+  });
+
+  // See https://github.com/ivaynberg/select2/blob/3.4.6/select2.js#L1431
+  function _ensureHighlightVisible() {
+    var container = $element.querySelectorAll('.ui-select-choices-content');
+    var rows = container.querySelectorAll('.ui-select-choices-row');
+    if (rows.length < 1) {
+      throw uiSelectMinErr('rows', "Expected multiple .ui-select-choices-row but got '{0}'.", rows.length);
+    }
+
+    var highlighted = rows[ctrl.activeIndex];
+    var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
+    var height = container[0].offsetHeight;
+
+    if (posY > height) {
+      container[0].scrollTop += posY - height;
+    } else if (posY < highlighted.clientHeight) {
+      container[0].scrollTop -= highlighted.clientHeight - posY;
+    }
+  }
+
+  $scope.$on('$destroy', function() {
+    _searchInput.off('keydown');
+  });
 }])
 
-.directive('uiSelect', ['$document', 'uiSelectConfig', function($document, uiSelectConfig) {
+.directive('uiSelect',
+  ['$document', 'uiSelectConfig',
+  function($document, uiSelectConfig) {
+
   return {
     restrict: 'EA',
     templateUrl: function(tElement, tAttrs) {
@@ -218,7 +304,14 @@ angular.module('ui.select', [])
       var ngModel = ctrls[1];
 
       attrs.$observe('disabled', function() {
-        $select.disabled = attrs.disabled ? true : false;
+        // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
+        $select.disabled = attrs.disabled !== undefined ? attrs.disabled : false;
+      });
+
+      attrs.$observe('resetSearchInput', function() {
+        // $eval() is needed otherwise we get a string instead of a boolean
+        var resetSearchInput = scope.$eval(attrs.resetSearchInput);
+        $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
       });
 
       scope.$watch('$select.selected', function(newValue, oldValue) {
@@ -231,34 +324,6 @@ angular.module('ui.select', [])
         $select.selected = ngModel.$viewValue;
       };
 
-      function ensureHighlightVisible() {
-        var container = element.querySelectorAll('.ui-select-choices-content');
-        var rows = container.querySelectorAll('.ui-select-choices-row');
-
-        var highlighted = rows[$select.activeIndex];
-        var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
-        var height = container[0].offsetHeight;
-
-        if (posY > height) {
-          container[0].scrollTop += posY - height;
-        } else if (posY < highlighted.clientHeight) {
-          container[0].scrollTop -= highlighted.clientHeight - posY;
-        }
-      }
-
-      // Bind to keyboard shortcuts
-      $select.searchInput.on('keydown', function(e) {
-        scope.$apply(function() {
-          var processed = $select.onKeydown(e.which);
-          if (processed) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            ensureHighlightVisible();
-          }
-        });
-      });
-
       // See Click everywhere but here event http://stackoverflow.com/questions/12931369
       $document.on('mousedown', function(e) {
         var contains = false;
@@ -266,7 +331,7 @@ angular.module('ui.select', [])
         if (window.jQuery) {
           // Firefox 3.6 does not support element.contains()
           // See Node.contains https://developer.mozilla.org/en-US/docs/Web/API/Node.contains
-          contains = $.contains(element[0], e.target);
+          contains = window.jQuery.contains(element[0], e.target);
         } else {
           contains = element[0].contains(e.target);
         }
@@ -278,31 +343,38 @@ angular.module('ui.select', [])
       });
 
       scope.$on('$destroy', function() {
-        $select.searchInput.off('keydown');
         $document.off('mousedown');
       });
 
-      // Move transcluded elements to their correct position on main template
+      // Move transcluded elements to their correct position in main template
       transcludeFn(scope, function(clone) {
+        // See Transclude in AngularJS http://blog.omkarpatil.com/2012/11/transclude-in-angularjs.html
+
+        // One day jqLite will be replaced by jQuery and we will be able to write:
+        // var transcludedElement = clone.filter('.my-class')
+        // instead of creating a hackish DOM element:
         var transcluded = angular.element('<div>').append(clone);
 
-        // Child directives could be uncompiled at this point, so we check both alternatives,
-        // first for compiled version (by class) or uncompiled (by tag). We place the directives
-        // at the insertion points that are marked with ui-select-* classes inside the templates
+        var transcludedMatch = transcluded.querySelectorAll('.ui-select-match');
+        if (transcludedMatch.length !== 1) {
+          throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-match but got '{0}'.", transcludedMatch.length);
+        }
+        element.querySelectorAll('.ui-select-match').replaceWith(transcludedMatch);
 
-        var transMatch = transcluded.querySelectorAll('.ui-select-match');
-        transMatch = !transMatch.length ? transcluded.find('match') : transMatch;
-        element.querySelectorAll('.ui-select-match').replaceWith(transMatch);
-
-        var transChoices = transcluded.querySelectorAll('.ui-select-choices');
-        transChoices = !transChoices.length ? transcluded.find('choices') : transChoices;
-        element.querySelectorAll('.ui-select-choices').replaceWith(transChoices);
+        var transcludedChoices = transcluded.querySelectorAll('.ui-select-choices');
+        if (transcludedChoices.length !== 1) {
+          throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-choices but got '{0}'.", transcludedChoices.length);
+        }
+        element.querySelectorAll('.ui-select-choices').replaceWith(transcludedChoices);
       });
     }
   };
 }])
 
-.directive('choices', ['uiSelectConfig', 'RepeatParser', function(uiSelectConfig, RepeatParser) {
+.directive('choices',
+  ['uiSelectConfig', 'RepeatParser', 'uiSelectMinErr',
+  function(uiSelectConfig, RepeatParser, uiSelectMinErr) {
+
   return {
     restrict: 'EA',
     require: '^uiSelect',
@@ -317,17 +389,27 @@ angular.module('ui.select', [])
     compile: function(tElement, tAttrs) {
       var repeat = RepeatParser.parse(tAttrs.repeat);
 
-      tElement.querySelectorAll('.ui-select-choices-row')
-        .attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
-        .attr('ng-mouseenter', '$select.activeIndex = $index')
-        .attr('ng-click', '$select.select(' + repeat.lhs + ')');
+      var rows = tElement.querySelectorAll('.ui-select-choices-row');
+      if (rows.length !== 1) {
+        throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", rows.length);
+      }
+
+      rows.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
+          .attr('ng-mouseenter', '$select.activeIndex = $index')
+          .attr('ng-click', '$select.select(' + repeat.lhs + ')');
 
       return function link(scope, element, attrs, $select) {
         $select.parseRepeatAttr(attrs.repeat);
 
         scope.$watch('$select.search', function() {
           $select.activeIndex = 0;
-          $select.populateItems(attrs.repeat);
+          $select.refresh(attrs.refresh);
+        });
+
+        attrs.$observe('refreshDelay', function() {
+          // $eval() is needed otherwise we get a string instead of a number
+          var refreshDelay = scope.$eval(attrs.refreshDelay);
+          $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
         });
       };
     }
@@ -347,7 +429,7 @@ angular.module('ui.select', [])
     },
     link: function(scope, element, attrs, $select) {
       attrs.$observe('placeholder', function(placeholder) {
-        $select.placeholder = placeholder || uiSelectConfig.placeholder;
+        $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
       });
     }
   };
@@ -357,7 +439,7 @@ angular.module('ui.select', [])
  * Highlights text that matches $select.search.
  *
  * Taken from AngularUI Bootstrap Typeahead
- * See https://github.com/angular-ui/bootstrap/blob/d0024931de/src/typeahead/typeahead.js#L352
+ * See https://github.com/angular-ui/bootstrap/blob/0.10.0/src/typeahead/typeahead.js#L340
  */
 .filter('highlight', function() {
   function escapeRegexp(queryToEscape) {

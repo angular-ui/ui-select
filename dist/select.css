@@ -29,7 +29,7 @@
 }
 
 .input-group > .ui-select-bootstrap > input.ui-select-search.form-control {
-  border-radius: 4px;  /* FIXME hardcoded value :-/ */
+  border-radius: 4px; /* FIXME hardcoded value :-/ */
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -40,9 +40,9 @@
 }
 
 .ui-select-bootstrap > .ui-select-match > .caret {
-  top: 45%;
   position: absolute;
-  right: 17px;
+  top: 45%;
+  right: 15px;
 }
 
 .ui-select-bootstrap > .ui-select-choices {
