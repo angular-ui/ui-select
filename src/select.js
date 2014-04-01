@@ -72,6 +72,7 @@ angular.module('ui.select', [])
                            lhs);
     }
 
+    // Unused for now
     var valueIdentifier = match[3] || match[1];
     var keyIdentifier = match[2];
 
@@ -115,9 +116,9 @@ angular.module('ui.select', [])
   ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
   ctrl.refreshDelay = undefined; // Initialized inside choices directive link function
 
-  ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
-  if (ctrl.searchInput.length !== 1) {
-    throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", ctrl.searchInput.length);
+  var _searchInput = $element.querySelectorAll('input.ui-select-search');
+  if (_searchInput.length !== 1) {
+    throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", _searchInput.length);
   }
 
   // Most of the time the user does not want to empty the search input when in typeahead mode
@@ -135,7 +136,7 @@ angular.module('ui.select', [])
 
       // Give it time to appear before focus
       $timeout(function() {
-        ctrl.searchInput[0].focus();
+        _searchInput[0].focus();
       });
     }
   };
@@ -172,13 +173,14 @@ angular.module('ui.select', [])
     }
   };
 
-  // When the user clicks on an item inside the dropdown list
+  // When the user clicks on an item inside the dropdown
   ctrl.select = function(item) {
     ctrl.selected = item;
     ctrl.close();
     // Using a watch instead of $scope.ngModel.$setViewValue(item)
   };
 
+  // Closes the dropdown
   ctrl.close = function() {
     if (ctrl.open) {
       _resetSearchInput();
@@ -194,7 +196,7 @@ angular.module('ui.select', [])
     Escape: 27
   };
 
-  ctrl.onKeydown = function(key) {
+  function _onKeydown(key) {
     var processed = true;
     switch (key) {
       case Key.Down:
@@ -214,12 +216,56 @@ angular.module('ui.select', [])
         processed = false;
     }
     return processed;
-  };
+  }
+
+  // Bind to keyboard shortcuts
+  // Cannot specify a namespace: not supported by jqLite
+  _searchInput.on('keydown', function(e) {
+    var key = e.which;
+
+    $scope.$apply(function() {
+      var processed = _onKeydown(key);
+      if (processed) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+
+    switch (key) {
+      case Key.Down:
+      case Key.Up:
+        _ensureHighlightVisible();
+        break;
+    }
+  });
+
+  // See https://github.com/ivaynberg/select2/blob/70873abe9d/select2.js#L1431
+  function _ensureHighlightVisible() {
+    var container = $element.querySelectorAll('.ui-select-choices-content');
+    var rows = container.querySelectorAll('.ui-select-choices-row');
+    if (rows.length < 1) {
+      throw uiSelectMinErr('rows', "Expected multiple .ui-select-choices-row but got '{0}'.", rows.length);
+    }
+
+    var highlighted = rows[ctrl.activeIndex];
+    var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
+    var height = container[0].offsetHeight;
+
+    if (posY > height) {
+      container[0].scrollTop += posY - height;
+    } else if (posY < highlighted.clientHeight) {
+      container[0].scrollTop -= highlighted.clientHeight - posY;
+    }
+  }
+
+  $scope.$on('$destroy', function() {
+    _searchInput.off('keydown');
+  });
 }])
 
 .directive('uiSelect',
-  ['$document', 'uiSelectConfig', 'uiSelectMinErr',
-  function($document, uiSelectConfig, uiSelectMinErr) {
+  ['$document', 'uiSelectConfig',
+  function($document, uiSelectConfig) {
 
   return {
     restrict: 'EA',
@@ -260,37 +306,6 @@ angular.module('ui.select', [])
         $select.selected = ngModel.$viewValue;
       };
 
-      function ensureHighlightVisible() {
-        var container = element.querySelectorAll('.ui-select-choices-content');
-        var rows = container.querySelectorAll('.ui-select-choices-row');
-        if (rows.length < 1) {
-          throw uiSelectMinErr('rows', "Expected multiple .ui-select-choices-row but got '{0}'.", rows.length);
-        }
-
-        var highlighted = rows[$select.activeIndex];
-        var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
-        var height = container[0].offsetHeight;
-
-        if (posY > height) {
-          container[0].scrollTop += posY - height;
-        } else if (posY < highlighted.clientHeight) {
-          container[0].scrollTop -= highlighted.clientHeight - posY;
-        }
-      }
-
-      // Bind to keyboard shortcuts
-      $select.searchInput.on('keydown', function(e) {
-        scope.$apply(function() {
-          var processed = $select.onKeydown(e.which);
-          if (processed) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            ensureHighlightVisible();
-          }
-        });
-      });
-
       // See Click everywhere but here event http://stackoverflow.com/questions/12931369
       $document.on('mousedown', function(e) {
         var contains = false;
@@ -310,7 +325,6 @@ angular.module('ui.select', [])
       });
 
       scope.$on('$destroy', function() {
-        $select.searchInput.off('keydown');
         $document.off('mousedown');
       });
 
