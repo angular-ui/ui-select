@@ -13,8 +13,8 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
     <script>
       document.createElement('ui-select');
-      document.createElement('match');
-      document.createElement('choices');
+      document.createElement('ui-select-match');
+      document.createElement('ui-select-choices');
     </script>
   <![endif]-->
 
@@ -47,11 +47,11 @@
         <div class="col-sm-6">
 
           <ui-select ng-model="person.selected" theme="bootstrap">
-            <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-            <choices repeat="item in people | filter: $select.search">
+            <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="item in people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
-            </choices>
+            </ui-select-choices>
           </ui-select>
 
         </div>
@@ -63,11 +63,11 @@
           <div class="input-group">
 
             <ui-select ng-model="person.selected" theme="bootstrap">
-              <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-              <choices repeat="item in people | filter: $select.search">
+              <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="item in people | filter: $select.search">
                 <span ng-bind-html="item.name | highlight: $select.search"></span>
                 <small ng-bind-html="item.email | highlight: $select.search"></small>
-              </choices>
+              </ui-select-choices>
             </ui-select>
 
             <span class="input-group-btn">
@@ -85,11 +85,11 @@
         <div class="col-sm-6">
 
           <ui-select ng-model="person.selected" theme="bootstrap" ng-disabled="true">
-            <match placeholder="Select or search a person in the list...">{{$select.selected.name}}</match>
-            <choices repeat="item in people | filter: $select.search">
+            <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="item in people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
-            </choices>
+            </ui-select-choices>
           </ui-select>
 
         </div>

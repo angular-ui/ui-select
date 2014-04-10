@@ -114,7 +114,7 @@ angular.module('ui.select', [])
   ctrl.open = false;
   ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
   ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
-  ctrl.refreshDelay = undefined; // Initialized inside choices directive link function
+  ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
 
   var _searchInput = $element.querySelectorAll('input.ui-select-search');
   if (_searchInput.length !== 1) {
@@ -371,7 +371,7 @@ angular.module('ui.select', [])
   };
 }])
 
-.directive('choices',
+.directive('uiSelectChoices',
   ['uiSelectConfig', 'RepeatParser', 'uiSelectMinErr',
   function(uiSelectConfig, RepeatParser, uiSelectMinErr) {
 
@@ -416,7 +416,7 @@ angular.module('ui.select', [])
   };
 }])
 
-.directive('match', ['uiSelectConfig', function(uiSelectConfig) {
+.directive('uiSelectMatch', ['uiSelectConfig', function(uiSelectConfig) {
   return {
     restrict: 'EA',
     require: '^uiSelect',

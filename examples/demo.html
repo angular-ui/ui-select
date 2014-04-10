@@ -13,8 +13,8 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
     <script>
       document.createElement('ui-select');
-      document.createElement('match');
-      document.createElement('choices');
+      document.createElement('ui-select-match');
+      document.createElement('ui-select-choices');
     </script>
   <![endif]-->
 
@@ -69,35 +69,35 @@
              ng-disabled="disabled"
              reset-search-input="false"
              style="width: 300px;">
-    <match placeholder="Enter an address...">{{$select.selected.formatted_address}}</match>
-    <choices repeat="address in addresses track by $index"
+    <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+    <ui-select-choices repeat="address in addresses track by $index"
              refresh="refreshAddresses($select.search)"
              refresh-delay="0">
       <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
-    </choices>
+    </ui-select-choices>
   </ui-select>
 
   <h3>Select2 theme</h3>
   <p>Selected: {{person.selected}}</p>
   <ui-select ng-model="person.selected" theme="select2" ng-disabled="disabled" style="min-width: 300px;">
-    <match placeholder="Select a person in the list or search his name/age...">{{$select.selected.name}}</match>
-    <choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
+    <ui-select-match placeholder="Select a person in the list or search his name/age...">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
       <small>
         email: {{person.email}}
         age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
       </small>
-    </choices>
+    </ui-select-choices>
   </ui-select>
 
   <h3>Selectize theme</h3>
   <p>Selected: {{country.selected}}</p>
   <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" style="width: 300px;">
-    <match placeholder="Select or search a country in the list...">{{$select.selected.name}}</match>
-    <choices repeat="country in countries | filter: $select.search">
+    <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="country in countries | filter: $select.search">
       <span ng-bind-html="country.name | highlight: $select.search"></span>
       <small ng-bind-html="country.code | highlight: $select.search"></small>
-    </choices>
+    </ui-select-choices>
   </ui-select>
 </body>
 </html>

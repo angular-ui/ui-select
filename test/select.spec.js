@@ -39,11 +39,11 @@ describe('ui-select tests', function() {
 
     return compileTemplate(
       '<ui-select ng-model="selection"' + attrsHtml + '> \
-        <match placeholder="Pick one...">{{$select.selected.name}}</match> \
-        <choices repeat="person in people | filter: $select.search"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
           <div ng-bind-html="person.name | highlight: $select.search"></div> \
           <div ng-bind-html="person.email | highlight: $select.search"></div> \
-        </choices> \
+        </ui-select-choices> \
       </ui-select>'
     );
   }
@@ -169,10 +169,10 @@ describe('ui-select tests', function() {
 
     var el = compileTemplate(
       '<ui-select ng-model="selection"> \
-        <match>{{$select.selected}}</match> \
-        <choices repeat="item in items | filter: $select.search"> \
+        <ui-select-match>{{$select.selected}}</ui-select-match> \
+        <ui-select-choices repeat="item in items | filter: $select.search"> \
           <div ng-bind-html="item | highlight: $select.search"></div> \
-        </choices> \
+        </ui-select-choices> \
       </ui-select>'
     );
     expect(el.scope().$select.selected).toEqual(undefined);
