@@ -174,8 +174,7 @@ angular.module('ui.select', [])
   ctrl.refresh = function(refreshAttr) {
     if (refreshAttr !== undefined) {
 
-      // Throttle / debounce
-      //
+      // Debounce
       // See https://github.com/angular-ui/bootstrap/blob/0.10.0/src/typeahead/typeahead.js#L155
       // FYI AngularStrap typeahead does not have debouncing: https://github.com/mgcrea/angular-strap/blob/v2.0.0-rc.4/src/typeahead/typeahead.js#L177
       if (_refreshDelayPromise) {
@@ -233,7 +232,6 @@ angular.module('ui.select', [])
   }
 
   // Bind to keyboard shortcuts
-  // Cannot specify a namespace: not supported by jqLite
   _searchInput.on('keydown', function(e) {
     // Keyboard shortcuts are all about the items,
     // does not make sense (and will crash) if ctrl.items is empty
@@ -324,8 +322,7 @@ angular.module('ui.select', [])
         $select.selected = ngModel.$viewValue;
       };
 
-      // See Click everywhere but here event http://stackoverflow.com/questions/12931369
-      $document.on('mousedown', function(e) {
+      function onDocumentClick(e) {
         var contains = false;
 
         if (window.jQuery) {
@@ -340,10 +337,13 @@ angular.module('ui.select', [])
           $select.close();
           scope.$digest();
         }
-      });
+      }
+
+      // See Click everywhere but here event http://stackoverflow.com/questions/12931369
+      $document.on('click', onDocumentClick);
 
       scope.$on('$destroy', function() {
-        $document.off('mousedown');
+        $document.off('click', onDocumentClick);
       });
 
       // Move transcluded elements to their correct position in main template
