@@ -280,8 +280,8 @@ angular.module('ui.select', [])
 }])
 
 .directive('uiSelect',
-  ['$document', 'uiSelectConfig',
-  function($document, uiSelectConfig) {
+  ['$document', 'uiSelectConfig', 'uiSelectMinErr', 
+  function($document, uiSelectConfig, uiSelectMinErr) {
 
   return {
     restrict: 'EA',
