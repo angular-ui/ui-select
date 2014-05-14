@@ -55,6 +55,10 @@ angular.module('ui.select', [])
    * keyIdentifier = undefined
    */
   self.parse = function(expression) {
+    if (!expression) {
+      throw uiSelectMinErr('repeat', "Expected 'repeat' expression.");
+    }
+
     var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
     if (!match) {

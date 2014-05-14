@@ -182,4 +182,33 @@ describe('ui-select tests', function() {
     expect(el.scope().$select.selected).toEqual('false');
     expect(getMatchLabel(el)).toEqual('false');
   });
-});
+
+  it('should throw when no ui-select-choices found', function() {
+    expect(function() {
+      compileTemplate(
+        '<ui-select ng-model="selection"> \
+          <ui-select-match></ui-select-match> \
+        </ui-select>'
+      );
+    }).toThrow(new Error('[ui.select:transcluded] Expected 1 .ui-select-choices but got \'0\'.'));
+  });
+
+  it('should throw when no repeat attribute is provided to ui-select-choices', function() {
+    expect(function() {
+      compileTemplate(
+        '<ui-select ng-model="selection"> \
+          <ui-select-choices></ui-select-choices> \
+        </ui-select>'
+      );
+    }).toThrow(new Error('[ui.select:repeat] Expected \'repeat\' expression.'));
+  });
+
+  it('should throw when no ui-select-match found', function() {
+    expect(function() {
+      compileTemplate(
+        '<ui-select ng-model="selection"> \
+          <ui-select-choices repeat="item in items"></ui-select-choices> \
+        </ui-select>'
+      );
+    }).toThrow(new Error('[ui.select:transcluded] Expected 1 .ui-select-match but got \'0\'.'));
+  });});
