@@ -239,7 +239,7 @@ angular.module('ui.select', [])
   _searchInput.on('keydown', function(e) {
     // Keyboard shortcuts are all about the items,
     // does not make sense (and will crash) if ctrl.items is empty
-    if (ctrl.items.length > 0) {
+    if (ctrl.items && ctrl.items.length >= 0) {
       var key = e.which;
 
       $scope.$apply(function() {
