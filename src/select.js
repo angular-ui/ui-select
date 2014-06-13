@@ -129,6 +129,10 @@ angular.module('ui.select', [])
   function _resetSearchInput() {
     if (ctrl.resetSearchInput) {
       ctrl.search = EMPTY_SEARCH;
+      //reset activeIndex
+      if (ctrl.selected && ctrl.items.length) {
+        ctrl.activeIndex = ctrl.items.indexOf(ctrl.selected);
+      }
     }
   }
 
@@ -200,10 +204,6 @@ angular.module('ui.select', [])
   // Closes the dropdown
   ctrl.close = function() {
     if (ctrl.open) {
-      //reset activeIndex
-      if (ctrl.selected && ctrl.items.length) {
-        ctrl.activeIndex = ctrl.items.indexOf(ctrl.selected);
-      }
       _resetSearchInput();
       ctrl.open = false;
     }
