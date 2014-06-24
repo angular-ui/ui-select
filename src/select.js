@@ -129,6 +129,10 @@ angular.module('ui.select', [])
   function _resetSearchInput() {
     if (ctrl.resetSearchInput) {
       ctrl.search = EMPTY_SEARCH;
+      //reset activeIndex
+      if (ctrl.selected && ctrl.items.length) {
+        ctrl.activeIndex = ctrl.items.indexOf(ctrl.selected);
+      }
     }
   }
 
@@ -284,7 +288,7 @@ angular.module('ui.select', [])
 }])
 
 .directive('uiSelect',
-  ['$document', 'uiSelectConfig', 'uiSelectMinErr', 
+  ['$document', 'uiSelectConfig', 'uiSelectMinErr',
   function($document, uiSelectConfig, uiSelectMinErr) {
 
   return {
