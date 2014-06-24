@@ -55,3 +55,9 @@
   max-height: 200px;
   overflow-x: hidden;
 }
+
+/* fix hide/show angular animation */
+.ui-select-match.ng-hide-add,
+.ui-select-search.ng-hide-add {
+    display: none !important;
+}
