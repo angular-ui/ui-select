@@ -2,7 +2,7 @@
 
 AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [Selectize](http://brianreavis.github.io/selectize.js/).
 
-- [Demo](http://plnkr.co/edit/GtOOWE?p=preview)
+- [Demo](http://plnkr.co/edit/bgXrCxZYlt99fquw7mce?p=preview)
 - [Bootstrap theme](http://plnkr.co/edit/7Fpbtg?p=preview)
 
 ## Features
