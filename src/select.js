@@ -380,8 +380,8 @@ angular.module('ui.select', [])
 }])
 
 .directive('uiSelectChoices',
-  ['uiSelectConfig', 'RepeatParser', 'uiSelectMinErr',
-  function(uiSelectConfig, RepeatParser, uiSelectMinErr) {
+  ['uiSelectConfig', 'RepeatParser', 'uiSelectMinErr', '$compile',
+  function(uiSelectConfig, RepeatParser, uiSelectMinErr, $compile) {
 
   return {
     restrict: 'EA',
@@ -396,17 +396,27 @@ angular.module('ui.select', [])
 
     compile: function(tElement, tAttrs) {
       var repeat = RepeatParser.parse(tAttrs.repeat);
+      return function link(scope, element, attrs, $select, transcludeFn) {
+  
+        var rows = element.querySelectorAll('.ui-select-choices-row');
+        if (rows.length !== 1) {
+          throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", rows.length);
+        }
 
-      var rows = tElement.querySelectorAll('.ui-select-choices-row');
-      if (rows.length !== 1) {
-        throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", rows.length);
-      }
+        rows.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
+            .attr('ng-mouseenter', '$select.activeIndex = $index')
+            .attr('ng-click', '$select.select(' + repeat.lhs + ')');
 
-      rows.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
-          .attr('ng-mouseenter', '$select.activeIndex = $index')
-          .attr('ng-click', '$select.select(' + repeat.lhs + ')');
 
-      return function link(scope, element, attrs, $select) {
+        transcludeFn(function(clone) {
+          var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
+          if (rowsInner.length !== 1)
+            throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);
+            
+          rowsInner.append(clone);
+          $compile(element)(scope);
+        });
+
         $select.parseRepeatAttr(attrs.repeat);
 
         scope.$watch('$select.search', function() {
@@ -455,6 +465,6 @@ angular.module('ui.select', [])
   }
 
   return function(matchItem, query) {
-    return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
+    return query && matchItem ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
   };
 });
