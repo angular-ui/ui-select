@@ -1,6 +1,7 @@
-<button type="button" class="btn btn-default form-control ui-select-match"
+<button type="button" class="btn btn-default form-control ui-select-match" tabindex="-1"
         ng-hide="$select.open"
         ng-disabled="$select.disabled"
+        ng-class="{'btn-default-focus':$select.focus}";
         ng-click="$select.activate()">
   <span ng-hide="$select.selected !== undefined" class="text-muted">{{$select.placeholder}}</span>
   <span ng-show="$select.selected !== undefined" ng-transclude></span>
