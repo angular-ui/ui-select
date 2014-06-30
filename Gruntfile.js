@@ -7,8 +7,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-hustler');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-conventional-changelog');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.initConfig({
+    watch: {
+      files: ['src/**/*'],
+      tasks: ['build'],
+    },
     karma: {
       options: {
         configFile: 'karma.conf.js'
