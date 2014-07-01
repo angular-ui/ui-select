@@ -16,11 +16,11 @@
     "test"
   ],
   "dependencies": {
-    "angular": "~1.2"
+    "angular": "1.2.0 - 1.2.17"
   },
   "devDependencies": {
     "jquery": "~1.11",
-    "angular-sanitize": "~1.2",
-    "angular-mocks": "~1.2"
+    "angular-sanitize": "1.2.0 - 1.2.17",
+    "angular-mocks": "1.2.0 - 1.2.17"
   }
 }
