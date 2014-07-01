@@ -6,6 +6,10 @@
 
 /* Select2 theme */
 
+/* Mark invalid Select2 */
+.ng-dirty.ng-invalid > a.select2-choice {
+    border-color: #D44950;
+}
 
 /* Selectize theme */
 
@@ -17,6 +21,11 @@
 /* Fix dropdown width for Selectize theme */
 .selectize-control > .selectize-dropdown {
   width: 100%;
+}
+
+/* Mark invalid Selectize */
+.ng-dirty.ng-invalid > div.selectize-input {
+    border-color: #D44950;
 }
 
 
@@ -60,4 +69,9 @@
 .ui-select-match.ng-hide-add,
 .ui-select-search.ng-hide-add {
     display: none !important;
+}
+
+/* Mark invalid Bootstrap */
+.ui-select-bootstrap.ng-dirty.ng-invalid > button.btn.ui-select-match {
+    border-color: #D44950;
 }
