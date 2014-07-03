@@ -335,7 +335,9 @@ angular.module('ui.select', [])
           return;
         }
 
-        if (e.which == KEY.DOWN  || e.which == KEY.UP || e.which == KEY.ENTER){
+        if (e.which == KEY.DOWN  || e.which == KEY.UP || e.which == KEY.ENTER || e.which == KEY.SPACE){
+          e.preventDefault();
+          e.stopPropagation();
           $select.activate();
         }
 
