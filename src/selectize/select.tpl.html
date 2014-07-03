@@ -1,9 +1,9 @@
 <div class="selectize-control single">
   <div class="selectize-input"
-       ng-class="{'focus': $select.open, 'disabled': $select.disabled}"
+       ng-class="{'focus': $select.open, 'disabled': $select.disabled, 'selectize-focus' : $select.focus}"
        ng-click="$select.activate()">
     <div class="ui-select-match"></div>
-    <input type="text" autocomplete="off" tabindex=""
+    <input type="text" autocomplete="off" tabindex="-1"
            class="ui-select-search"
            placeholder="{{$select.placeholder}}"
            ng-model="$select.search"

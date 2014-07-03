@@ -116,6 +116,8 @@ angular.module('ui.select', [])
   ctrl.items = [];
   ctrl.selected = undefined;
   ctrl.open = false;
+  ctrl.focus = false;
+  ctrl.focusser = undefined; //Reference to input element used to handle focus events  
   ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
   ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
   ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
@@ -137,13 +139,14 @@ angular.module('ui.select', [])
   }
 
   // When the user clicks on ui-select, displays the dropdown list
-  ctrl.activate = function() {
+  ctrl.activate = function(initSearchValue) {
     if (!ctrl.disabled) {
       _resetSearchInput();
       ctrl.open = true;
 
       // Give it time to appear before focus
       $timeout(function() {
+        ctrl.search = initSearchValue || ctrl.search;
         _searchInput[0].focus();
       });
     }
@@ -206,6 +209,7 @@ angular.module('ui.select', [])
     if (ctrl.open) {
       _resetSearchInput();
       ctrl.open = false;
+      ctrl.focusser[0].focus();
     }
   };
 
@@ -288,8 +292,8 @@ angular.module('ui.select', [])
 }])
 
 .directive('uiSelect',
-  ['$document', 'uiSelectConfig', 'uiSelectMinErr',
-  function($document, uiSelectConfig, uiSelectMinErr) {
+  ['$document', 'uiSelectConfig', 'uiSelectMinErr', '$compile',
+  function($document, uiSelectConfig, uiSelectMinErr, $compile) {
 
   return {
     restrict: 'EA',
@@ -308,6 +312,98 @@ angular.module('ui.select', [])
     link: function(scope, element, attrs, ctrls, transcludeFn) {
       var $select = ctrls[0];
       var ngModel = ctrls[1];
+
+      //Idea from: https://github.com/ivaynberg/select2/blob/79b5bf6db918d7560bdd959109b7bcfb47edaf43/select2.js#L1954
+      var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' aria-haspopup='true' role='button' />");
+      $compile(focusser)(scope);
+      $select.focusser = focusser;
+
+      element.append(focusser);
+      focusser.bind("focus", function(){
+        scope.$evalAsync(function(){
+          $select.focus = true;
+        });
+      });
+      focusser.bind("blur", function(){
+        scope.$evalAsync(function(){
+          $select.focus = false;
+        });
+      });
+      focusser.bind("keydown", function(e){
+
+        if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC) {
+          return;
+        }
+
+        if (e.which == KEY.DOWN  || e.which == KEY.UP || e.which == KEY.ENTER || e.which == KEY.SPACE){
+          e.preventDefault();
+          e.stopPropagation();
+          $select.activate();
+        }
+
+        scope.$digest();
+      });
+
+      focusser.bind("keyup input", function(e){
+
+        if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC || e.which == KEY.ENTER) {
+          return;
+        }
+        
+        $select.activate(focusser.val()); //User pressed some regualar key, so we pass it to the search input
+        focusser.val('');
+        scope.$digest();
+
+      });
+
+      //TODO Refactor to reuse the KEY object from uiSelectCtrl
+      var KEY = {
+        TAB: 9,
+        ENTER: 13,
+        ESC: 27,
+        SPACE: 32,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40,
+        SHIFT: 16,
+        CTRL: 17,
+        ALT: 18,
+        PAGE_UP: 33,
+        PAGE_DOWN: 34,
+        HOME: 36,
+        END: 35,
+        BACKSPACE: 8,
+        DELETE: 46,
+        isArrow: function (k) {
+            k = k.which ? k.which : k;
+            switch (k) {
+            case KEY.LEFT:
+            case KEY.RIGHT:
+            case KEY.UP:
+            case KEY.DOWN:
+                return true;
+            }
+            return false;
+        },
+        isControl: function (e) {
+            var k = e.which;
+            switch (k) {
+            case KEY.SHIFT:
+            case KEY.CTRL:
+            case KEY.ALT:
+                return true;
+            }
+
+            if (e.metaKey) return true;
+
+            return false;
+        },
+        isFunctionKey: function (k) {
+            k = k.which ? k.which : k;
+            return k >= 112 && k <= 123;
+        }
+      };
 
       attrs.$observe('disabled', function() {
         // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
