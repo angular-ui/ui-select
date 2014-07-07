@@ -8,12 +8,18 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.initConfig({
+    
+    pkg: grunt.file.readJSON('package.json'),
+
     watch: {
       files: ['src/**/*'],
       tasks: ['build'],
     },
+
     karma: {
       options: {
         configFile: 'karma.conf.js'
@@ -39,7 +45,8 @@ module.exports = function(grunt) {
     },
 
     clean: {
-      dist: ['.tmp/', 'dist/']
+      dist: ['dist/'],
+      tmp: ['.tmp/']
     },
 
     ngTemplateCache: {
@@ -71,11 +78,41 @@ module.exports = function(grunt) {
           dest: 'dist/select.css'
         }]
       }
+    },
+
+    uglify: {
+      options: {
+        banner: '/*!\n<%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>\n<%= pkg.homepage %>\n*/\n',
+        sourceMap: true
+      },
+      build: {
+        files: {
+          'dist/select.min.js': ['dist/select.js']
+        }
+      },
+      compress: {
+        global_defs: {
+          "DEBUG": false
+        },
+        dead_code: true
+      },
+    },
+
+    cssmin: {
+      minify: {
+        options: {
+          banner: '/*!\n<%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>\n<%= pkg.homepage %>\n*/\n',
+        },
+        files: {
+          'dist/select.min.css': ['src/select.css']
+        }
+      }
     }
+
   });
 
   grunt.registerTask('default', ['test']);
-  grunt.registerTask('build', ['clean', 'ngTemplateCache', 'concat', 'copy']);
+  grunt.registerTask('build', ['clean', 'ngTemplateCache', 'concat', 'copy', 'uglify:build', 'cssmin', 'clean:tmp']);
   grunt.registerTask('test', ['build', 'karma:once']);
   grunt.registerTask('test:watch', ['build', 'karma:watch']);
   grunt.registerTask('test:travis', ['build', 'karma:travis']);

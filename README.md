@@ -25,8 +25,8 @@ Check the [examples](https://github.com/angular-ui/ui-select/blob/master/example
 
 - `bower install angular-ui-select`
 - Inside your HTML add
-  - select.js: `<script src="bower_components/angular-ui-select/dist/select.js"></script>`
-  - select.css: `<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css">`
+  - select.js: `<script src="bower_components/angular-ui-select/dist/select.min.js"></script>`
+  - select.css: `<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css">`
 
 ### Bootstrap theme
 
