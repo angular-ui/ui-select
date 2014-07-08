@@ -1,8 +1,10 @@
 <div ng-show="$select.open" class="ui-select-choices selectize-dropdown single">
   <div class="ui-select-choices-content selectize-dropdown-content">
-    <div class="ui-select-choices-row"
-         ng-class="{'active': $select.activeIndex === $index}">
-      <div class="option ui-select-choices-row-inner" data-selectable></div>
+    <div class="ui-select-choices-group optgroup">
+      <div class="ui-select-choices-group-label optgroup-header">{{$group}}</div>
+      <div class="ui-select-choices-row" ng-class="{active: $select.isActive(this)}">
+        <div class="option ui-select-choices-row-inner" data-selectable></div>
+      </div>
     </div>
   </div>
 </div>

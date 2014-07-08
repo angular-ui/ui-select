@@ -88,8 +88,12 @@
       };
     };
 
-    self.getNgRepeatExpression = function(lhs, rhs, trackByExp) {
-      var expression = lhs + ' in ' + rhs;
+    self.getGroupNgRepeatExpression = function() {
+      return '($group, $items) in $select.groups'
+    };
+
+    self.getNgRepeatExpression = function(lhs, rhs, trackByExp, grouped) {
+      var expression = lhs + ' in ' + (grouped ? '$items' : rhs);
       if (trackByExp) {
         expression += ' track by ' + trackByExp;
       }
@@ -153,8 +157,30 @@
       }
     };
 
-    ctrl.parseRepeatAttr = function(repeatAttr) {
-      var repeat = RepeatParser.parse(repeatAttr);
+    ctrl.parseRepeatAttr = function(repeatAttr, groupByExp) {
+      function updateGroups(items) {
+        ctrl.groups = {};
+        angular.forEach(items, function(item) {
+          var groupFn = $scope.$eval(groupByExp);
+          var groupValue = angular.isFunction(groupFn) ? groupFn(item) : item[groupFn];
+          if(!ctrl.groups[groupValue]) {
+            ctrl.groups[groupValue] = [item];
+          }
+          else {
+            ctrl.groups[groupValue].push(item);
+          }
+        });
+        setPlainItems(items);
+      }
+
+      function setPlainItems(items) {
+        ctrl.items = items;
+      }
+
+      var repeat = RepeatParser.parse(repeatAttr),
+        setItemsFn = groupByExp ? updateGroups : setPlainItems;
+
+      ctrl.itemProperty = repeat.lhs;
 
       // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
       $scope.$watchCollection(repeat.rhs, function(items) {
@@ -169,7 +195,7 @@
             throw uiSelectMinErr('items', "Expected an array but got '{0}'.", items);
           } else {
             // Regular case
-            ctrl.items = items;
+            setItemsFn(items);
           }
         }
 
@@ -196,6 +222,14 @@
           $scope.$eval(refreshAttr);
         }, ctrl.refreshDelay);
       }
+    };
+
+    ctrl.setActiveItem = function(item) {
+      ctrl.activeIndex = ctrl.items.indexOf(item);
+    };
+
+    ctrl.isActive = function(itemScope) {
+      return ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
     };
 
     // When the user clicks on an item inside the dropdown
@@ -493,15 +527,21 @@
 
       compile: function(tElement, tAttrs) {
         var repeat = RepeatParser.parse(tAttrs.repeat);
+        var groupByExp = tAttrs.groupBy;
         return function link(scope, element, attrs, $select, transcludeFn) {
-    
-          var rows = element.querySelectorAll('.ui-select-choices-row');
-          if (rows.length !== 1) {
-            throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", rows.length);
+
+          var groups = element.querySelectorAll('.ui-select-choices-group');
+          if(groupByExp) {
+            groups.attr('ng-repeat', RepeatParser.getGroupNgRepeatExpression())
           }
 
-          rows.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp))
-              .attr('ng-mouseenter', '$select.activeIndex = $index')
+          var choices = element.querySelectorAll('.ui-select-choices-row');
+          if (choices.length !== 1) {
+            throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", choices.length);
+          }
+
+          choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp, groupByExp))
+              .attr('ng-mouseenter', '$select.setActiveItem('+repeat.lhs+')')
               .attr('ng-click', '$select.select(' + repeat.lhs + ')');
 
 
@@ -509,12 +549,12 @@
             var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
             if (rowsInner.length !== 1)
               throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);
-              
+
             rowsInner.append(clone);
             $compile(element)(scope);
           });
 
-          $select.parseRepeatAttr(attrs.repeat);
+          $select.parseRepeatAttr(attrs.repeat, groupByExp);
 
           scope.$watch('$select.search', function() {
             $select.activeIndex = 0;
