@@ -89,7 +89,7 @@
     };
 
     self.getGroupNgRepeatExpression = function() {
-      return '($group, $items) in $select.groups'
+      return '($group, $items) in $select.groups';
     };
 
     self.getNgRepeatExpression = function(lhs, rhs, trackByExp, grouped) {
@@ -170,7 +170,10 @@
             ctrl.groups[groupValue].push(item);
           }
         });
-        setPlainItems(items);
+        ctrl.items = [];
+        angular.forEach(Object.keys(ctrl.groups).sort(), function(group) {
+          ctrl.items = ctrl.items.concat(ctrl.groups[group]);
+        });
       }
 
       function setPlainItems(items) {
@@ -530,9 +533,9 @@
         var groupByExp = tAttrs.groupBy;
         return function link(scope, element, attrs, $select, transcludeFn) {
 
-          var groups = element.querySelectorAll('.ui-select-choices-group');
           if(groupByExp) {
-            groups.attr('ng-repeat', RepeatParser.getGroupNgRepeatExpression())
+            var groups = element.querySelectorAll('.ui-select-choices-group');
+            groups.attr('ng-repeat', RepeatParser.getGroupNgRepeatExpression());
           }
 
           var choices = element.querySelectorAll('.ui-select-choices-row');

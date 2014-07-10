@@ -14,14 +14,14 @@ describe('ui-select tests', function() {
     };
 
     scope.people = [
-      { name: 'Adam',      email: 'adam@email.com',      age: 12 },
-      { name: 'Amalie',    email: 'amalie@email.com',    age: 12 },
-      { name: 'Estefanía', email: 'estefanía@email.com', age: 21 },
-      { name: 'Adrian',    email: 'adrian@email.com',    age: 21 },
-      { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30 },
-      { name: 'Samantha',  email: 'samantha@email.com',  age: 30 },
-      { name: 'Nicole',    email: 'nicole@email.com',    age: 43 },
-      { name: 'Natasha',   email: 'natasha@email.com',   age: 54 }
+      { name: 'Adam',      email: 'adam@email.com',      group: 'Foo', age: 12 },
+      { name: 'Amalie',    email: 'amalie@email.com',    group: 'Foo', age: 12 },
+      { name: 'Estefanía', email: 'estefanía@email.com', group: 'Foo', age: 21 },
+      { name: 'Adrian',    email: 'adrian@email.com',    group: 'Foo', age: 21 },
+      { name: 'Wladimir',  email: 'wladimir@email.com',  group: 'Foo', age: 30 },
+      { name: 'Samantha',  email: 'samantha@email.com',  group: 'bar', age: 30 },
+      { name: 'Nicole',    email: 'nicole@email.com',    group: 'bar', age: 43 },
+      { name: 'Natasha',   email: 'natasha@email.com',   group: 'Baz', age: 54 }
     ];
   }));
 
@@ -201,7 +201,7 @@ describe('ui-select tests', function() {
       return compileTemplate(
           '<ui-select ng-model="selection"> \
         <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
-        <ui-select-choices group-by="\'age\'" repeat="person in people | filter: $select.search"> \
+        <ui-select-choices group-by="\'group\'" repeat="person in people | filter: $select.search"> \
           <div ng-bind-html="person.name | highlight: $select.search"></div> \
           <div ng-bind-html="person.email | highlight: $select.search"></div> \
         </ui-select-choices> \
@@ -211,14 +211,14 @@ describe('ui-select tests', function() {
 
     it('should create items group', function() {
       var el = createUiSelect();
-      expect(el.find('.ui-select-choices-group').length).toBe(5);
+      expect(el.find('.ui-select-choices-group').length).toBe(3);
     });
 
     it('should show label before each group', function() {
       var el = createUiSelect();
       expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
         return this.textContent;
-      }).toArray()).toEqual(['12', '21', '30', '43', '54']);
+      }).toArray()).toEqual(['Baz', 'Foo', 'bar']);
     });
 
     it('should hide empty groups', function() {
@@ -228,21 +228,21 @@ describe('ui-select tests', function() {
 
       expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
         return this.textContent;
-      }).toArray()).toEqual(['12', '21', '30']);
+      }).toArray()).toEqual(['Foo']);
     });
 
     it('should change activeItem through groups', function() {
       var el = createUiSelect();
-      el.scope().$select.search = 'd';
+      el.scope().$select.search = 'n';
       scope.$digest();
       var choices = el.find('.ui-select-choices-row');
       expect(choices.eq(0)).toHaveClass('active');
-      expect(getGroupLabel(choices.eq(0)).text()).toBe('12');
+      expect(getGroupLabel(choices.eq(0)).text()).toBe('Baz');
 
       triggerKeydown(el.find('input'), 40 /*Down*/);
       scope.$digest();
       expect(choices.eq(1)).toHaveClass('active');
-      expect(getGroupLabel(choices.eq(1)).text()).toBe('21');
+      expect(getGroupLabel(choices.eq(1)).text()).toBe('Foo');
     });
   });
 
