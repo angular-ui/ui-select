@@ -56,16 +56,28 @@ app.controller('DemoCtrl', function($scope, $http) {
     $scope.country.selected = undefined;
   };
 
+  $scope.someGroupFn = function (item){
+
+    if (item.name[0] >= 'A' && item.name[0] <= 'M')
+        return 'From A - M';
+
+    if (item.name[0] >= 'N' && item.name[0] <= 'Z')
+        return 'From N - Z';
+
+  };
+
   $scope.person = {};
   $scope.people = [
-    { name: 'Adam',      email: 'adam@email.com',      group: 'Foo', age: 12 },
-    { name: 'Amalie',    email: 'amalie@email.com',    group: 'Foo', age: 12 },
-    { name: 'Estefanía', email: 'estefanía@email.com', group: 'Foo', age: 21 },
-    { name: 'Adrian',    email: 'adrian@email.com',    group: 'Foo', age: 21 },
-    { name: 'Wladimir',  email: 'wladimir@email.com',  group: 'Foo', age: 30 },
-    { name: 'Samantha',  email: 'samantha@email.com',  group: 'bar', age: 30 },
-    { name: 'Nicole',    email: 'nicole@email.com',    group: 'bar', age: 43 },
-    { name: 'Natasha',   email: 'natasha@email.com',   group: 'Baz', age: 54 }
+    { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
+    { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
+    { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+    { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
+    { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
+    { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
+    { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
+    { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
+    { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
+    { name: 'Nicolás',   email: 'nicole@email.com',    age: 43, country: 'Colombia' }
   ];
 
   $scope.address = {};
@@ -75,7 +87,7 @@ app.controller('DemoCtrl', function($scope, $http) {
       'http://maps.googleapis.com/maps/api/geocode/json',
       {params: params}
     ).then(function(response) {
-      $scope.addresses = response.data.results
+      $scope.addresses = response.data.results;
     });
   };
 
