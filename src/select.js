@@ -183,6 +183,7 @@
       var repeat = RepeatParser.parse(repeatAttr),
         setItemsFn = groupByExp ? updateGroups : setPlainItems;
 
+      ctrl.isGrouped = !!groupByExp;
       ctrl.itemProperty = repeat.lhs;
 
       // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
@@ -308,19 +309,22 @@
     // See https://github.com/ivaynberg/select2/blob/3.4.6/select2.js#L1431
     function _ensureHighlightVisible() {
       var container = $element.querySelectorAll('.ui-select-choices-content');
-      var rows = container.querySelectorAll('.ui-select-choices-row');
-      if (rows.length < 1) {
-        throw uiSelectMinErr('rows', "Expected multiple .ui-select-choices-row but got '{0}'.", rows.length);
+      var choices = container.querySelectorAll('.ui-select-choices-row');
+      if (choices.length < 1) {
+        throw uiSelectMinErr('choices', "Expected multiple .ui-select-choices-row but got '{0}'.", choices.length);
       }
 
-      var highlighted = rows[ctrl.activeIndex];
+      var highlighted = choices[ctrl.activeIndex];
       var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
       var height = container[0].offsetHeight;
 
       if (posY > height) {
         container[0].scrollTop += posY - height;
       } else if (posY < highlighted.clientHeight) {
-        container[0].scrollTop -= highlighted.clientHeight - posY;
+        if (ctrl.isGrouped && ctrl.activeIndex === 0)
+          container[0].scrollTop = 0; //To make group header visible when going all the way up
+        else
+          container[0].scrollTop -= highlighted.clientHeight - posY;
       }
     }
 
@@ -535,6 +539,7 @@
 
           if(groupByExp) {
             var groups = element.querySelectorAll('.ui-select-choices-group');
+            if (groups.length !== 1) throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-group but got '{0}'.", groups.length);
             groups.attr('ng-repeat', RepeatParser.getGroupNgRepeatExpression());
           }
 
