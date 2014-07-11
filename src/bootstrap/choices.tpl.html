@@ -1,7 +1,11 @@
 <ul class="ui-select-choices ui-select-choices-content dropdown-menu"
     role="menu" aria-labelledby="dLabel"
     ng-show="$select.items.length > 0">
-  <li class="ui-select-choices-row" ng-class="{active: $select.activeIndex === $index}">
-    <a class="ui-select-choices-row-inner" href="javascript:void(0)"></a>
+  <li class="ui-select-choices-group">
+    <div class="divider" ng-show="$index > 0"></div>
+    <div class="ui-select-choices-group-label dropdown-header">{{$group}}</div>
+    <div class="ui-select-choices-row" ng-class="{active: $select.isActive(this)}">
+      <a href="javascript:void(0)" class="ui-select-choices-row-inner"></a>
+    </div>
   </li>
 </ul>

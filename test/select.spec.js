@@ -9,15 +9,19 @@ describe('ui-select tests', function() {
     scope = $rootScope.$new();
     $compile = _$compile_;
 
+    scope.getGroupLabel = function(person) {
+      return person.age % 2 ? 'even' : 'odd';
+    };
+
     scope.people = [
-      { name: 'Adam',      email: 'adam@email.com',      age: 10 },
-      { name: 'Amalie',    email: 'amalie@email.com',    age: 12 },
-      { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30 },
-      { name: 'Samantha',  email: 'samantha@email.com',  age: 31 },
-      { name: 'Estefanía', email: 'estefanía@email.com', age: 16 },
-      { name: 'Natasha',   email: 'natasha@email.com',   age: 54 },
-      { name: 'Nicole',    email: 'nicole@email.com',    age: 43 },
-      { name: 'Adrian',    email: 'adrian@email.com',    age: 21 }
+      { name: 'Adam',      email: 'adam@email.com',      group: 'Foo', age: 12 },
+      { name: 'Amalie',    email: 'amalie@email.com',    group: 'Foo', age: 12 },
+      { name: 'Estefanía', email: 'estefanía@email.com', group: 'Foo', age: 21 },
+      { name: 'Adrian',    email: 'adrian@email.com',    group: 'Foo', age: 21 },
+      { name: 'Wladimir',  email: 'wladimir@email.com',  group: 'Foo', age: 30 },
+      { name: 'Samantha',  email: 'samantha@email.com',  group: 'bar', age: 30 },
+      { name: 'Nicole',    email: 'nicole@email.com',    group: 'bar', age: 43 },
+      { name: 'Natasha',   email: 'natasha@email.com',   group: 'Baz', age: 54 }
     ];
   }));
 
@@ -69,6 +73,12 @@ describe('ui-select tests', function() {
     return el.scope().$select.open && el.hasClass('open');
   }
 
+  function triggerKeydown(element, keyCode) {
+    var e = jQuery.Event("keydown");
+    e.which = keyCode;
+    e.keyCode = keyCode;
+    element.trigger(e);
+  }
 
   // Tests
 
@@ -181,6 +191,78 @@ describe('ui-select tests', function() {
 
     expect(el.scope().$select.selected).toEqual('false');
     expect(getMatchLabel(el)).toEqual('false');
+  });
+
+  describe('choices group', function() {
+    function getGroupLabel(item) {
+      return item.parent('.ui-select-choices-group').find('.ui-select-choices-group-label');
+    }
+    function createUiSelect() {
+      return compileTemplate(
+          '<ui-select ng-model="selection"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices group-by="\'group\'" repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+      );
+    }
+
+    it('should create items group', function() {
+      var el = createUiSelect();
+      expect(el.find('.ui-select-choices-group').length).toBe(3);
+    });
+
+    it('should show label before each group', function() {
+      var el = createUiSelect();
+      expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
+        return this.textContent;
+      }).toArray()).toEqual(['Baz', 'Foo', 'bar']);
+    });
+
+    it('should hide empty groups', function() {
+      var el = createUiSelect();
+      el.scope().$select.search = 'd';
+      scope.$digest();
+
+      expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
+        return this.textContent;
+      }).toArray()).toEqual(['Foo']);
+    });
+
+    it('should change activeItem through groups', function() {
+      var el = createUiSelect();
+      el.scope().$select.search = 'n';
+      scope.$digest();
+      var choices = el.find('.ui-select-choices-row');
+      expect(choices.eq(0)).toHaveClass('active');
+      expect(getGroupLabel(choices.eq(0)).text()).toBe('Baz');
+
+      triggerKeydown(el.find('input'), 40 /*Down*/);
+      scope.$digest();
+      expect(choices.eq(1)).toHaveClass('active');
+      expect(getGroupLabel(choices.eq(1)).text()).toBe('Foo');
+    });
+  });
+
+  describe('choices group by function', function() {
+    function createUiSelect() {
+      return compileTemplate(
+        '<ui-select ng-model="selection"> \
+      <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+      <ui-select-choices group-by="getGroupLabel" repeat="person in people | filter: $select.search"> \
+        <div ng-bind-html="person.name | highlight: $select.search"></div> \
+      </ui-select-choices> \
+    </ui-select>'
+      );
+    }
+    it("should extract group value through function", function () {
+      var el = createUiSelect();
+      expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
+        return this.textContent;
+      }).toArray()).toEqual(['even', 'odd']);
+    });
   });
 
   it('should throw when no ui-select-choices found', function() {

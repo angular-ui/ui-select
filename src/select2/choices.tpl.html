@@ -1,5 +1,10 @@
 <ul class="ui-select-choices ui-select-choices-content select2-results">
-  <li class="ui-select-choices-row" ng-class="{'select2-highlighted': $select.activeIndex === $index}">
-    <div class="select2-result-label ui-select-choices-row-inner"></div>
+  <li class="ui-select-choices-group">
+    <div class="ui-select-choices-group-label select2-result-label">{{$group}}</div>
+    <ul class="select2-result-sub">
+      <li class="ui-select-choices-row" ng-class="{'select2-highlighted': $select.isActive(this)}">
+        <div class="select2-result-label ui-select-choices-row-inner"></div>
+      </li>
+    </ul>
   </li>
 </ul>
