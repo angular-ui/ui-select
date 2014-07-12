@@ -138,19 +138,18 @@ Or:
 <div ng-bind-html="person.age.toString() | highlight: $select.search"></div>
 ```
 
-## Run the tests
+## Development
+### Prepare your environment
+* Install [Node.js](http://nodejs.org/) and NPM (should come with)
+* Install global dev dependencies: `npm install -g bower gulp`
+* Install local dev dependencies: `npm install && bower install` in repository directory
 
-Install [Node.js](http://nodejs.org/), then inside a console:
-```
-npm update # Installs all Grunt dependencies (package.json) inside node_modules directory
-bower update # Installs all ui-select dependencies (bower.json) inside bower_components directory
-```
+### Development Commands
 
-To run the tests:
-```
-grunt build # Builds dist/select.js
-grunt test # Launches Karma
-```
+* `gulp` to jshint, build and test
+* `gulp build` to jshint and build
+* `gulp test` for one-time test with karma (also build and jshint)
+* `gulp watch` to watch src files to jshin, build and test when changed
 
 ## Contributing
 
