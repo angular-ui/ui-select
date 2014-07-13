@@ -11,7 +11,9 @@
         "source": "https://github.com/angular-ui/ui-select"
     },
     "authors": [
-        "AngularUI"
+        {
+            "name": "AngularUI"
+        }
     ],
     "require": {
         "robloach/component-installer": "*"
