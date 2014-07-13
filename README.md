@@ -28,6 +28,23 @@ Check the [examples](https://github.com/angular-ui/ui-select/blob/master/example
   - select.js: `<script src="bower_components/angular-ui-select/dist/select.min.js"></script>`
   - select.css: `<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css">`
 
+## Installation using [Composer](http://getcomposer.org/)
+
+Make sure composer is install globally before we proceed. After that we need to add below piece of code in `composer.json` file located inside your project root folder.
+
+```
+{
+    "require": {
+        "components/ui-select": "dev-master"
+    }
+}
+```
+
+- Run `composer update` and composer will install the component.
+- Inside your HTML add below script and link tags.
+  - select.js: `<script src="components/ui-select/dist/select.min.js"></script>`
+  - select.css: `<link rel="stylesheet" href="components/ui-select/dist/select.min.css">`
+
 ### Bootstrap theme
 
 If you already use Bootstrap, this theme will save you a lot of CSS code compared to the Select2 and Selectize themes.
