@@ -502,12 +502,14 @@
           var transcluded = angular.element('<div>').append(clone);
 
           var transcludedMatch = transcluded.querySelectorAll('.ui-select-match');
+          transcludedMatch.removeAttr('ui-select-match'); //To avoid loop in case directive as attr
           if (transcludedMatch.length !== 1) {
             throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-match but got '{0}'.", transcludedMatch.length);
           }
           element.querySelectorAll('.ui-select-match').replaceWith(transcludedMatch);
 
           var transcludedChoices = transcluded.querySelectorAll('.ui-select-choices');
+          transcludedChoices.removeAttr('ui-select-choices'); //To avoid loop in case directive as attr
           if (transcludedChoices.length !== 1) {
             throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-choices but got '{0}'.", transcludedChoices.length);
           }
