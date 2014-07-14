@@ -373,6 +373,14 @@
         });
         focusser.bind("keydown", function(e){
 
+          if (e.which === KEY.BACKSPACE) {
+            e.preventDefault();
+            e.stopPropagation();
+            $select.select(undefined);
+            scope.$digest();
+            return;
+          }
+
           if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC) {
             return;
           }
@@ -388,7 +396,7 @@
 
         focusser.bind("keyup input", function(e){
 
-          if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC || e.which == KEY.ENTER) {
+          if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC || e.which == KEY.ENTER || e.which === KEY.BACKSPACE) {
             return;
           }
           
