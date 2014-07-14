@@ -295,7 +295,7 @@ describe('ui-select tests', function() {
     }).toThrow(new Error('[ui.select:transcluded] Expected 1 .ui-select-match but got \'0\'.'));
   });
   
-  it('should parse and format the model correctly using alias', function() {
+  it('should format the model correctly using alias', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
         <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
@@ -309,7 +309,22 @@ describe('ui-select tests', function() {
 	expect(scope.selection.selected).toBe(scope.people[5]);
   });
   
-  it('should parse and format the model correctly using property of alias', function() {
+  it('should parse the model correctly using alias', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    scope.selection.selected = scope.people[5];
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+  });
+  
+  it('should format the model correctly using property of alias', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
         <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
@@ -323,9 +338,46 @@ describe('ui-select tests', function() {
 	expect(scope.selection.selected).toBe('Samantha');
   });
   
-  it('should parse and format the model correctly without alias', function() {
+  it('should parse the model correctly using property of alias', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    scope.selection.selected = 'Samantha';
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+  });
+  
+  it('should parse the model correctly using property of alias but passed whole object', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    scope.selection.selected = scope.people[5];
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+  });
+  
+  it('should format the model correctly without alias', function() {
     var el = createUiSelect();
     clickItem(el, 'Samantha');
 	expect(scope.selection.selected).toBe(scope.people[5]);
+  });
+  
+  it('should parse the model correctly without alias', function() {
+    var el = createUiSelect();
+    scope.selection.selected = scope.people[5];
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
   });
 });
