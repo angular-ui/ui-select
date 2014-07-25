@@ -27,6 +27,7 @@ Check the [examples](https://github.com/angular-ui/ui-select/blob/master/example
 - Inside your HTML add
   - select.js: `<script src="bower_components/angular-ui-select/dist/select.min.js"></script>`
   - select.css: `<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css">`
+- Add the `ui.select` module as a dependency: `angular.module("myApp", ["ui.select"]);`
 
 ### Bootstrap theme
 
