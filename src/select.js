@@ -43,57 +43,40 @@
    * Original discussion about parsing "repeat" attribute instead of fully relying on ng-repeat:
    * https://github.com/angular-ui/ui-select/commit/5dd63ad#commitcomment-5504697
    */
-  .service('RepeatParser', ['uiSelectMinErr', function(uiSelectMinErr) {
+  .service('RepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinErr, $parse) {
     var self = this;
 
     /**
      * Example:
      * expression = "address in addresses | filter: {street: $select.search} track by $index"
-     * lhs = "address",
-     * rhs = "addresses | filter: {street: $select.search}",
+     * itemName = "address",
+     * source = "addresses | filter: {street: $select.search}",
      * trackByExp = "$index",
-     * valueIdentifier = "address",
-     * keyIdentifier = undefined
      */
     self.parse = function(expression) {
-      if (!expression) {
-        throw uiSelectMinErr('repeat', "Expected 'repeat' expression.");
-      }
 
-      var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
+      var match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
       if (!match) {
         throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
-                             expression);
+                expression);
       }
-
-      var lhs = match[1]; // Left-hand side
-      var rhs = match[2]; // Right-hand side
-      var trackByExp = match[3];
-
-      match = lhs.match(/^(?:([\$\w]+)|\(([\$\w]+)\s*,\s*([\$\w]+)\))$/);
-      if (!match) {
-        throw uiSelectMinErr('iidexp', "'_item_' in '_item_ in _collection_' should be an identifier or '(_key_, _value_)' expression, but got '{0}'.",
-                             lhs);
-      }
-
-      // Unused for now
-      // var valueIdentifier = match[3] || match[1];
-      // var keyIdentifier = match[2];
 
       return {
-        lhs: lhs,
-        rhs: rhs,
-        trackByExp: trackByExp
+        itemName: match[2], // (lhs) Left-hand side,
+        source: match[3], // (rhs) Right-hand side,
+        trackByExp: match[4],
+        modelMapper: $parse(match[1] || match[2])
       };
+
     };
 
     self.getGroupNgRepeatExpression = function() {
       return '($group, $items) in $select.groups';
     };
 
-    self.getNgRepeatExpression = function(lhs, rhs, trackByExp, grouped) {
-      var expression = lhs + ' in ' + (grouped ? '$items' : rhs);
+    self.getNgRepeatExpression = function(itemName, source, trackByExp, grouped) {
+      var expression = itemName + ' in ' + (grouped ? '$items' : source);
       if (trackByExp) {
         expression += ' track by ' + trackByExp;
       }
@@ -180,14 +163,15 @@
         ctrl.items = items;
       }
 
-      var repeat = RepeatParser.parse(repeatAttr),
-        setItemsFn = groupByExp ? updateGroups : setPlainItems;
+      var setItemsFn = groupByExp ? updateGroups : setPlainItems;
+
+      ctrl.parserResult = RepeatParser.parse(repeatAttr);
 
       ctrl.isGrouped = !!groupByExp;
-      ctrl.itemProperty = repeat.lhs;
+      ctrl.itemProperty = ctrl.parserResult.itemName;
 
       // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
-      $scope.$watchCollection(repeat.rhs, function(items) {
+      $scope.$watchCollection(ctrl.parserResult.source, function(items) {
 
         if (items === undefined || items === null) {
           // If the user specifies undefined or null => reset the collection
@@ -204,6 +188,7 @@
         }
 
       });
+
     };
 
     var _refreshDelayPromise;
@@ -354,6 +339,32 @@
       link: function(scope, element, attrs, ctrls, transcludeFn) {
         var $select = ctrls[0];
         var ngModel = ctrls[1];
+
+        //From view --> model
+        ngModel.$parsers.unshift(function (inputValue) {
+          var locals = {};
+          locals[$select.parserResult.itemName] = inputValue;
+          var result = $select.parserResult.modelMapper(scope, locals);
+          return result;
+        });
+
+        //From model --> view
+        ngModel.$formatters.unshift(function (inputValue) {
+          var match = $select.parserResult.source.match(/^\s*([\S]+).*$/);
+          var data = scope[match[1]];
+          if (data){
+            for (var i = data.length - 1; i >= 0; i--) {
+              var locals = {};
+              locals[$select.parserResult.itemName] = data[i];
+              var result = $select.parserResult.modelMapper(scope, locals);
+              if (result == inputValue){
+                return data[i];
+              }
+            }
+          }
+          return inputValue;
+        });
+
 
         //Idea from: https://github.com/ivaynberg/select2/blob/79b5bf6db918d7560bdd959109b7bcfb47edaf43/select2.js#L1954
         var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' aria-haspopup='true' role='button' />");
@@ -543,9 +554,15 @@
       },
 
       compile: function(tElement, tAttrs) {
-        var repeat = RepeatParser.parse(tAttrs.repeat);
-        var groupByExp = tAttrs.groupBy;
+
+        if (!tAttrs.repeat) throw uiSelectMinErr('repeat', "Expected 'repeat' expression.");
+
         return function link(scope, element, attrs, $select, transcludeFn) {
+          
+          // var repeat = RepeatParser.parse(attrs.repeat);
+          var groupByExp = attrs.groupBy;
+
+          $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
 
           if(groupByExp) {
             var groups = element.querySelectorAll('.ui-select-choices-group');
@@ -558,10 +575,9 @@
             throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", choices.length);
           }
 
-          choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression(repeat.lhs, '$select.items', repeat.trackByExp, groupByExp))
-              .attr('ng-mouseenter', '$select.setActiveItem('+repeat.lhs+')')
-              .attr('ng-click', '$select.select(' + repeat.lhs + ')');
-
+          choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression($select.parserResult.itemName, '$select.items', $select.parserResult.trackByExp, groupByExp))
+              .attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
+              .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ')');
 
           transcludeFn(function(clone) {
             var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
@@ -571,8 +587,6 @@
             rowsInner.append(clone);
             $compile(element)(scope);
           });
-
-          $select.parseRepeatAttr(attrs.repeat, groupByExp);
 
           scope.$watch('$select.search', function() {
             $select.activeIndex = 0;
