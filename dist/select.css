@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.3.1 - 2014-07-12T16:26:10.171Z
+ * Version: 0.5.0 - 2014-07-30T04:47:33.136Z
  * License: MIT
  */
 
@@ -30,6 +30,10 @@
 /* Mark invalid Select2 */
 .ng-dirty.ng-invalid > a.select2-choice {
     border-color: #D44950;
+}
+
+.select2-result-single {
+  padding-left: 0;
 }
 
 /* Selectize theme */
