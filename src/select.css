@@ -24,6 +24,10 @@
     border-color: #D44950;
 }
 
+.select2-result-single {
+  padding-left: 0;
+}
+
 /* Selectize theme */
 
 /* Helper class to show styles when focus */
