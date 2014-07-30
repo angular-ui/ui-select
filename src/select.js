@@ -276,7 +276,7 @@
 
         $scope.$apply(function() {
           var processed = _onKeydown(key);
-          if (processed) {
+          if (processed && key != Key.Tab) {
             e.preventDefault();
             e.stopPropagation();
           }
