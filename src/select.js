@@ -188,6 +188,8 @@
           } else {
             // Regular case
             setItemsFn(items);
+            ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+
           }
         }
 
@@ -370,6 +372,8 @@
           return inputValue;
         });
 
+        //Set reference to ngModel from uiSelectCtrl
+        $select.ngModel = ngModel;
 
         //Idea from: https://github.com/ivaynberg/select2/blob/79b5bf6db918d7560bdd959109b7bcfb47edaf43/select2.js#L1954
         var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' aria-haspopup='true' role='button' />");
