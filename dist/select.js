@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.5.0 - 2014-07-30T04:47:33.132Z
+ * Version: 0.5.1 - 2014-08-01T01:09:37.148Z
  * License: MIT
  */
 
@@ -72,7 +72,7 @@
 
       return {
         itemName: match[2], // (lhs) Left-hand side,
-        source: match[3], // (rhs) Right-hand side,
+        source: $parse(match[3]),
         trackByExp: match[4],
         modelMapper: $parse(match[1] || match[2])
       };
@@ -358,8 +358,7 @@
 
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
-          var match = $select.parserResult.source.match(/^\s*([\S]+).*$/);
-          var data = scope[match[1]];
+          var data = $select.parserResult.source(scope);
           if (data){
             for (var i = data.length - 1; i >= 0; i--) {
               var locals = {};
