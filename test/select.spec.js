@@ -458,4 +458,31 @@ describe('ui-select tests', function() {
     expect(scope.selection.selected).toBe('Samantha');
   });
 
+  it('should invoke select callback on select', function () {
+
+      scope.onSelectFn = function ($item, $model, $label) {
+        scope.$item = $item;
+        scope.$model = $model;
+      };
+      var el = compileTemplate(
+        '<ui-select on-select="onSelectFn($item, $model)" ng-model="selection.selected"> \
+          <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+          <ui-select-choices repeat="person.name as person in people | filter: $select.search"> \
+            <div ng-bind-html="person.name | highlight: $select.search"></div> \
+            <div ng-bind-html="person.email | highlight: $select.search"></div> \
+          </ui-select-choices> \
+        </ui-select>'
+      );
+
+      expect(scope.$item).toBeFalsy();
+      expect(scope.$model).toBeFalsy();
+
+      clickItem(el, 'Samantha');
+      expect(scope.selection.selected).toBe('Samantha');
+
+      expect(scope.$item).toEqual(scope.people[5]);
+      expect(scope.$model).toEqual('Samantha');
+
+    });
+
 });

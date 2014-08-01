@@ -84,6 +84,12 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
       ];
   },3000);
 
+  $scope.counter = 0;
+  $scope.someFunction = function (item, model){
+    $scope.counter++;
+    $scope.eventResult = {item: item, model: model};
+  };
+
   $scope.person = {};
   $scope.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
