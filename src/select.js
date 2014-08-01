@@ -110,6 +110,10 @@
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
 
+    ctrl.isEmpty = function() {
+      return angular.isUndefined(ctrl.selected) || ctrl.selected === null;
+    };
+
     var _searchInput = $element.querySelectorAll('input.ui-select-search');
     if (_searchInput.length !== 1) {
       throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", _searchInput.length);
