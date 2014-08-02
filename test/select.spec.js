@@ -285,6 +285,17 @@ describe('ui-select tests', function() {
     }).toThrow(new Error('[ui.select:repeat] Expected \'repeat\' expression.'));
   });
 
+  it('should throw when repeat attribute has incorrect format ', function() {
+    expect(function() {
+      compileTemplate(
+        '<ui-select ng-model="selection.selected"> \
+          <ui-select-match></ui-select-match> \
+          <ui-select-choices repeat="incorrect format people"></ui-select-choices> \
+      </ui-select>'
+      );
+    }).toThrow(new Error('[ui.select:iexp] Expected expression in form of \'_item_ in _collection_[ track by _id_]\' but got \'incorrect format people\'.'));
+  });
+
   it('should throw when no ui-select-match found', function() {
     expect(function() {
       compileTemplate(
