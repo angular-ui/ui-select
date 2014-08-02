@@ -8,12 +8,24 @@ describe('ui-select tests', function() {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
-	scope.selection = {}
+	  scope.selection = {}
     scope.getGroupLabel = function(person) {
       return person.age % 2 ? 'even' : 'odd';
     };
 
     scope.people = [
+      { name: 'Adam',      email: 'adam@email.com',      group: 'Foo', age: 12 },
+      { name: 'Amalie',    email: 'amalie@email.com',    group: 'Foo', age: 12 },
+      { name: 'Estefanía', email: 'estefanía@email.com', group: 'Foo', age: 21 },
+      { name: 'Adrian',    email: 'adrian@email.com',    group: 'Foo', age: 21 },
+      { name: 'Wladimir',  email: 'wladimir@email.com',  group: 'Foo', age: 30 },
+      { name: 'Samantha',  email: 'samantha@email.com',  group: 'bar', age: 30 },
+      { name: 'Nicole',    email: 'nicole@email.com',    group: 'bar', age: 43 },
+      { name: 'Natasha',   email: 'natasha@email.com',   group: 'Baz', age: 54 }
+    ];
+
+    scope.someObject = {};
+    scope.someObject.people = [
       { name: 'Adam',      email: 'adam@email.com',      group: 'Foo', age: 12 },
       { name: 'Amalie',    email: 'amalie@email.com',    group: 'Foo', age: 12 },
       { name: 'Estefanía', email: 'estefanía@email.com', group: 'Foo', age: 21 },
@@ -305,7 +317,7 @@ describe('ui-select tests', function() {
       );
     }).toThrow(new Error('[ui.select:transcluded] Expected 1 .ui-select-match but got \'0\'.'));
   });
-  
+
   it('should format the model correctly using alias', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -317,7 +329,7 @@ describe('ui-select tests', function() {
       </ui-select>'
     );
     clickItem(el, 'Samantha');
-	expect(scope.selection.selected).toBe(scope.people[5]);
+	  expect(scope.selection.selected).toBe(scope.people[5]);
   });
   
   it('should parse the model correctly using alias', function() {
@@ -346,7 +358,7 @@ describe('ui-select tests', function() {
       </ui-select>'
     );
     clickItem(el, 'Samantha');
-	expect(scope.selection.selected).toBe('Samantha');
+	  expect(scope.selection.selected).toBe('Samantha');
   });
   
   it('should parse the model correctly using property of alias', function() {
@@ -364,6 +376,7 @@ describe('ui-select tests', function() {
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
   
+  //TODO Is this really something we should expect?
   it('should parse the model correctly using property of alias but passed whole object', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -382,7 +395,7 @@ describe('ui-select tests', function() {
   it('should format the model correctly without alias', function() {
     var el = createUiSelect();
     clickItem(el, 'Samantha');
-	expect(scope.selection.selected).toBe(scope.people[5]);
+	  expect(scope.selection.selected).toBe(scope.people[5]);
   });
   
   it('should parse the model correctly without alias', function() {
@@ -391,4 +404,34 @@ describe('ui-select tests', function() {
     scope.$digest();
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
+
+  it('should display choices correctly with child array', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in someObject.people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    scope.selection.selected = scope.people[5];
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+  });
+
+  it('should format the model correctly using property of alias and when using child array for choices', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in someObject.people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    clickItem(el, 'Samantha');
+    expect(scope.selection.selected).toBe('Samantha');
+  });
+
 });
