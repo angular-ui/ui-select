@@ -237,7 +237,9 @@
       if (ctrl.open) {
         _resetSearchInput();
         ctrl.open = false;
-        ctrl.focusser[0].focus();
+        $timeout(function(){
+          ctrl.focusser[0].focus();          
+        });
       }
     };
 
