@@ -1,13 +1,14 @@
 'use strict';
 
 describe('ui-select tests', function() {
-  var scope, $rootScope, $compile;
+  var scope, $rootScope, $compile, $timeout;
 
   beforeEach(module('ngSanitize', 'ui.select'));
-  beforeEach(inject(function(_$rootScope_, _$compile_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
+    $timeout = _$timeout_;
 	  scope.selection = {}
     scope.getGroupLabel = function(person) {
       return person.age % 2 ? 'even' : 'odd';
@@ -376,6 +377,29 @@ describe('ui-select tests', function() {
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
   
+  it('should parse the model correctly using property of alias with async choices data', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in peopleAsync | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    $timeout(function() {
+      scope.peopleAsync = scope.people;
+    });
+
+    scope.selection.selected = 'Samantha';
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('');
+
+    $timeout.flush(); //After choices populated (async), it should show match correctly
+    expect(getMatchLabel(el)).toEqual('Samantha');
+
+  });
+
   //TODO Is this really something we should expect?
   it('should parse the model correctly using property of alias but passed whole object', function() {
     var el = compileTemplate(
