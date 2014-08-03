@@ -250,7 +250,7 @@
         ctrl.open = false;
         $timeout(function(){
           ctrl.focusser[0].focus();          
-        });
+        },0,false);
       }
     };
 
