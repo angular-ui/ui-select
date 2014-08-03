@@ -229,6 +229,15 @@
 
     // When the user clicks on an item inside the dropdown
     ctrl.select = function(item) {
+
+      var locals = {};
+      locals[ctrl.parserResult.itemName] = item;
+
+      ctrl.onSelectCallback($scope, {
+          $item: item,
+          $model: ctrl.parserResult.modelMapper($scope, locals)
+        });
+
       ctrl.selected = item;
       ctrl.close();
       // Using a watch instead of $scope.ngModel.$setViewValue(item)
@@ -327,8 +336,8 @@
   }])
 
   .directive('uiSelect',
-    ['$document', 'uiSelectConfig', 'uiSelectMinErr', '$compile',
-    function($document, uiSelectConfig, uiSelectMinErr, $compile) {
+    ['$document', 'uiSelectConfig', 'uiSelectMinErr', '$compile', '$parse',
+    function($document, uiSelectConfig, uiSelectMinErr, $compile, $parse) {
 
     return {
       restrict: 'EA',
@@ -347,6 +356,8 @@
       link: function(scope, element, attrs, ctrls, transcludeFn) {
         var $select = ctrls[0];
         var ngModel = ctrls[1];
+
+        $select.onSelectCallback = $parse(attrs.onSelect);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
