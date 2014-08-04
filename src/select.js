@@ -111,7 +111,7 @@
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
 
     ctrl.isEmpty = function() {
-      return angular.isUndefined(ctrl.selected) || ctrl.selected === null;
+      return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
     };
 
     var _searchInput = $element.querySelectorAll('input.ui-select-search');
