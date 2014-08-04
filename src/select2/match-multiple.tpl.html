@@ -1,0 +1,12 @@
+<!--
+  select2-choice needs to be before ui-select-multiple
+  otherwise CSS rules from https://github.com/fk/select2-bootstrap-css
+  do not work: [class^="select2-choice"]
+-->
+<span class="ui-select-match">
+  <li class="select2-search-choice" ng-repeat="$item in $select.selected" 
+      ng-class="{'select2-search-choice-focus':$select.activeMatchIndex === $index}">
+      <span transinject></span>
+      <a href="#" class="select2-search-choice-close" ng-click="$select.removeChoice($index)" tabindex="-1"></a>
+  </li>
+</span>
