@@ -308,11 +308,11 @@
       var processed = true;
       switch (key) {
         case Key.Down:
-          if (!ctrl.open && ctrl.multiple) ctrl.activate(true); //In case its the search input in 'multiple' mode
+          if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           else if (ctrl.activeIndex < ctrl.items.length - 1) { ctrl.activeIndex++; }
           break;
         case Key.Up:
-          if (!ctrl.open && ctrl.multiple) ctrl.activate(true); //In case its the search input in 'multiple' mode
+          if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
           break;
         case Key.Tab:
@@ -323,7 +323,7 @@
           if(ctrl.open){
             ctrl.select(ctrl.items[ctrl.activeIndex]);
           } else {
-            ctrl.activate(true); //In case its the search input in 'multiple' mode
+            ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           }
           break;
         case Key.Escape:
@@ -777,7 +777,7 @@
           $compile(element, transcludeFn)(scope); //Passing current transcludeFn to be able to append elements correctly from uisTranscludeAppend
 
           scope.$watch('$select.search', function(newValue) {
-            if(newValue && !$select.open && $select.multiple) $select.activate(true);
+            if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
             $select.activeIndex = 0;
             $select.refresh(attrs.refresh);
           });
