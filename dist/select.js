@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.5.3 - 2014-08-03T03:25:32.534Z
+ * Version: 0.5.4 - 2014-08-04T19:03:12.158Z
  * License: MIT
  */
 
@@ -119,7 +119,7 @@
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
 
     ctrl.isEmpty = function() {
-      return angular.isUndefined(ctrl.selected) || ctrl.selected === null;
+      return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
     };
 
     var _searchInput = $element.querySelectorAll('input.ui-select-search');
@@ -237,6 +237,15 @@
 
     // When the user clicks on an item inside the dropdown
     ctrl.select = function(item) {
+
+      var locals = {};
+      locals[ctrl.parserResult.itemName] = item;
+
+      ctrl.onSelectCallback($scope, {
+          $item: item,
+          $model: ctrl.parserResult.modelMapper($scope, locals)
+        });
+
       ctrl.selected = item;
       ctrl.close();
       // Using a watch instead of $scope.ngModel.$setViewValue(item)
@@ -249,7 +258,7 @@
         ctrl.open = false;
         $timeout(function(){
           ctrl.focusser[0].focus();          
-        });
+        },0,false);
       }
     };
 
@@ -335,8 +344,8 @@
   }])
 
   .directive('uiSelect',
-    ['$document', 'uiSelectConfig', 'uiSelectMinErr', '$compile',
-    function($document, uiSelectConfig, uiSelectMinErr, $compile) {
+    ['$document', 'uiSelectConfig', 'uiSelectMinErr', '$compile', '$parse',
+    function($document, uiSelectConfig, uiSelectMinErr, $compile, $parse) {
 
     return {
       restrict: 'EA',
@@ -355,6 +364,8 @@
       link: function(scope, element, attrs, ctrls, transcludeFn) {
         var $select = ctrls[0];
         var ngModel = ctrls[1];
+
+        $select.onSelectCallback = $parse(attrs.onSelect);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
