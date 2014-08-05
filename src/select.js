@@ -520,22 +520,53 @@
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
-          var locals = {};
-          locals[$select.parserResult.itemName] = inputValue;
-          var result = $select.parserResult.modelMapper(scope, locals);
-          return result;
+          var locals = {},
+              result;
+          if ($select.multiple){
+            var resultMultiple = [];
+            for (var j = inputValue.length - 1; j >= 0; j--) {
+              locals = {};
+              locals[$select.parserResult.itemName] = inputValue[j];
+              result = $select.parserResult.modelMapper(scope, locals);
+              resultMultiple.unshift(result);
+            }
+            return resultMultiple;
+          }else{
+            locals = {};
+            locals[$select.parserResult.itemName] = inputValue;
+            result = $select.parserResult.modelMapper(scope, locals);
+            return result;
+          }
         });
 
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
-          var data = $select.parserResult.source(scope);
+          var data = $select.parserResult.source(scope),
+              locals = {},
+              result;
           if (data){
-            for (var i = data.length - 1; i >= 0; i--) {
-              var locals = {};
-              locals[$select.parserResult.itemName] = data[i];
-              var result = $select.parserResult.modelMapper(scope, locals);
-              if (result == inputValue){
-                return data[i];
+            if ($select.multiple){
+              var resultMultiple = [];
+              for (var k = data.length - 1; k >= 0; k--) {
+                locals = {};
+                locals[$select.parserResult.itemName] = data[k];
+                result = $select.parserResult.modelMapper(scope, locals);
+                for (var j = inputValue.length - 1; j >= 0; j--) {
+                  if (result == inputValue[j]){
+                    resultMultiple.push(data[k]);
+                    break;
+                  }
+                }
+              }
+              return resultMultiple;
+            }else{
+              for (var i = data.length - 1; i >= 0; i--) {
+                locals = {};
+                locals[$select.parserResult.itemName] = data[i];
+                result = $select.parserResult.modelMapper(scope, locals);
+                if (result == inputValue){
+                  return data[i];
+                }                
               }
             }
           }
@@ -666,14 +697,18 @@
           $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
         });
 
-        scope.$watch('$select.selected', function(newValue) {
-          if (ngModel.$viewValue !== newValue) {
-            ngModel.$setViewValue(newValue);
-          }
-          if($select.multiple) $select.sizeSearchInput();
-        },$select.multiple); //Do depth watch if multiple
-
-        if ($select.multiple) focusser.prop('disabled', true); //Focusser isn't needed if multiple
+        if ($select.multiple){
+          scope.$watchCollection('$select.selected', function(newValue) {
+            ngModel.$setViewValue(newValue, null, true); //Third parameter (revalidate) is true, to force $parsers to recreate model
+          });
+          focusser.prop('disabled', true); //Focusser isn't needed if multiple
+        }else{
+          scope.$watch('$select.selected', function(newValue) {
+            if (ngModel.$viewValue !== newValue) {
+              ngModel.$setViewValue(newValue);
+            }
+          });
+        }
 
         ngModel.$render = function() {
           if($select.multiple){
