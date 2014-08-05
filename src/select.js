@@ -193,8 +193,13 @@
           if (!angular.isArray(items)) {
             throw uiSelectMinErr('items', "Expected an array but got '{0}'.", items);
           } else {
-            // Regular case
-            setItemsFn(items);
+            if (ctrl.multiple){
+              //Remove already selected items (ex: while searching)
+              var filteredItems = items.filter(function(i) {return ctrl.selected.indexOf(i) < 0;});
+              setItemsFn(filteredItems);
+            }else{
+              setItemsFn(items);              
+            }
             ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
 
           }
