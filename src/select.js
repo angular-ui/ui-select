@@ -541,19 +541,19 @@
 
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
-          var data = $select.parserResult.source(scope),
+          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search 
               locals = {},
               result;
           if (data){
             if ($select.multiple){
               var resultMultiple = [];
-              for (var k = data.length - 1; k >= 0; k--) {
-                locals = {};
-                locals[$select.parserResult.itemName] = data[k];
-                result = $select.parserResult.modelMapper(scope, locals);
-                for (var j = inputValue.length - 1; j >= 0; j--) {
-                  if (result == inputValue[j]){
-                    resultMultiple.push(data[k]);
+              for (var k = inputValue.length - 1; k >= 0; k--) {
+                for (var j = data.length - 1; j >= 0; j--) {
+                  locals = {};
+                  locals[$select.parserResult.itemName] = data[j];
+                  result = $select.parserResult.modelMapper(scope, locals);
+                  if (result == inputValue[k]){
+                    resultMultiple.unshift(data[j]);
                     break;
                   }
                 }
