@@ -510,4 +510,46 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should append/transclude content (with correct scope) that users add at <match> tag', function () {
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match> \
+          <span ng-if="$select.selected.name!==\'Wladimir\'">{{$select.selected.name}}</span>\
+          <span ng-if="$select.selected.name===\'Wladimir\'">{{$select.selected.name | uppercase}}</span>\
+        </ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    clickItem(el, 'Samantha');
+    expect(getMatchLabel(el).trim()).toEqual('Samantha');
+
+    clickItem(el, 'Wladimir');
+    expect(getMatchLabel(el).trim()).not.toEqual('Wladimir');
+    expect(getMatchLabel(el).trim()).toEqual('WLADIMIR');
+
+  });
+  it('should append/transclude content (with correct scope) that users add at <choices> tag', function () {
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match> \
+        </ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-if="person.name==\'Wladimir\'"> \
+            <span class="only-once">I should appear only once</span>\
+          </div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    expect($(el).find('.only-once').length).toEqual(1);
+
+
+  });
+
 });
