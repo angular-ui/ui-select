@@ -88,15 +88,29 @@
   right: 15px;
 }
 
-.ui-select-bootstrap > .ui-select-choices {
-  width: 100%;
-}
-
 /* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */
 .ui-select-bootstrap > .ui-select-choices {
+  width: 100%;
   height: auto;
   max-height: 200px;
   overflow-x: hidden;
+}
+
+.ui-select-multiple.ui-select-bootstrap {
+  height: auto;
+  padding: .3em;
+}
+
+.ui-select-multiple.ui-select-bootstrap input.ui-select-search {
+  background-color: transparent !important; /* To prevent double background when disabled */
+  border: none;
+  outline: none;
+  height: 1.666666em;
+}
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
+  font-size: 1.6em;
+  line-height: 0.75;
 }
 
 .ui-select-bootstrap .ui-select-choices-row>a {
