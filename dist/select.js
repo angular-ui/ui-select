@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.5.4 - 2014-08-04T19:03:12.158Z
+ * Version: 0.5.4 - 2014-08-14T02:30:31.943Z
  * License: MIT
  */
 
@@ -607,14 +607,11 @@
               .attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
               .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ')');
 
-          transcludeFn(function(clone) {
-            var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
-            if (rowsInner.length !== 1)
-              throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);
+          var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
+          if (rowsInner.length !== 1) throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);
+          rowsInner.attr('uis-transclude-append', ''); //Adding uisTranscludeAppend directive to row element after choices element has ngRepeat
 
-            rowsInner.append(clone);
-            $compile(element)(scope);
-          });
+          $compile(element, transcludeFn)(scope); //Passing current transcludeFn to be able to append elements correctly from uisTranscludeAppend
 
           scope.$watch('$select.search', function() {
             $select.activeIndex = 0;
@@ -630,7 +627,15 @@
       }
     };
   }])
-
+  .directive('uisTranscludeAppend', function () {
+    return {
+      link: function (scope, element, attrs, ctrl, transclude) {
+          transclude(scope, function (clone) {
+            element.append(clone);
+          });
+        }
+      };
+  })
   .directive('uiSelectMatch', ['uiSelectConfig', function(uiSelectConfig) {
     return {
       restrict: 'EA',
