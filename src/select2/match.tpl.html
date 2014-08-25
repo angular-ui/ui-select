@@ -6,7 +6,7 @@
 <a class="select2-choice ui-select-match"
    ng-class="{'select2-default': $select.isEmpty()}"
    ng-click="$select.activate()">
-  <span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span>
+  <span ng-show="$select.searchEnabled && $select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span>
   <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude></span>
   <span class="select2-arrow"><b></b></span>
 </a>
