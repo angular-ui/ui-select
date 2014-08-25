@@ -552,4 +552,66 @@ describe('ui-select tests', function() {
 
   });
 
+  describe('search-enabled option', function() {
+
+    var el;
+
+    function setupSelectComponent(searchEnabled, theme) {
+      el = compileTemplate(
+        '<ui-select ng-model="selection.selected" theme="' + theme + '" search-enabled="' + searchEnabled + '"> \
+          <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+          <ui-select-choices repeat="person in people | filter: $select.search"> \
+            <div ng-bind-html="person.name | highlight: $select.search"></div> \
+            <div ng-bind-html="person.email | highlight: $select.search"></div> \
+          </ui-select-choices> \
+        </ui-select>'
+      );
+    }
+
+    describe('selectize theme', function() {
+
+      it('should show search input when true', function() {
+        setupSelectComponent('true', 'selectize');
+        expect($(el).find('.ui-select-search')).not.toHaveClass('ng-hide');
+      });
+
+      it('should hide search input when false', function() {
+        setupSelectComponent('false', 'selectize');
+        expect($(el).find('.ui-select-search')).toHaveClass('ng-hide');
+      });
+
+    });
+
+    describe('select2 theme', function() {
+
+      it('should show search input when true', function() {
+        setupSelectComponent('true', 'select2');
+        expect($(el).find('.select2-search')).not.toHaveClass('ng-hide');
+      });
+
+      it('should hide search input when false', function() {
+        setupSelectComponent('false', 'select2');
+        expect($(el).find('.select2-search')).toHaveClass('ng-hide');
+      });
+
+    });
+
+    describe('bootstrap theme', function() {
+
+      it('should show search input when true', function() {
+        setupSelectComponent('true', 'bootstrap');
+        clickMatch(el);
+        expect($(el).find('.ui-select-search')).not.toHaveClass('ng-hide');
+      });
+
+      it('should hide search input when false', function() {
+        setupSelectComponent('false', 'bootstrap');
+        clickMatch(el);
+        expect($(el).find('.ui-select-search')).toHaveClass('ng-hide');
+      });
+
+    });
+
+  });
+
 });
