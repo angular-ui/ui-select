@@ -3,7 +3,7 @@
         ng-disabled="$select.disabled"
         ng-class="{'btn-default-focus':$select.focus}";
         ng-click="$select.activate()">
-  <span ng-show="$select.isEmpty()" class="text-muted">{{$select.placeholder}}</span>
+  <span ng-show="$select.searchEnabled && $select.isEmpty()" class="text-muted">{{$select.placeholder}}</span>
   <span ng-hide="$select.isEmpty()" ng-transclude></span>
   <span class="caret"></span>
 </button>
