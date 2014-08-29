@@ -20,6 +20,7 @@
 
   .constant('uiSelectConfig', {
     theme: 'bootstrap',
+    searchEnabled: true,
     placeholder: '', // Empty by default, like HTML tag <select>
     refreshDelay: 1000 // In milliseconds
   })
@@ -107,6 +108,7 @@
     ctrl.focus = false;
     ctrl.focusser = undefined; //Reference to input element used to handle focus events  
     ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
+    ctrl.searchEnabled = undefined; // Initialized inside uiSelect directive link function
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
 
@@ -485,6 +487,11 @@
               return k >= 112 && k <= 123;
           }
         };
+
+        scope.$watch('searchEnabled', function() {
+            var searchEnabled = scope.$eval(attrs.searchEnabled);
+            $select.searchEnabled = searchEnabled !== undefined ? searchEnabled : true;
+        });
 
         attrs.$observe('disabled', function() {
           // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string

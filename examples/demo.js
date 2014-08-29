@@ -41,6 +41,7 @@ app.filter('propsFilter', function() {
 
 app.controller('DemoCtrl', function($scope, $http, $timeout) {
   $scope.disabled = undefined;
+  $scope.searchEnabled = undefined;
 
   $scope.enable = function() {
     $scope.disabled = false;
@@ -49,6 +50,14 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
   $scope.disable = function() {
     $scope.disabled = true;
   };
+
+  $scope.enableSearch = function() {
+    $scope.searchEnabled = true;
+  }
+
+  $scope.disableSearch = function() {
+    $scope.searchEnabled = false;
+  }
 
   $scope.clear = function() {
     $scope.person.selected = undefined;
