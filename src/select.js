@@ -73,11 +73,11 @@
     };
 
     self.getGroupNgRepeatExpression = function() {
-      return '($group, $items) in $select.groups';
+      return '$group in $select.groups';
     };
 
     self.getNgRepeatExpression = function(itemName, source, trackByExp, grouped) {
-      var expression = itemName + ' in ' + (grouped ? '$items' : source);
+      var expression = itemName + ' in ' + (grouped ? '$group.items' : source);
       if (trackByExp) {
         expression += ' track by ' + trackByExp;
       }
@@ -146,22 +146,29 @@
       }
     };
 
+    ctrl.findGroupByName = function(name) {
+      return ctrl.groups && ctrl.groups.filter(function(group) {
+        return group.name === name;
+      })[0];
+    };
+
     ctrl.parseRepeatAttr = function(repeatAttr, groupByExp) {
       function updateGroups(items) {
-        ctrl.groups = {};
+        ctrl.groups = [];
         angular.forEach(items, function(item) {
           var groupFn = $scope.$eval(groupByExp);
-          var groupValue = angular.isFunction(groupFn) ? groupFn(item) : item[groupFn];
-          if(!ctrl.groups[groupValue]) {
-            ctrl.groups[groupValue] = [item];
+          var groupName = angular.isFunction(groupFn) ? groupFn(item) : item[groupFn];
+          var group = ctrl.findGroupByName(groupName);
+          if(group) {
+            group.items.push(item);
           }
           else {
-            ctrl.groups[groupValue].push(item);
+            ctrl.groups.push({name: groupName, items: [item]});
           }
         });
         ctrl.items = [];
-        angular.forEach(Object.keys(ctrl.groups).sort(), function(group) {
-          ctrl.items = ctrl.items.concat(ctrl.groups[group]);
+        ctrl.groups.forEach(function(group) {
+          ctrl.items = ctrl.items.concat(group.items);
         });
       }
 

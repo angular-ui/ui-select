@@ -231,7 +231,7 @@ describe('ui-select tests', function() {
       var el = createUiSelect();
       expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
         return this.textContent;
-      }).toArray()).toEqual(['Baz', 'Foo', 'bar']);
+      }).toArray()).toEqual(['Foo', 'bar', 'Baz']);
     });
 
     it('should hide empty groups', function() {
@@ -246,16 +246,16 @@ describe('ui-select tests', function() {
 
     it('should change activeItem through groups', function() {
       var el = createUiSelect();
-      el.scope().$select.search = 'n';
+      el.scope().$select.search = 't';
       scope.$digest();
       var choices = el.find('.ui-select-choices-row');
       expect(choices.eq(0)).toHaveClass('active');
-      expect(getGroupLabel(choices.eq(0)).text()).toBe('Baz');
+      expect(getGroupLabel(choices.eq(0)).text()).toBe('Foo');
 
       triggerKeydown(el.find('input'), 40 /*Down*/);
       scope.$digest();
       expect(choices.eq(1)).toHaveClass('active');
-      expect(getGroupLabel(choices.eq(1)).text()).toBe('Foo');
+      expect(getGroupLabel(choices.eq(1)).text()).toBe('bar');
     });
   });
 
@@ -274,7 +274,7 @@ describe('ui-select tests', function() {
       var el = createUiSelect();
       expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
         return this.textContent;
-      }).toArray()).toEqual(['even', 'odd']);
+      }).toArray()).toEqual(['odd', 'even']);
     });
   });
 
