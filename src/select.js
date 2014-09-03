@@ -156,6 +156,7 @@
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
+    ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -299,24 +300,40 @@
       return ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
     };
 
+    ctrl.isDisabled = function(itemScope) {
+      var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
+      var isDisabled = false;
+      var item;
+
+      if (itemIndex >= 0 && !angular.isUndefined(ctrl.disableChoiceExpression)) {
+        item = ctrl.items[itemIndex];
+        isDisabled = !!(itemScope.$eval(ctrl.disableChoiceExpression)); // force the boolean value
+        item._uiSelectChoiceDisabled = isDisabled; // store this for later reference
+      }
+
+      return isDisabled;
+    };
+
     // When the user clicks on an item inside the dropdown
     ctrl.select = function(item) {
 
-      var locals = {};
-      locals[ctrl.parserResult.itemName] = item;
+      if (!item._uiSelectChoiceDisabled) {
+        var locals = {};
+        locals[ctrl.parserResult.itemName] = item;
 
-      ctrl.onSelectCallback($scope, {
-          $item: item,
-          $model: ctrl.parserResult.modelMapper($scope, locals)
-      });
+        ctrl.onSelectCallback($scope, {
+            $item: item,
+            $model: ctrl.parserResult.modelMapper($scope, locals)
+        });
 
-      if(ctrl.multiple){
-        ctrl.selected.push(item);
-        ctrl.sizeSearchInput();
-      } else {
-        ctrl.selected = item;
+        if(ctrl.multiple){
+          ctrl.selected.push(item);
+          ctrl.sizeSearchInput();
+        } else {
+          ctrl.selected = item;
+        }
+        ctrl.close();
       }
-      ctrl.close();
     };
 
     // Closes the dropdown
@@ -817,6 +834,8 @@
           var groupByExp = attrs.groupBy;
 
           $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
+
+          $select.disableChoiceExpression = attrs.uiDisableChoice;
 
           if(groupByExp) {
             var groups = element.querySelectorAll('.ui-select-choices-group');

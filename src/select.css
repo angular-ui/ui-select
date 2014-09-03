@@ -136,6 +136,13 @@
     background-color: #428bca;
 }
 
+.ui-select-bootstrap .ui-select-choices-row.disabled>a,
+.ui-select-bootstrap .ui-select-choices-row.active.disabled>a {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+}
+
 /* fix hide/show angular animation */
 .ui-select-match.ng-hide-add,
 .ui-select-search.ng-hide-add {
