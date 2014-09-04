@@ -300,10 +300,10 @@
           container = _searchInput.parent().parent()[0];
       _searchInput.css('width','10px');
       $timeout(function(){
-        var newWidth = container.clientWidth - input.offsetLeft;
+        var newWidth = container.clientWidth - input.offsetLeft - 10;
         if(newWidth < 50) newWidth = container.clientWidth;
         _searchInput.css('width',newWidth+'px');
-      });
+      }, 0, false);
     };
 
     var Key = {
