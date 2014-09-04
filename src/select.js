@@ -843,6 +843,7 @@
       }
     };
   }])
+  // Recreates old behavior of ng-transclude. Used internally.
   .directive('uisTranscludeAppend', function () {
     return {
       link: function (scope, element, attrs, ctrl, transclude) {
@@ -890,14 +891,6 @@
 
     return function(matchItem, query) {
       return query && matchItem ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
-    };
-  })
-  // Re-creates the old behavior of ng-transclude. Used internally.
-  .directive('transinject', function() {
-    return function(scope, element, attrs, ctrl, transcludeFn) {
-        transcludeFn(scope, function(clone) {
-            element.append(clone);
-        });
     };
   });
 }());

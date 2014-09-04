@@ -6,7 +6,7 @@
 <span class="ui-select-match">
   <li class="select2-search-choice" ng-repeat="$item in $select.selected" 
       ng-class="{'select2-search-choice-focus':$select.activeMatchIndex === $index}">
-      <span transinject></span>
+      <span uis-transclude-append></span>
       <a href="#" class="select2-search-choice-close" ng-click="$select.removeChoice($index)" tabindex="-1"></a>
   </li>
 </span>

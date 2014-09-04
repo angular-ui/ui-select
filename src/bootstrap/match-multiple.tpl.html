@@ -8,7 +8,7 @@
       ng-click="$select.activeMatchIndex = $index;"
       ng-class="{'btn-primary':$select.activeMatchIndex === $index}">
         <span class="close" ng-hide="$select.disabled" ng-click="$select.removeChoice($index)">&nbsp;&times;</span>
-        <span transinject></span>
+        <span uis-transclude-append></span>
     </button>
   </span>
 </span>
