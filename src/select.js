@@ -568,31 +568,36 @@
           if (data){
             if ($select.multiple){
               var resultMultiple = [];
-              for (var k = inputValue.length - 1; k >= 0; k--) {
-                for (var j = data.length - 1; j >= 0; j--) {
-                  locals = {};
-                  locals[$select.parserResult.itemName] = data[j];
+              var checkFnMultiple = function(list, value){
+                if (!list || !list.length) return;
+                for (var p = list.length - 1; p >= 0; p--) {
+                  locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
-                  if (result == inputValue[k]){
-                    resultMultiple.unshift(data[j]);
-                    break;
+                  if (result == value){
+                    resultMultiple.unshift(list[p]);
+                    return true;
                   }
+                }
+                return false;
+              };
+              for (var k = inputValue.length - 1; k >= 0; k--) {
+                if (!checkFnMultiple($select.selected, inputValue[k])){
+                  checkFnMultiple(data, inputValue[k]);
                 }
               }
               return resultMultiple;
             }else{
-              var checkFn = function(d){
-                locals = {};
+              var checkFnSingle = function(d){
                 locals[$select.parserResult.itemName] = d;
                 result = $select.parserResult.modelMapper(scope, locals);
                 return result == inputValue;
               };
               //If possible pass same object stored in $select.selected
-              if ($select.selected && checkFn($select.selected)) {
+              if ($select.selected && checkFnSingle($select.selected)) {
                 return $select.selected;
               }
               for (var i = data.length - 1; i >= 0; i--) {
-                if (checkFn(data[i])) return data[i];
+                if (checkFnSingle(data[i])) return data[i];
               }
             }
           }

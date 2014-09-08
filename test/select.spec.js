@@ -1036,6 +1036,47 @@ describe('ui-select tests', function() {
 
     });
 
+    it('should format view value correctly when using single property binding and refresh funcion', function () {
+      
+      scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
+
+      var el = compileTemplate(
+          '<ui-select multiple ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+              <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+              <ui-select-choices repeat="person.email as person in people | filter: $select.search" \
+                refresh="fetchFromServer($select.search)" refresh-delay="0"> \
+                <div ng-bind-html="person.name | highlight: $select.search"></div> \
+                <div ng-bind-html="person.email | highlight: $select.search"></div> \
+              </ui-select-choices> \
+          </ui-select>'
+      );
+
+      var searchInput = el.find('.ui-select-search');
+
+      scope.fetchFromServer = function(searching){
+
+        if (searching == 'n')
+          return scope.people 
+        
+        if (searching == 'o'){
+          scope.people = []; //To simulate cases were previously selected item isnt in the list anymore
+        }
+
+      };
+
+      setSearchText(el, 'n')
+      clickItem(el, 'Nicole');
+
+      expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+        .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>Nicole <nicole@email.com>");
+
+      setSearchText(el, 'o')
+
+      expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+        .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>Nicole <nicole@email.com>");
+
+    });
+
   });
 
 
