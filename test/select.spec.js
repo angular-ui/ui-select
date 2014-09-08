@@ -23,9 +23,6 @@ describe('ui-select tests', function() {
     $timeout = _$timeout_;
     scope.selection = {};
     
-    //TESTME
-    scope.selection.selectedMultiple = []; 
-    
     scope.getGroupLabel = function(person) {
       return person.age % 2 ? 'even' : 'odd';
     };
@@ -753,6 +750,15 @@ describe('ui-select tests', function() {
         expect(el).toHaveClass('ui-select-multiple');
         expect(el.scope().$select.selected.length).toBe(0);
         expect(el.find('.ui-select-match-item').length).toBe(0);
+    });
+
+    it('should set model as an empty array if ngModel isnt defined', function () {
+      
+      // scope.selection.selectedMultiple = [];
+      var el = createUiSelectMultiple();
+
+      expect(scope.selection.selectedMultiple instanceof Array).toBe(true);
+
     });
 
     it('should render initial selected items', function() {

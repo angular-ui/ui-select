@@ -580,6 +580,7 @@
                 }
                 return false;
               };
+              if (!inputValue) return resultMultiple; //If ngModel was undefined
               for (var k = inputValue.length - 1; k >= 0; k--) {
                 if (!checkFnMultiple($select.selected, inputValue[k])){
                   checkFnMultiple(data, inputValue[k]);
