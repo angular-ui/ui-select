@@ -110,8 +110,17 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
     { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
     { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
-    { name: 'Nicolás',   email: 'nicole@email.com',    age: 43, country: 'Colombia' }
+    { name: 'Nicolás',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
   ];
+
+  $scope.availableColors = ['Red','Green','Blue','Yellow','Magenta','Maroon','Umbra','Turquoise'];
+
+  $scope.multipleDemo = {};
+  $scope.multipleDemo.colors = ['Blue','Red'];
+  $scope.multipleDemo.selectedPeople = [$scope.people[5], $scope.people[4]];
+  $scope.multipleDemo.selectedPeopleWithGroupBy = [$scope.people[8], $scope.people[6]];
+  $scope.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
+
 
   $scope.address = {};
   $scope.refreshAddresses = function(address) {

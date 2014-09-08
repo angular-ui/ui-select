@@ -1,0 +1,17 @@
+<div class="ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}">
+  <div>
+    <div class="ui-select-match"></div>
+    <input type="text"
+           autocomplete="off" 
+           autocorrect="off" 
+           autocapitalize="off" 
+           spellcheck="false" 
+           class="ui-select-search input-xs"
+           placeholder="{{$select.getPlaceholder()}}"
+           ng-disabled="$select.disabled"
+           ng-hide="$select.disabled"
+           ng-click="$select.activate()"
+           ng-model="$select.search">
+  </div>
+  <div class="ui-select-choices"></div>
+</div>
