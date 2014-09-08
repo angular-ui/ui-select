@@ -581,13 +581,18 @@
               }
               return resultMultiple;
             }else{
-              for (var i = data.length - 1; i >= 0; i--) {
+              var checkFn = function(d){
                 locals = {};
-                locals[$select.parserResult.itemName] = data[i];
+                locals[$select.parserResult.itemName] = d;
                 result = $select.parserResult.modelMapper(scope, locals);
-                if (result == inputValue){
-                  return data[i];
-                }                
+                return result == inputValue;
+              };
+              //If possible pass same object stored in $select.selected
+              if ($select.selected && checkFn($select.selected)) {
+                return $select.selected;
+              }
+              for (var i = data.length - 1; i >= 0; i--) {
+                if (checkFn(data[i])) return data[i];
               }
             }
           }

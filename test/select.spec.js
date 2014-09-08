@@ -109,6 +109,12 @@ describe('ui-select tests', function() {
     element.trigger(e);
   }
 
+  function setSearchText(el, text) {
+    el.scope().$select.search = text;
+    scope.$digest();
+    $timeout.flush();
+  }
+
   // Tests
 
   it('should compile child directives', function() {
@@ -558,13 +564,104 @@ describe('ui-select tests', function() {
           <div ng-bind-html="person.name | highlight: $select.search"></div> \
           <div ng-if="person.name==\'Wladimir\'"> \
             <span class="only-once">I should appear only once</span>\
-      ®    </div> \
+          </div> \
         </ui-select-choices> \
       </ui-select>'
     );
 
     expect($(el).find('.only-once').length).toEqual(1);
 
+
+  });
+
+  it('should call refresh function when search text changes', function () {
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match> \
+        </ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search" \
+          refresh="fetchFromServer($select.search)" refresh-delay="0"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-if="person.name==\'Wladimir\'"> \
+            <span class="only-once">I should appear only once</span>\
+          </div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    scope.fetchFromServer = function(){};
+
+    spyOn(scope, 'fetchFromServer');
+
+    el.scope().$select.search = 'r';
+    scope.$digest();
+    $timeout.flush();
+
+    expect(scope.fetchFromServer).toHaveBeenCalledWith('r');
+
+  });
+
+  it('should call refresh function when search text changes', function () {
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match> \
+        </ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search" \
+          refresh="fetchFromServer($select.search)" refresh-delay="0"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-if="person.name==\'Wladimir\'"> \
+            <span class="only-once">I should appear only once</span>\
+          </div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    scope.fetchFromServer = function(){};
+
+    spyOn(scope, 'fetchFromServer');
+
+    el.scope().$select.search = 'r';
+    scope.$digest();
+    $timeout.flush();
+
+    expect(scope.fetchFromServer).toHaveBeenCalledWith('r');
+
+  });
+
+  it('should format view value correctly when using single property binding and refresh funcion', function () {
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match>{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in people | filter: $select.search" \
+          refresh="fetchFromServer($select.search)" refresh-delay="0"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-if="person.name==\'Wladimir\'"> \
+            <span class="only-once">I should appear only once</span>\
+          </div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    scope.fetchFromServer = function(searching){
+
+      if (searching == 's')
+        return scope.people 
+      
+      if (searching == 'o'){
+        scope.people = []; //To simulate cases were previously selected item isnt in the list anymore
+      }
+
+    };
+
+    setSearchText(el, 'r')
+    clickItem(el, 'Samantha');
+    expect(getMatchLabel(el)).toBe('Samantha');
+
+    setSearchText(el, 'o')
+    expect(getMatchLabel(el)).toBe('Samantha');
 
   });
 
