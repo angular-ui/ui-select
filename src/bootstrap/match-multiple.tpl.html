@@ -2,12 +2,12 @@
   <span ng-repeat="$item in $select.selected">
     <button 
       style="margin-right: 3px;"
-      class="btn btn-default btn-xs" 
+      class="ui-select-match-item btn btn-default btn-xs"
       tabindex="-1" 
       ng-disabled="$select.disabled"
       ng-click="$select.activeMatchIndex = $index;"
       ng-class="{'btn-primary':$select.activeMatchIndex === $index}">
-        <span class="close" ng-hide="$select.disabled" ng-click="$select.removeChoice($index)">&nbsp;&times;</span>
+        <span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$select.removeChoice($index)">&nbsp;&times;</span>
         <span uis-transclude-append></span>
     </button>
   </span>

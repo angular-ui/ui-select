@@ -1,6 +1,49 @@
 (function () {
   "use strict";
 
+  var KEY = {
+    TAB: 9,
+    ENTER: 13,
+    ESC: 27,
+    SPACE: 32,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
+    HOME: 36,
+    END: 35,
+    BACKSPACE: 8,
+    DELETE: 46,
+    isControl: function (e) {
+        var k = e.which;
+        switch (k) {
+        case KEY.SHIFT:
+        case KEY.CTRL:
+        case KEY.ALT:
+            return true;
+        }
+
+        if (e.metaKey) return true;
+
+        return false;
+    },
+    isFunctionKey: function (k) {
+        k = k.which ? k.which : k;
+        return k >= 112 && k <= 123;
+    },
+    isVerticalMovement: function (k){
+      return ~[KEY.UP, KEY.DOWN].indexOf(k);
+    },
+    isHorizontalMovement: function (k){
+      return ~[KEY.LEFT,KEY.RIGHT,KEY.BACKSPACE,KEY.DELETE].indexOf(k);
+    }
+  };
+
   /**
    * Add querySelectorAll() to jqLite.
    *
@@ -261,10 +304,8 @@
       });
 
       if(ctrl.multiple){
-        if(!_itemInSelected(item)){
-          ctrl.selected.push(item);
-          ctrl.sizeSearchInput();
-        }
+        ctrl.selected.push(item);
+        ctrl.sizeSearchInput();
       } else {
         ctrl.selected = item;
       }
@@ -306,44 +347,29 @@
       }, 0, false);
     };
 
-    var Key = {
-      Enter: 13,
-      Tab: 9,
-      Up: 38,
-      Down: 40,
-      Left: 37,
-      Right: 39,
-      Backspace: 8,
-      Delete: 46,
-      Escape: 27
-    };
-
-    Key.verticalMovement = [Key.Up,Key.Down];
-    Key.horizontalMovement = [Key.Left,Key.Right,Key.Backspace,Key.Delete];
-
     function _handleDropDownSelection(key) {
       var processed = true;
       switch (key) {
-        case Key.Down:
+        case KEY.DOWN:
           if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           else if (ctrl.activeIndex < ctrl.items.length - 1) { ctrl.activeIndex++; }
           break;
-        case Key.Up:
+        case KEY.UP:
           if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
           break;
-        case Key.Tab:
+        case KEY.TAB:
           //TODO: Que hacemos en modo multiple?
           if (!ctrl.multiple) ctrl.select(ctrl.items[ctrl.activeIndex]);
           break;
-        case Key.Enter:
+        case KEY.ENTER:
           if(ctrl.open){
             ctrl.select(ctrl.items[ctrl.activeIndex]);
           } else {
             ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           }
           break;
-        case Key.Escape:
+        case KEY.ESC:
           ctrl.close();
           break;
         default:
@@ -364,19 +390,19 @@
           prev  = ctrl.activeMatchIndex-1,
           newIndex = curr;
 
-      if(caretPosition > 0 || (ctrl.search.length && key == Key.Right)) return false;
+      if(caretPosition > 0 || (ctrl.search.length && key == KEY.RIGHT)) return false;
 
       ctrl.close();
 
-      function __getNewIndex(){
+      function getNewActiveMatchIndex(){
         switch(key){
-          case Key.Left:
+          case KEY.LEFT:
             // Select previous/first item
             if(~ctrl.activeMatchIndex) return prev;
             // Select last item
             else return last;
             break;
-          case Key.Right:
+          case KEY.RIGHT:
             // Open drop-down
             if(!~ctrl.activeMatchIndex || curr === last){ 
               ctrl.activate();
@@ -385,7 +411,7 @@
             // Select next/last item
             else return next;
             break;
-          case Key.Backspace:
+          case KEY.BACKSPACE:
             // Remove selected item and select previous/first
             if(~ctrl.activeMatchIndex){
               ctrl.removeChoice(curr);
@@ -394,7 +420,7 @@
             // Select last item
             else return last;
             break;
-          case Key.Delete:
+          case KEY.DELETE:
             // Remove selected item and select next item
             if(~ctrl.activeMatchIndex){
               ctrl.removeChoice(ctrl.activeMatchIndex);
@@ -404,7 +430,7 @@
         }      
       }
 
-      newIndex = __getNewIndex();
+      newIndex = getNewActiveMatchIndex();
 
       if(!ctrl.selected.length || newIndex === false) ctrl.activeMatchIndex = -1;
       else ctrl.activeMatchIndex = Math.min(last,Math.max(first,newIndex));
@@ -417,7 +443,7 @@
 
       var key = e.which;
 
-      // if(~[Key.Escape,Key.Tab].indexOf(key)){
+      // if(~[KEY.ESC,KEY.TAB].indexOf(key)){
       //   //TODO: SEGURO?
       //   ctrl.close();
       // }
@@ -425,7 +451,7 @@
       $scope.$apply(function() {
         var processed = false;
 
-        if(ctrl.multiple && ~Key.horizontalMovement.indexOf(key)){
+        if(ctrl.multiple && KEY.isHorizontalMovement(key)){
           processed = _handleMatchSelection(key);
         }
         
@@ -433,7 +459,7 @@
           processed = _handleDropDownSelection(key);
         }
         
-        if (processed  && key != Key.Tab) {
+        if (processed  && key != KEY.TAB) {
           //TODO Check si el tab selecciona aun correctamente
           //Crear test
           e.preventDefault();
@@ -441,7 +467,7 @@
         }
       });
 
-      if(~Key.verticalMovement.indexOf(key) && ctrl.items.length > 0){
+      if(KEY.isVerticalMovement(key) && ctrl.items.length > 0){
         _ensureHighlightVisible();
       }
 
@@ -453,16 +479,6 @@
         ctrl.activeIndex = 0;
       });
     });
-
-    function _itemInSelected(item){
-      var match = false;
-      angular.forEach(ctrl.selected,function(value){
-        // We need to use angular.equals for when an initially selected item lacks $$hashKey and stuff.
-        if(angular.equals(item,value)) match = true;
-      });
-
-      return match;
-    }
 
     function _getCaretPosition(el) {
       if(angular.isNumber(el.selectionStart)) return el.selectionStart;
@@ -633,55 +649,6 @@
             scope.$digest();
 
           });
-
-          //TODO Refactor to reuse the KEY object from uiSelectCtrl
-          var KEY = {
-            TAB: 9,
-            ENTER: 13,
-            ESC: 27,
-            SPACE: 32,
-            LEFT: 37,
-            UP: 38,
-            RIGHT: 39,
-            DOWN: 40,
-            SHIFT: 16,
-            CTRL: 17,
-            ALT: 18,
-            PAGE_UP: 33,
-            PAGE_DOWN: 34,
-            HOME: 36,
-            END: 35,
-            BACKSPACE: 8,
-            DELETE: 46,
-            isArrow: function (k) {
-                k = k.which ? k.which : k;
-                switch (k) {
-                case KEY.LEFT:
-                case KEY.RIGHT:
-                case KEY.UP:
-                case KEY.DOWN:
-                    return true;
-                }
-                return false;
-            },
-            isControl: function (e) {
-                var k = e.which;
-                switch (k) {
-                case KEY.SHIFT:
-                case KEY.CTRL:
-                case KEY.ALT:
-                    return true;
-                }
-
-                if (e.metaKey) return true;
-
-                return false;
-            },
-            isFunctionKey: function (k) {
-                k = k.which ? k.which : k;
-                return k >= 112 && k <= 123;
-            }
-          };
 
         }
 
