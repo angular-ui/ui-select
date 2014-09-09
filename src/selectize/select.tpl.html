@@ -4,7 +4,8 @@
        ng-click="$select.activate()">
     <div class="ui-select-match"></div>
     <input type="text" autocomplete="off" tabindex="-1"
-           class="ui-select-search"
+           class="ui-select-search ui-select-toggle"
+           ng-click="$select.toggle($event)"
            placeholder="{{$select.placeholder}}"
            ng-model="$select.search"
            ng-hide="!$select.searchEnabled || ($select.selected && !$select.open)"

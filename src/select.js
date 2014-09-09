@@ -330,6 +330,13 @@
       }
     };
 
+    // Toggle dropdown
+    ctrl.toggle = function(e) {
+      if (ctrl.open) ctrl.close(); else ctrl.activate();
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
       ctrl.selected.splice(index, 1);

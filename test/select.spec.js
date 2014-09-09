@@ -65,6 +65,7 @@ describe('ui-select tests', function() {
     if (attrs !== undefined) {
       if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
       if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
+      if (attrs.theme !== undefined) { attrsHtml += ' theme="' + attrs.theme + '"'; }
     }
 
     return compileTemplate(
@@ -186,6 +187,24 @@ describe('ui-select tests', function() {
     clickItem(el, 'Samantha');
 
     expect(isDropdownOpened(el)).toEqual(false);
+  });
+
+
+  it('should open/close dropdown when clicking caret icon', function() {
+
+    var el = createUiSelect({theme : 'select2'});
+    var searchInput = el.find('.ui-select-search');
+    var $select = el.scope().$select;
+    
+    expect($select.open).toEqual(false);
+
+    el.find(".ui-select-toggle").click();
+    expect($select.open).toEqual(true);
+
+
+    el.find(".ui-select-toggle").click();
+    expect($select.open).toEqual(false);
+
   });
 
   it('should be disabled if the attribute says so', function() {
