@@ -5,5 +5,5 @@
         ng-click="$select.activate()">
   <span ng-show="$select.searchEnabled && $select.isEmpty()" class="text-muted">{{$select.placeholder}}</span>
   <span ng-hide="$select.isEmpty()" ng-transclude></span>
-  <span class="caret"></span>
+  <span class="caret ui-select-toggle" ng-click="$select.toggle($event)"></span>
 </button>
