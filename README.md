@@ -3,7 +3,10 @@
 AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [Selectize](http://brianreavis.github.io/selectize.js/).
 
 - [Demo](http://plnkr.co/edit/a3KlK8dKH3wwiiksDSn2?p=preview)
+- [Demo Multiselect](http://plnkr.co/edit/juqoNOt1z1Gb349XabQ2?p=preview)
 - [Bootstrap theme](http://plnkr.co/edit/QCwSM75ilH2Vh6D9aMA4?p=preview)
+
+Check [examples](https://github.com/angular-ui/ui-select/blob/master/examples).
 
 ## Features
 
@@ -21,7 +24,6 @@ Starting from Internet Explorer 8 and Firefox 3.6 included.
 
 ## Installation using [Bower](http://bower.io/)
 
-Check the [examples](https://github.com/angular-ui/ui-select/blob/master/examples).
 
 - `bower install angular-ui-select`
 - Inside your HTML add
