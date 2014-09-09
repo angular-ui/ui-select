@@ -66,6 +66,7 @@ describe('ui-select tests', function() {
       if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
       if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
       if (attrs.theme !== undefined) { attrsHtml += ' theme="' + attrs.theme + '"'; }
+      if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
     }
 
     return compileTemplate(
@@ -204,7 +205,28 @@ describe('ui-select tests', function() {
 
     el.find(".ui-select-toggle").click();
     expect($select.open).toEqual(false);
+  });
 
+  it('should pass tabindex to focusser', function() {
+    var el = createUiSelect({tabindex: 5});
+
+    expect($(el).find('.ui-select-focusser').attr('tabindex')).toEqual('5');
+    expect($(el).attr('tabindex')).toEqual(undefined);
+  });
+
+  it('should pass tabindex to focusser when tabindex is an expression', function() {
+    scope.tabValue = 22;
+    var el = createUiSelect({tabindex: '{{tabValue + 10}}'});
+
+    expect($(el).find('.ui-select-focusser').attr('tabindex')).toEqual('32');
+    expect($(el).attr('tabindex')).toEqual(undefined);
+  });
+
+  it('should not give focusser a tabindex when ui-select does not have one', function() {
+    var el = createUiSelect();
+
+    expect($(el).find('.ui-select-focusser').attr('tabindex')).toEqual(undefined);
+    expect($(el).attr('tabindex')).toEqual(undefined);
   });
 
   it('should be disabled if the attribute says so', function() {
