@@ -549,6 +549,8 @@
         var $select = ctrls[0];
         var ngModel = ctrls[1];
 
+        var searchInput = element.querySelectorAll('input.ui-select-search');
+
         $select.multiple = angular.isDefined(attrs.multiple);
 
         $select.onSelectCallback = $parse(attrs.onSelect);
@@ -624,6 +626,21 @@
 
         //Idea from: https://github.com/ivaynberg/select2/blob/79b5bf6db918d7560bdd959109b7bcfb47edaf43/select2.js#L1954
         var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' aria-haspopup='true' role='button' />");
+
+        if(attrs.tabindex){
+          //tabindex might be an expression, wait until it contains the actual value before we set the focusser tabindex
+          attrs.$observe('tabindex', function(value) {
+            //If we are using multiple, add tabindex to the search input 
+            if($select.multiple){
+              searchInput.attr("tabindex", value);
+            } else {
+              focusser.attr("tabindex", value);
+            }
+            //Remove the tabindex on the parent so that it is not focusable
+            element.removeAttr("tabindex");
+          });
+        }
+
         $compile(focusser)(scope);
         $select.focusser = focusser;
 

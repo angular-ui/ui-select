@@ -66,6 +66,7 @@ describe('ui-select tests', function() {
       if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
       if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
       if (attrs.theme !== undefined) { attrsHtml += ' theme="' + attrs.theme + '"'; }
+      if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
     }
 
     return compileTemplate(
@@ -204,7 +205,28 @@ describe('ui-select tests', function() {
 
     el.find(".ui-select-toggle").click();
     expect($select.open).toEqual(false);
+  });
 
+  it('should pass tabindex to focusser', function() {
+    var el = createUiSelect({tabindex: 5});
+
+    expect($(el).find('.ui-select-focusser').attr('tabindex')).toEqual('5');
+    expect($(el).attr('tabindex')).toEqual(undefined);
+  });
+
+  it('should pass tabindex to focusser when tabindex is an expression', function() {
+    scope.tabValue = 22;
+    var el = createUiSelect({tabindex: '{{tabValue + 10}}'});
+
+    expect($(el).find('.ui-select-focusser').attr('tabindex')).toEqual('32');
+    expect($(el).attr('tabindex')).toEqual(undefined);
+  });
+
+  it('should not give focusser a tabindex when ui-select does not have one', function() {
+    var el = createUiSelect();
+
+    expect($(el).find('.ui-select-focusser').attr('tabindex')).toEqual(undefined);
+    expect($(el).attr('tabindex')).toEqual(undefined);
   });
 
   it('should be disabled if the attribute says so', function() {
@@ -751,6 +773,7 @@ describe('ui-select tests', function() {
         if (attrs !== undefined) {
             if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
             if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
+            if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
         }
 
         return compileTemplate(
@@ -794,6 +817,31 @@ describe('ui-select tests', function() {
         el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
         expect(el.scope().$select.selected.length).toBe(1);
         // $timeout.flush();
+    });
+
+    it('should pass tabindex to searchInput', function() {
+      var el = createUiSelectMultiple({tabindex: 5});
+      var searchInput = el.find('.ui-select-search');
+
+      expect(searchInput.attr('tabindex')).toEqual('5');
+      expect($(el).attr('tabindex')).toEqual(undefined);
+    });
+
+    it('should pass tabindex to searchInput when tabindex is an expression', function() {
+      scope.tabValue = 22;
+      var el = createUiSelectMultiple({tabindex: '{{tabValue + 10}}'});
+      var searchInput = el.find('.ui-select-search');
+
+      expect(searchInput.attr('tabindex')).toEqual('32');
+      expect($(el).attr('tabindex')).toEqual(undefined);
+    });
+
+    it('should not give searchInput a tabindex when ui-select does not have one', function() {
+      var el = createUiSelectMultiple();
+      var searchInput = el.find('.ui-select-search');
+
+      expect(searchInput.attr('tabindex')).toEqual(undefined);
+      expect($(el).attr('tabindex')).toEqual(undefined);
     });
 
     it('should update size of search input after removing an item', function() {
