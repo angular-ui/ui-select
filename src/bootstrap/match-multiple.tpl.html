@@ -3,7 +3,8 @@
     <button 
       style="margin-right: 3px;"
       class="ui-select-match-item btn btn-default btn-xs"
-      tabindex="-1" 
+      tabindex="-1"
+      type="button"
       ng-disabled="$select.disabled"
       ng-click="$select.activeMatchIndex = $index;"
       ng-class="{'btn-primary':$select.activeMatchIndex === $index}">
