@@ -549,6 +549,8 @@
         var $select = ctrls[0];
         var ngModel = ctrls[1];
 
+        var searchInput = element.querySelectorAll('input.ui-select-search');
+
         $select.multiple = angular.isDefined(attrs.multiple);
 
         $select.onSelectCallback = $parse(attrs.onSelect);
@@ -628,7 +630,12 @@
         if(attrs.tabindex){
           //tabindex might be an expression, wait until it contains the actual value before we set the focusser tabindex
           attrs.$observe('tabindex', function(value) {
-            focusser.attr("tabindex", value);
+            //If we are using multiple, add tabindex to the search input 
+            if($select.multiple){
+              searchInput.attr("tabindex", value);
+            } else {
+              focusser.attr("tabindex", value);
+            }
             //Remove the tabindex on the parent so that it is not focusable
             element.removeAttr("tabindex");
           });
