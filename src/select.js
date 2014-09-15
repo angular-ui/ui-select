@@ -578,9 +578,9 @@
               result;
           if ($select.multiple){
             var resultMultiple = [];
-            for (var j = inputValue.length - 1; j >= 0; j--) {
+            for (var j = $select.selected.length - 1; j >= 0; j--) {
               locals = {};
-              locals[$select.parserResult.itemName] = inputValue[j];
+              locals[$select.parserResult.itemName] = $select.selected[j];
               result = $select.parserResult.modelMapper(scope, locals);
               resultMultiple.unshift(result);
             }
@@ -729,10 +729,8 @@
         });
 
         if ($select.multiple){
-          scope.$watchCollection('$select.selected', function(newValue) {
-            //On v1.2.19 the 2nd and 3rd parameteres are ignored
-            //On v1.3.0-beta+ 3rd parameter (revalidate) is true, to force $parsers to recreate model
-            ngModel.$setViewValue(newValue, null, true);
+          scope.$watchCollection('$select.selected', function() {
+            ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
           });
           focusser.prop('disabled', true); //Focusser isn't needed if multiple
         }else{
