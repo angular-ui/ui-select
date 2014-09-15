@@ -266,6 +266,164 @@ describe('ui-select tests', function() {
     expect(getMatchLabel(el)).toEqual('false');
   });
 
+  describe('disabled options', function() {
+    function createUiSelect(attrs) {
+      var attrsDisabled = '';
+      if (attrs !== undefined) {
+        if (attrs.disabled !== undefined) {
+          attrsDisabled = ' ui-disable-choice="' + attrs.disabled + '"';
+        } else {
+          attrsDisabled = '';
+        }
+      }
+
+      return compileTemplate(
+        '<ui-select ng-model="selection.selected"> \
+          <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+          <ui-select-choices repeat="person in people | filter: $select.search"' + attrsDisabled + '> \
+            <div ng-bind-html="person.name | highlight: $select.search"></div> \
+            <div ng-bind-html="person.email | highlight: $select.search"></div> \
+          </ui-select-choices> \
+        </ui-select>'
+      );
+    }
+
+    function disablePerson(opts) {
+      opts = opts || {};
+
+      var key = opts.key || 'people',
+          disableAttr = opts.disableAttr || 'disabled',
+          disableBool = opts.disableBool === undefined ? true : opts.disableBool,
+          matchAttr = opts.match || 'name',
+          matchVal = opts.matchVal || 'Wladimir';
+
+      scope['_' + key] = angular.copy(scope[key]);
+      scope[key].map(function (model) {
+        if (model[matchAttr] == matchVal) {
+          model[disableAttr] = disableBool;
+        }
+        return model;
+      });
+    }
+
+    function resetScope(opts) {
+      opts = opts || {};
+      var key = opts.key || 'people';
+      scope[key] = angular.copy(scope['_' + key]);
+    }
+
+    describe('without disabling expression', function () {
+      beforeEach(function() {
+        disablePerson();
+        this.el = createUiSelect();
+      });
+
+      it('should not allow disabled options to be selected', function() {
+        clickItem(this.el, 'Wladimir');
+
+        expect(getMatchLabel(this.el)).toEqual('Wladimir');
+      });
+
+      it('should set a disabled class on the option', function() {
+        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
+        var container = option.closest('.ui-select-choices-row');
+
+        expect(container.hasClass('disabled')).toBeFalsy();
+      });
+    });
+
+    describe('disable on truthy property', function () {
+      beforeEach(function() {
+        disablePerson({
+          disableAttr : 'inactive',
+          disableBool : true,
+        });
+        this.el = createUiSelect({
+          disabled: 'person.inactive'
+        });
+      });
+
+      it('should allow the user to define the selected option', function () {
+        expect($(this.el).find('.ui-select-choices').attr('ui-disable-choice')).toBe('person.inactive');
+      });
+
+      it('should not allow disabled options to be selected', function() {
+        clickItem(this.el, 'Wladimir');
+
+        expect(getMatchLabel(this.el)).not.toEqual('Wladimir');
+      });
+
+      it('should set a disabled class on the option', function() {
+        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
+        var container = option.closest('.ui-select-choices-row');
+
+        expect(container.hasClass('disabled')).toBeTruthy();
+      });
+    });
+
+    describe('disable on inverse property check', function () {
+      beforeEach(function() {
+        disablePerson({
+          disableAttr : 'active',
+          disableBool : false,
+        });
+        this.el = createUiSelect({
+          disabled: '!person.active'
+        });
+      });
+
+      it('should allow the user to define the selected option', function () {
+        expect($(this.el).find('.ui-select-choices').attr('ui-disable-choice')).toBe('!person.active');
+      });
+
+      it('should not allow disabled options to be selected', function() {
+        clickItem(this.el, 'Wladimir');
+
+        expect(getMatchLabel(this.el)).not.toEqual('Wladimir');
+      });
+
+      it('should set a disabled class on the option', function() {
+        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
+        var container = option.closest('.ui-select-choices-row');
+
+        expect(container.hasClass('disabled')).toBeTruthy();
+      });
+    });
+
+    describe('disable on expression', function () {
+      beforeEach(function() {
+        disablePerson({
+          disableAttr : 'status',
+          disableBool : 'inactive'
+        });
+        this.el = createUiSelect({
+          disabled: "person.status == 'inactive'"
+        });
+      });
+
+      it('should allow the user to define the selected option', function () {
+        expect($(this.el).find('.ui-select-choices').attr('ui-disable-choice')).toBe("person.status == 'inactive'");
+      });
+
+      it('should not allow disabled options to be selected', function() {
+        clickItem(this.el, 'Wladimir');
+
+        expect(getMatchLabel(this.el)).not.toEqual('Wladimir');
+      });
+
+      it('should set a disabled class on the option', function() {
+        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
+        var container = option.closest('.ui-select-choices-row');
+
+        expect(container.hasClass('disabled')).toBeTruthy();
+      });
+    });
+
+    afterEach(function() {
+      resetScope();
+    });
+  });
+
   describe('choices group', function() {
     function getGroupLabel(item) {
       return item.parent('.ui-select-choices-group').find('.ui-select-choices-group-label');
