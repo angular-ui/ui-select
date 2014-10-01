@@ -201,7 +201,7 @@ uis.controller('uiSelectCtrl',
     }
 
     function setPlainItems(items) {
-      ctrl.items = items;
+      ctrl.items = items || [];
     }
 
     ctrl.setItemsFn = groupByExp ? updateGroups : setPlainItems;
