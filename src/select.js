@@ -491,7 +491,7 @@
           processed = _handleMatchSelection(key);
         }
         
-        if (!processed && ctrl.items.length > 0) {
+        if (!processed && (ctrl.items.length > 0 || ctrl.tagging.isActivated)) {
           processed = _handleDropDownSelection(key);
         }
         

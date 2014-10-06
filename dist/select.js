@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.7.0 - 2014-10-06T10:45:08.127Z
+ * Version: 0.7.0 - 2014-10-06T12:29:59.829Z
  * License: MIT
  */
 
@@ -499,7 +499,7 @@
           processed = _handleMatchSelection(key);
         }
         
-        if (!processed && ctrl.items.length > 0) {
+        if (!processed && (ctrl.items.length > 0 || ctrl.tagging.isActivated)) {
           processed = _handleDropDownSelection(key);
         }
         
