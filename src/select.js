@@ -317,7 +317,12 @@
     // When the user clicks on an item inside the dropdown
     ctrl.select = function(item) {
 
-      if (!item._uiSelectChoiceDisabled) {
+      if (!item || !item._uiSelectChoiceDisabled) {
+        if(ctrl.tagging.isActivated && !item && ctrl.search.length > 0) {
+          // create new item on the fly
+          item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
+        }
+
         var locals = {};
         locals[ctrl.parserResult.itemName] = item;
 
@@ -387,7 +392,7 @@
           break;
         case KEY.UP:
           if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-          else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
+          else if (ctrl.activeIndex > 0 || (ctrl.search.length === 0 && ctrl.tagging.isActivated)) { ctrl.activeIndex--; }
           break;
         case KEY.TAB:
           //TODO: Que hacemos en modo multiple?
@@ -728,6 +733,19 @@
           $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
         });
 
+        attrs.$observe('tagging', function() {
+          if(attrs.tagging !== undefined)
+          {
+            // $eval() is needed otherwise we get a string instead of a function or a boolean
+            var taggingEval = scope.$eval(attrs.tagging);
+            $select.tagging = {isActivated: true, fct: taggingEval !== true ? taggingEval : undefined};
+          }
+          else
+          {
+            $select.tagging = {isActivated: false, fct: undefined};
+          }
+        });
+
         if ($select.multiple){
           scope.$watchCollection('$select.selected', function(newValue) {
             //On v1.2.19 the 2nd and 3rd parameteres are ignored
@@ -860,7 +878,7 @@
 
           scope.$watch('$select.search', function(newValue) {
             if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
-            $select.activeIndex = 0;
+            $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
             $select.refresh(attrs.refresh);
           });
 

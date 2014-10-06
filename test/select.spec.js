@@ -67,6 +67,7 @@ describe('ui-select tests', function() {
       if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
       if (attrs.theme !== undefined) { attrsHtml += ' theme="' + attrs.theme + '"'; }
       if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
+      if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
     }
 
     return compileTemplate(
@@ -244,6 +245,39 @@ describe('ui-select tests', function() {
     expect(el3.scope().$select.disabled).toEqual(false);
     clickMatch(el3);
     expect(isDropdownOpened(el3)).toEqual(true);
+  });
+
+  it('should allow tagging if the attribute says so', function() {
+    var el = createUiSelect({tagging: true});
+    clickMatch(el);
+
+    $(el).scope().$select.select("I don't exist");
+
+    expect($(el).scope().$select.selected).toEqual("I don't exist");
+  });
+
+  it('should format new items using the tagging function when the attribute is a function', function() {
+    scope.taggingFunc = function (name) {
+      return {
+        name: name,
+        email: name + '@email.com',
+        group: 'Foo',
+        age: 12
+      };
+    };
+
+    var el = createUiSelect({tagging: 'taggingFunc'});
+    clickMatch(el);
+
+    $(el).scope().$select.search = 'idontexist';
+    $(el).scope().$select.select();
+
+    expect($(el).scope().$select.selected).toEqual({
+      name: 'idontexist',
+      email: 'idontexist@email.com',
+      group: 'Foo',
+      age: 12
+    });
   });
 
   // See when an item that evaluates to false (such as "false" or "no") is selected, the placeholder is shown https://github.com/angular-ui/ui-select/pull/32
