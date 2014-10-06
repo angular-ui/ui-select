@@ -263,6 +263,7 @@
         $scope.$watchCollection('$select.selected', function(selectedItems){
           if (!selectedItems) return;
           var data = ctrl.parserResult.source($scope);
+          if (!data) return;
           var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
           setItemsFn(filteredItems);
         });
@@ -368,7 +369,7 @@
 
     ctrl.getPlaceholder = function(){
       //Refactor single?
-      if(ctrl.multiple && ctrl.selected.length) return;
+      if(ctrl.multiple && (ctrl.selected === undefined || ctrl.selected.length)) return;
       return ctrl.placeholder;
     };
 
@@ -583,11 +584,13 @@
               result;
           if ($select.multiple){
             var resultMultiple = [];
-            for (var j = inputValue.length - 1; j >= 0; j--) {
-              locals = {};
-              locals[$select.parserResult.itemName] = inputValue[j];
-              result = $select.parserResult.modelMapper(scope, locals);
-              resultMultiple.unshift(result);
+            if (inputValue) {
+              for (var j = inputValue.length - 1; j >= 0; j--) {
+                locals = {};
+                locals[$select.parserResult.itemName] = inputValue[j];
+                result = $select.parserResult.modelMapper(scope, locals);
+                resultMultiple.unshift(result);
+              }
             }
             return resultMultiple;
           }else{
