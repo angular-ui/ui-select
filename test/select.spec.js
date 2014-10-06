@@ -728,6 +728,63 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should invoke remove callback on remove', function () {
+
+    scope.onRemoveFn = function ($item, $model, $label) {
+      scope.$item = $item;
+      scope.$model = $model;
+    };
+
+    var el = compileTemplate(
+      '<ui-select multiple on-remove="onRemoveFn($item, $model)" ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    expect(scope.$item).toBeFalsy();
+    expect(scope.$model).toBeFalsy();
+
+    clickItem(el, 'Samantha');
+    clickItem(el, 'Adrian');
+    el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+
+    expect(scope.$item).toBe(scope.people[5]);
+    expect(scope.$model).toBe('Samantha');
+
+  });
+
+  it('should set $item & $model correctly when invoking callback on remove and no single prop. binding', function () {
+
+    scope.onRemoveFn = function ($item, $model, $label) {
+      scope.$item = $item;
+      scope.$model = $model;
+    };
+
+    var el = compileTemplate(
+      '<ui-select multiple on-remove="onRemoveFn($item, $model)" ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    expect(scope.$item).toBeFalsy();
+    expect(scope.$model).toBeFalsy();
+
+    clickItem(el, 'Samantha');
+    clickItem(el, 'Adrian');
+    el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+
+    expect(scope.$item).toBe(scope.people[5]);
+    expect(scope.$model).toBe(scope.$item);
+  });
+
   it('should append/transclude content (with correct scope) that users add at <match> tag', function () {
 
     var el = compileTemplate(

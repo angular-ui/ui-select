@@ -356,9 +356,18 @@
 
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
+      var removedChoice = ctrl.selected[index];
+      var locals = {};
+      locals[ctrl.parserResult.itemName] = removedChoice;
+
       ctrl.selected.splice(index, 1);
       ctrl.activeMatchIndex = -1;
       ctrl.sizeSearchInput();
+
+      ctrl.onRemoveCallback($scope, {
+        $item: removedChoice,
+        $model: ctrl.parserResult.modelMapper($scope, locals)
+      });
     };
 
     ctrl.getPlaceholder = function(){
@@ -571,6 +580,7 @@
         $select.multiple = angular.isDefined(attrs.multiple);
 
         $select.onSelectCallback = $parse(attrs.onSelect);
+        $select.onRemoveCallback = $parse(attrs.onRemove);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
