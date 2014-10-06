@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.7.0 - 2014-09-09T01:02:43.612Z
+ * Version: 0.8.0 - 2014-10-06T23:55:23.050Z
  * License: MIT
  */
 
@@ -142,6 +142,13 @@
     text-decoration: none;
     outline: 0;
     background-color: #428bca;
+}
+
+.ui-select-bootstrap .ui-select-choices-row.disabled>a,
+.ui-select-bootstrap .ui-select-choices-row.active.disabled>a {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
 }
 
 /* fix hide/show angular animation */
