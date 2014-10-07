@@ -1371,6 +1371,32 @@ describe('ui-select tests', function() {
 
     });
 
+    it('should change viewvalue only once when updating modelvalue', function () {
+      
+      scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
+
+      var el = compileTemplate(
+          '<ui-select ng-change="onlyOnce()" multiple ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+              <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+              <ui-select-choices repeat="person.email as person in people | filter: $select.search"> \
+                <div ng-bind-html="person.name | highlight: $select.search"></div> \
+                <div ng-bind-html="person.email | highlight: $select.search"></div> \
+              </ui-select-choices> \
+          </ui-select> \
+          '
+      );
+
+      scope.counter = 0;
+      scope.onlyOnce = function(){
+        scope.counter++;
+      }
+
+      clickItem(el, 'Nicole');
+
+      expect(scope.counter).toBe(1);
+
+    });
+
   });
 
 

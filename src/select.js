@@ -261,11 +261,12 @@
       if (ctrl.multiple){
         //Remove already selected items 
         $scope.$watchCollection('$select.selected', function(selectedItems){
-          if (!selectedItems) return;
+          if (!selectedItems.length) return;
           var data = ctrl.parserResult.source($scope);
           if (!data) return;
           var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
           setItemsFn(filteredItems);
+          ctrl.sizeSearchInput();
         });
       }
 
@@ -584,13 +585,11 @@
               result;
           if ($select.multiple){
             var resultMultiple = [];
-            if (inputValue) {
-              for (var j = inputValue.length - 1; j >= 0; j--) {
-                locals = {};
-                locals[$select.parserResult.itemName] = inputValue[j];
-                result = $select.parserResult.modelMapper(scope, locals);
-                resultMultiple.unshift(result);
-              }
+            for (var j = $select.selected.length - 1; j >= 0; j--) {
+              locals = {};
+              locals[$select.parserResult.itemName] = $select.selected[j];
+              result = $select.parserResult.modelMapper(scope, locals);
+              resultMultiple.unshift(result);
             }
             return resultMultiple;
           }else{
@@ -750,10 +749,8 @@
         });
 
         if ($select.multiple){
-          scope.$watchCollection('$select.selected', function(newValue) {
-            //On v1.2.19 the 2nd and 3rd parameteres are ignored
-            //On v1.3.0-beta+ 3rd parameter (revalidate) is true, to force $parsers to recreate model
-            ngModel.$setViewValue(newValue, null, true);
+          scope.$watchCollection('$select.selected', function() {
+            ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
           });
           focusser.prop('disabled', true); //Focusser isn't needed if multiple
         }else{
