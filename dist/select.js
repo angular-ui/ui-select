@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.8.0 - 2014-10-07T13:28:21.745Z
+ * Version: 0.8.0 - 2014-10-07T13:45:31.563Z
  * License: MIT
  */
 
@@ -586,6 +586,8 @@
         $select.multiple = angular.isDefined(attrs.multiple);
 
         $select.onSelectCallback = $parse(attrs.onSelect);
+
+        $select.tagging = {isActivated: false, fct: undefined};
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {

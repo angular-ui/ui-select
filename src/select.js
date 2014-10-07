@@ -579,6 +579,8 @@
 
         $select.onSelectCallback = $parse(attrs.onSelect);
 
+        $select.tagging = {isActivated: false, fct: undefined};
+
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
           var locals = {},
