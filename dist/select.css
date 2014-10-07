@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.8.0 - 2014-10-06T23:55:23.050Z
+ * Version: 0.8.1 - 2014-10-07T21:36:20.169Z
  * License: MIT
  */
 
@@ -119,6 +119,10 @@
 .ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
   font-size: 1.6em;
   line-height: 0.75;
+}
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match-item{
+  outline: 0;
 }
 
 .ui-select-bootstrap .ui-select-choices-row>a {
