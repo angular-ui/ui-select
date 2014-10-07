@@ -261,10 +261,13 @@
       if (ctrl.multiple){
         //Remove already selected items 
         $scope.$watchCollection('$select.selected', function(selectedItems){
-          if (!selectedItems.length) return;
           var data = ctrl.parserResult.source($scope);
-          var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
-          setItemsFn(filteredItems);
+          if (!selectedItems.length) {
+            setItemsFn(data);            
+          }else{
+            var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
+            setItemsFn(filteredItems);            
+          }
           ctrl.sizeSearchInput();
         });
       }
