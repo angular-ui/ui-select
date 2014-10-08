@@ -321,7 +321,7 @@
     // When the user clicks on an item inside the dropdown
     ctrl.select = function(item) {
 
-      if (!item._uiSelectChoiceDisabled) {
+      if (item === undefined || !item._uiSelectChoiceDisabled) {
         var locals = {};
         locals[ctrl.parserResult.itemName] = item;
 
