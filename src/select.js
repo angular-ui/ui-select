@@ -694,7 +694,7 @@
               e.preventDefault();
               e.stopPropagation();
               $select.select(undefined);
-              scope.$digest();
+              scope.$apply();
               return;
             }
 
