@@ -182,6 +182,7 @@
     ctrl.activate = function(initSearchValue, avoidReset) {
       if (!ctrl.disabled  && !ctrl.open) {
         if(!avoidReset) _resetSearchInput();
+        ctrl.focusser.prop('disabled', true); //Will reactivate it on .close()
         ctrl.open = true;
         ctrl.activeMatchIndex = -1;
 
@@ -319,7 +320,7 @@
     };
 
     // When the user clicks on an item inside the dropdown
-    ctrl.select = function(item) {
+    ctrl.select = function(item, skipFocusser) {
 
       if (item === undefined || !item._uiSelectChoiceDisabled) {
         var locals = {};
@@ -336,17 +337,19 @@
         } else {
           ctrl.selected = item;
         }
-        ctrl.close();
+        ctrl.close(skipFocusser);
       }
     };
 
     // Closes the dropdown
-    ctrl.close = function() {
-      if (ctrl.open) {
+    ctrl.close = function(skipFocusser) {
+      if (!ctrl.open) return;        
         _resetSearchInput();
         ctrl.open = false;
+      if (!ctrl.multiple){
         $timeout(function(){
-          ctrl.focusser[0].focus();          
+          ctrl.focusser.prop('disabled', false);
+          if (!skipFocusser) ctrl.focusser[0].focus();
         },0,false);
       }
     };
@@ -403,8 +406,7 @@
           else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
           break;
         case KEY.TAB:
-          //TODO: Que hacemos en modo multiple?
-          if (!ctrl.multiple) ctrl.select(ctrl.items[ctrl.activeIndex]);
+          if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
           break;
         case KEY.ENTER:
           if(ctrl.open){
