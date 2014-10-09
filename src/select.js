@@ -19,9 +19,11 @@
     END: 35,
     BACKSPACE: 8,
     DELETE: 46,
+    COMMAND: 91,
     isControl: function (e) {
         var k = e.which;
         switch (k) {
+        case KEY.COMMAND:
         case KEY.SHIFT:
         case KEY.CTRL:
         case KEY.ALT:
@@ -498,7 +500,7 @@
         if(ctrl.multiple && KEY.isHorizontalMovement(key)){
           processed = _handleMatchSelection(key);
         }
-        
+
         if (!processed && ctrl.items.length > 0) {
           processed = _handleDropDownSelection(key);
         }
@@ -517,12 +519,14 @@
 
     });
 
-    _searchInput.on('blur', function() {
-      $timeout(function() {
-        ctrl.activeMatchIndex = -1;
-        ctrl.activeIndex = 0;
-      });
-    });
+    // _searchInput.on('blur', function() {
+    //   console.log("blurring");
+    //   // $timeout(function() {
+    //   //   ctrl.activeMatchIndex = -1;
+    //   //   ctrl.activeIndex = 0;
+    //   // console.log("blurring done");
+    //   // });
+    // });
 
     function _getCaretPosition(el) {
       if(angular.isNumber(el.selectionStart)) return el.selectionStart;
