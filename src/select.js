@@ -590,7 +590,7 @@
 
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
-        $select.multiple = angular.isDefined(attrs.multiple);
+        $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
 
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
