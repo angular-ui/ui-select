@@ -349,8 +349,8 @@
     // Closes the dropdown
     ctrl.close = function(skipFocusser) {
       if (!ctrl.open) return;        
-        _resetSearchInput();
-        ctrl.open = false;
+      _resetSearchInput();
+      ctrl.open = false;
       if (!ctrl.multiple){
         $timeout(function(){
           ctrl.focusser.prop('disabled', false);
@@ -524,14 +524,11 @@
 
     });
 
-    // _searchInput.on('blur', function() {
-    //   console.log("blurring");
-    //   // $timeout(function() {
-    //   //   ctrl.activeMatchIndex = -1;
-    //   //   ctrl.activeIndex = 0;
-    //   // console.log("blurring done");
-    //   // });
-    // });
+    _searchInput.on('blur', function() {
+      $timeout(function() {
+        ctrl.activeMatchIndex = -1;
+      });
+    });
 
     function _getCaretPosition(el) {
       if(angular.isNumber(el.selectionStart)) return el.selectionStart;
