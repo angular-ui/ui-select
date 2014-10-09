@@ -304,10 +304,13 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      return ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+      return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
     };
 
     ctrl.isDisabled = function(itemScope) {
+      
+      if (!ctrl.open) return;
+
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       var isDisabled = false;
       var item;

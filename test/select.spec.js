@@ -85,6 +85,11 @@ describe('ui-select tests', function() {
   }
 
   function clickItem(el, text) {
+
+    if (!isDropdownOpened(el)){
+      openDropdown(el);
+    }
+
     $(el).find('.ui-select-choices-row div:contains("' + text + '")').click();
     scope.$digest();
   }
@@ -113,6 +118,13 @@ describe('ui-select tests', function() {
     scope.$digest();
     $timeout.flush();
   }
+
+  function openDropdown(el) {
+    var $select = el.scope().$select;
+    $select.open = true;
+    scope.$digest();
+  };
+
 
   // Tests
 
@@ -357,6 +369,8 @@ describe('ui-select tests', function() {
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
 
+        openDropdown(this.el);
+
         expect(container.hasClass('disabled')).toBeTruthy();
       });
     });
@@ -386,6 +400,8 @@ describe('ui-select tests', function() {
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
 
+        openDropdown(this.el);
+
         expect(container.hasClass('disabled')).toBeTruthy();
       });
     });
@@ -414,6 +430,8 @@ describe('ui-select tests', function() {
       it('should set a disabled class on the option', function() {
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
+
+        openDropdown(this.el);
 
         expect(container.hasClass('disabled')).toBeTruthy();
       });
@@ -467,6 +485,9 @@ describe('ui-select tests', function() {
       el.scope().$select.search = 't';
       scope.$digest();
       var choices = el.find('.ui-select-choices-row');
+      
+      openDropdown(el);
+      
       expect(choices.eq(0)).toHaveClass('active');
       expect(getGroupLabel(choices.eq(0)).text()).toBe('Foo');
 
