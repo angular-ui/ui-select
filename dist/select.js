@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.8.1 - 2014-10-07T21:36:20.165Z
+ * Version: 0.8.2 - 2014-10-09T23:29:49.713Z
  * License: MIT
  */
 
@@ -27,9 +27,11 @@
     END: 35,
     BACKSPACE: 8,
     DELETE: 46,
+    COMMAND: 91,
     isControl: function (e) {
         var k = e.which;
         switch (k) {
+        case KEY.COMMAND:
         case KEY.SHIFT:
         case KEY.CTRL:
         case KEY.ALT:
@@ -190,6 +192,7 @@
     ctrl.activate = function(initSearchValue, avoidReset) {
       if (!ctrl.disabled  && !ctrl.open) {
         if(!avoidReset) _resetSearchInput();
+        ctrl.focusser.prop('disabled', true); //Will reactivate it on .close()
         ctrl.open = true;
         ctrl.activeMatchIndex = -1;
 
@@ -309,10 +312,13 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      return ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+      return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
     };
 
     ctrl.isDisabled = function(itemScope) {
+      
+      if (!ctrl.open) return;
+
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       var isDisabled = false;
       var item;
@@ -327,9 +333,9 @@
     };
 
     // When the user clicks on an item inside the dropdown
-    ctrl.select = function(item) {
+    ctrl.select = function(item, skipFocusser) {
 
-      if (!item._uiSelectChoiceDisabled) {
+      if (item === undefined || !item._uiSelectChoiceDisabled) {
         var locals = {};
         locals[ctrl.parserResult.itemName] = item;
 
@@ -344,17 +350,19 @@
         } else {
           ctrl.selected = item;
         }
-        ctrl.close();
+        ctrl.close(skipFocusser);
       }
     };
 
     // Closes the dropdown
-    ctrl.close = function() {
-      if (ctrl.open) {
-        _resetSearchInput();
-        ctrl.open = false;
+    ctrl.close = function(skipFocusser) {
+      if (!ctrl.open) return;        
+      _resetSearchInput();
+      ctrl.open = false;
+      if (!ctrl.multiple){
         $timeout(function(){
-          ctrl.focusser[0].focus();          
+          ctrl.focusser.prop('disabled', false);
+          if (!skipFocusser) ctrl.focusser[0].focus();
         },0,false);
       }
     };
@@ -368,9 +376,18 @@
 
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
+      var removedChoice = ctrl.selected[index];
+      var locals = {};
+      locals[ctrl.parserResult.itemName] = removedChoice;
+
       ctrl.selected.splice(index, 1);
       ctrl.activeMatchIndex = -1;
       ctrl.sizeSearchInput();
+
+      ctrl.onRemoveCallback($scope, {
+        $item: removedChoice,
+        $model: ctrl.parserResult.modelMapper($scope, locals)
+      });
     };
 
     ctrl.getPlaceholder = function(){
@@ -402,8 +419,7 @@
           else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
           break;
         case KEY.TAB:
-          //TODO: Que hacemos en modo multiple?
-          if (!ctrl.multiple) ctrl.select(ctrl.items[ctrl.activeIndex]);
+          if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
           break;
         case KEY.ENTER:
           if(ctrl.open){
@@ -497,7 +513,7 @@
         if(ctrl.multiple && KEY.isHorizontalMovement(key)){
           processed = _handleMatchSelection(key);
         }
-        
+
         if (!processed && ctrl.items.length > 0) {
           processed = _handleDropDownSelection(key);
         }
@@ -519,7 +535,6 @@
     _searchInput.on('blur', function() {
       $timeout(function() {
         ctrl.activeMatchIndex = -1;
-        ctrl.activeIndex = 0;
       });
     });
 
@@ -580,9 +595,10 @@
 
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
-        $select.multiple = angular.isDefined(attrs.multiple);
+        $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
 
         $select.onSelectCallback = $parse(attrs.onSelect);
+        $select.onRemoveCallback = $parse(attrs.onRemove);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
@@ -692,7 +708,7 @@
               e.preventDefault();
               e.stopPropagation();
               $select.select(undefined);
-              scope.$digest();
+              scope.$apply();
               return;
             }
 
