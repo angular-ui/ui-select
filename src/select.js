@@ -749,6 +749,10 @@
         });
 
         if ($select.multiple){
+          scope.$watchCollection(function(){ return ngModel.$modelValue; }, function(newValue, oldValue) {
+            if (oldValue != newValue)
+              ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          });
           scope.$watchCollection('$select.selected', function() {
             ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
           });
