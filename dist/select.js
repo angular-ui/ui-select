@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.8.2 - 2014-10-09T23:29:49.713Z
+ * Version: 0.8.3 - 2014-10-14T18:22:05.432Z
  * License: MIT
  */
 
@@ -396,14 +396,28 @@
       return ctrl.placeholder;
     };
 
+    var containerSizeWatch; 
     ctrl.sizeSearchInput = function(){
       var input = _searchInput[0],
           container = _searchInput.parent().parent()[0];
       _searchInput.css('width','10px');
-      $timeout(function(){
+      var calculate = function(){
         var newWidth = container.clientWidth - input.offsetLeft - 10;
         if(newWidth < 50) newWidth = container.clientWidth;
         _searchInput.css('width',newWidth+'px');
+      };
+      $timeout(function(){ //Give tags time to render correctly
+        if (container.clientWidth === 0 && !containerSizeWatch){
+          containerSizeWatch = $scope.$watch(function(){ return container.clientWidth;}, function(newValue){
+            if (newValue !== 0){
+              calculate();
+              containerSizeWatch();
+              containerSizeWatch = null;
+            }
+          });
+        }else if (!containerSizeWatch) {
+          calculate();
+        }
       }, 0, false);
     };
 
@@ -757,6 +771,10 @@
         });
 
         if ($select.multiple){
+          scope.$watchCollection(function(){ return ngModel.$modelValue; }, function(newValue, oldValue) {
+            if (oldValue != newValue)
+              ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          });
           scope.$watchCollection('$select.selected', function() {
             ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
           });
@@ -927,7 +945,7 @@
         });
 
         if($select.multiple){
-          $select.sizeSearchInput();
+            $select.sizeSearchInput();
         }
 
       }
