@@ -1083,12 +1083,14 @@ describe('ui-select tests', function() {
     it('should update size of search input after removing an item', function() {
         scope.selection.selectedMultiple = [scope.people[4], scope.people[5]]; //Wladimir & Samantha
         var el = createUiSelectMultiple();
+
+        spyOn(el.scope().$select, 'sizeSearchInput');
+
         var searchInput = el.find('.ui-select-search');
         var oldWidth = searchInput.css('width');
-        el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
 
-        $timeout.flush();
-        expect(oldWidth).not.toBe(searchInput.css('width'));
+        el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+        expect(el.scope().$select.sizeSearchInput).toHaveBeenCalled();
 
     });
 

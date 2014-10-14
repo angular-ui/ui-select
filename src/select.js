@@ -388,14 +388,28 @@
       return ctrl.placeholder;
     };
 
+    var containerSizeWatch; 
     ctrl.sizeSearchInput = function(){
       var input = _searchInput[0],
           container = _searchInput.parent().parent()[0];
       _searchInput.css('width','10px');
-      $timeout(function(){
+      var calculate = function(){
         var newWidth = container.clientWidth - input.offsetLeft - 10;
         if(newWidth < 50) newWidth = container.clientWidth;
         _searchInput.css('width',newWidth+'px');
+      };
+      $timeout(function(){ //Give tags time to render correctly
+        if (container.clientWidth === 0 && !containerSizeWatch){
+          containerSizeWatch = $scope.$watch(function(){ return container.clientWidth;}, function(newValue){
+            if (newValue !== 0){
+              calculate();
+              containerSizeWatch();
+              containerSizeWatch = null;
+            }
+          });
+        }else if (!containerSizeWatch) {
+          calculate();
+        }
       }, 0, false);
     };
 
@@ -919,7 +933,7 @@
         });
 
         if($select.multiple){
-          $select.sizeSearchInput();
+            $select.sizeSearchInput();
         }
 
       }
