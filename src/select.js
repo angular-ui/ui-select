@@ -366,6 +366,10 @@
       e.stopPropagation();
     };
 
+    ctrl.isLocked = function(index){
+      return ctrl.selected[index] && ctrl.selected[index].locked;
+    };
+
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
       var removedChoice = ctrl.selected[index];
