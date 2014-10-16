@@ -301,6 +301,9 @@
 
     ctrl.setActiveItem = function(item) {
       ctrl.activeIndex = ctrl.items.indexOf(item);
+      ctrl.onHighlightCallback($scope, {
+            $item: item
+        });
     };
 
     ctrl.isActive = function(itemScope) {
@@ -605,6 +608,7 @@
 
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
+        $select.onHighlightCallback = $parse(attrs.onHighlight);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
