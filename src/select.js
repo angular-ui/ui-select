@@ -159,6 +159,7 @@
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
+    ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -366,8 +367,15 @@
       e.stopPropagation();
     };
 
-    ctrl.isLocked = function(index){
-      return ctrl.selected[index] && ctrl.selected[index].locked;
+    ctrl.isLocked = function(itemScope, itemIndex) {
+        var isLocked, item = ctrl.selected[itemIndex];
+
+        if (item && !angular.isUndefined(ctrl.lockChoiceExpression)) {
+            isLocked = !!(itemScope.$eval(ctrl.lockChoiceExpression)); // force the boolean value
+            item._uiSelectChoiceLocked = isLocked; // store this for later reference
+        }
+
+        return isLocked;
     };
 
     // Remove item from multiple select
@@ -936,6 +944,7 @@
         return theme + (multi ? '/match-multiple.tpl.html' : '/match.tpl.html');
       },
       link: function(scope, element, attrs, $select) {
+        $select.lockChoiceExpression = attrs.uiLockChoice;
         attrs.$observe('placeholder', function(placeholder) {
           $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
         });
