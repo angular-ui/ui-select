@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.8.3 - 2014-10-14T18:22:05.432Z
+ * Version: 0.8.3 - 2014-10-17T16:24:21.429Z
  * License: MIT
  */
 
@@ -59,7 +59,7 @@
    *
    * jqLite find() is limited to lookups by tag name.
    * TODO This will change with future versions of AngularJS, to be removed when this happens
-   *
+5   *
    * See jqLite.find - why not use querySelectorAll? https://github.com/angular/angular.js/issues/3586
    * See feat(jqLite): use querySelectorAll instead of getElementsByTagName in jqLite.find https://github.com/angular/angular.js/pull/3598
    */
@@ -160,7 +160,7 @@
     ctrl.selected = undefined;
     ctrl.open = false;
     ctrl.focus = false;
-    ctrl.focusser = undefined; //Reference to input element used to handle focus events  
+    ctrl.focusser = undefined; //Reference to input element used to handle focus events
     ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
     ctrl.searchEnabled = undefined; // Initialized inside uiSelect directive link function
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
@@ -260,7 +260,7 @@
               var filteredItems = items.filter(function(i) {return ctrl.selected.indexOf(i) < 0;});
               setItemsFn(filteredItems);
             }else{
-              setItemsFn(items);              
+              setItemsFn(items);
             }
             ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
 
@@ -270,14 +270,14 @@
       });
 
       if (ctrl.multiple){
-        //Remove already selected items 
+        //Remove already selected items
         $scope.$watchCollection('$select.selected', function(selectedItems){
           var data = ctrl.parserResult.source($scope);
           if (!selectedItems.length) {
-            setItemsFn(data);            
+            setItemsFn(data);
           }else{
             var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
-            setItemsFn(filteredItems);            
+            setItemsFn(filteredItems);
           }
           ctrl.sizeSearchInput();
         });
@@ -312,17 +312,11 @@
     };
 
     ctrl.isActive = function(itemScope) {
-<<<<<<< HEAD
-      if ( typeof itemScope[ctrl.itemProperty] === 'undefined') {
-        return false;
-      }
-=======
       return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
->>>>>>> master
     };
 
     ctrl.isDisabled = function(itemScope) {
-      
+
       if (!ctrl.open) return;
 
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
@@ -341,7 +335,12 @@
     // When the user clicks on an item inside the dropdown
     ctrl.select = function(item, skipFocusser) {
 
-      if (item === undefined || !item._uiSelectChoiceDisabled) {
+      if (!item || !item._uiSelectChoiceDisabled) {
+        if(ctrl.tagging.isActivated && !item && ctrl.search.length > 0) {
+          // create new item on the fly
+          item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
+        }
+
         var locals = {};
         locals[ctrl.parserResult.itemName] = item;
 
@@ -362,7 +361,7 @@
 
     // Closes the dropdown
     ctrl.close = function(skipFocusser) {
-      if (!ctrl.open) return;        
+      if (!ctrl.open) return;
       _resetSearchInput();
       ctrl.open = false;
       if (!ctrl.multiple){
@@ -402,7 +401,7 @@
       return ctrl.placeholder;
     };
 
-    var containerSizeWatch; 
+    var containerSizeWatch;
     ctrl.sizeSearchInput = function(){
       var input = _searchInput[0],
           container = _searchInput.parent().parent()[0];
@@ -436,7 +435,7 @@
           break;
         case KEY.UP:
           if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-          else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
+          else if (ctrl.activeIndex > 0 || (ctrl.search.length === 0 && ctrl.tagging.isActivated)) { ctrl.activeIndex--; }
           break;
         case KEY.TAB:
           if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
@@ -460,7 +459,7 @@
     // Handles selected options in "multiple" mode
     function _handleMatchSelection(key){
       var caretPosition = _getCaretPosition(_searchInput[0]),
-          length = ctrl.selected.length, 
+          length = ctrl.selected.length,
           // none  = -1,
           first = 0,
           last  = length-1,
@@ -483,7 +482,7 @@
             break;
           case KEY.RIGHT:
             // Open drop-down
-            if(!~ctrl.activeMatchIndex || curr === last){ 
+            if(!~ctrl.activeMatchIndex || curr === last){
               ctrl.activate();
               return false;
             }
@@ -506,7 +505,7 @@
               return curr;
             }
             else return false;
-        }      
+        }
       }
 
       newIndex = getNewActiveMatchIndex();
@@ -534,10 +533,10 @@
           processed = _handleMatchSelection(key);
         }
 
-        if (!processed && ctrl.items.length > 0) {
+        if (!processed && (ctrl.items.length > 0 || ctrl.tagging.isActivated)) {
           processed = _handleDropDownSelection(key);
         }
-        
+
         if (processed  && key != KEY.TAB) {
           //TODO Check si el tab selecciona aun correctamente
           //Crear test
@@ -643,7 +642,7 @@
 
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
-          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search 
+          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
               locals = {},
               result;
           if (data){
@@ -695,7 +694,7 @@
         if(attrs.tabindex){
           //tabindex might be an expression, wait until it contains the actual value before we set the focusser tabindex
           attrs.$observe('tabindex', function(value) {
-            //If we are using multiple, add tabindex to the search input 
+            //If we are using multiple, add tabindex to the search input
             if($select.multiple){
               searchInput.attr("tabindex", value);
             } else {
@@ -750,7 +749,7 @@
             if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC || e.which == KEY.ENTER || e.which === KEY.BACKSPACE) {
               return;
             }
-            
+
             $select.activate(focusser.val()); //User pressed some regular key, so we pass it to the search input
             focusser.val('');
             scope.$digest();
@@ -774,6 +773,19 @@
           // $eval() is needed otherwise we get a string instead of a boolean
           var resetSearchInput = scope.$eval(attrs.resetSearchInput);
           $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
+        });
+
+        attrs.$observe('tagging', function() {
+          if(attrs.tagging !== undefined)
+          {
+            // $eval() is needed otherwise we get a string instead of a function or a boolean
+            var taggingEval = scope.$eval(attrs.tagging);
+            $select.tagging = {isActivated: true, fct: taggingEval !== true ? taggingEval : undefined};
+          }
+          else
+          {
+            $select.tagging = {isActivated: false, fct: undefined};
+          }
         });
 
         if ($select.multiple){
@@ -879,7 +891,7 @@
         if (!tAttrs.repeat) throw uiSelectMinErr('repeat', "Expected 'repeat' expression.");
 
         return function link(scope, element, attrs, $select, transcludeFn) {
-          
+
           // var repeat = RepeatParser.parse(attrs.repeat);
           var groupByExp = attrs.groupBy;
 
@@ -910,7 +922,7 @@
 
           scope.$watch('$select.search', function(newValue) {
             if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
-            $select.activeIndex = 0;
+            $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
             $select.refresh(attrs.refresh);
           });
 
@@ -951,7 +963,7 @@
         });
 
         if($select.multiple){
-            $select.sizeSearchInput();
+          $select.sizeSearchInput();
         }
 
       }
