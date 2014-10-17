@@ -338,11 +338,6 @@
         if(ctrl.tagging.isActivated && !item && ctrl.search.length > 0) {
           // create new item on the fly
           item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
-          // if(ctrl.taggingTokens.isActivated) {
-          //   setTimeout(function() {}, 10);
-          //   _resetSearchInput();
-
-          // }
         }
 
         var locals = {};
