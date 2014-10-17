@@ -19,9 +19,11 @@
     END: 35,
     BACKSPACE: 8,
     DELETE: 46,
+    COMMAND: 91,
     isControl: function (e) {
         var k = e.which;
         switch (k) {
+        case KEY.COMMAND:
         case KEY.SHIFT:
         case KEY.CTRL:
         case KEY.ALT:
@@ -150,7 +152,7 @@
     ctrl.selected = undefined;
     ctrl.open = false;
     ctrl.focus = false;
-    ctrl.focusser = undefined; //Reference to input element used to handle focus events
+    ctrl.focusser = undefined; //Reference to input element used to handle focus events  
     ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
     ctrl.searchEnabled = undefined; // Initialized inside uiSelect directive link function
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
@@ -182,6 +184,7 @@
     ctrl.activate = function(initSearchValue, avoidReset) {
       if (!ctrl.disabled  && !ctrl.open) {
         if(!avoidReset) _resetSearchInput();
+        ctrl.focusser.prop('disabled', true); //Will reactivate it on .close()
         ctrl.open = true;
         ctrl.activeMatchIndex = -1;
 
@@ -249,7 +252,7 @@
               var filteredItems = items.filter(function(i) {return ctrl.selected.indexOf(i) < 0;});
               setItemsFn(filteredItems);
             }else{
-              setItemsFn(items);
+              setItemsFn(items);              
             }
             ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
 
@@ -259,13 +262,15 @@
       });
 
       if (ctrl.multiple){
-        //Remove already selected items
+        //Remove already selected items 
         $scope.$watchCollection('$select.selected', function(selectedItems){
-          if (!selectedItems.length) return;
           var data = ctrl.parserResult.source($scope);
-          if (!data) return;
-          var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
-          setItemsFn(filteredItems);
+          if (!selectedItems.length) {
+            setItemsFn(data);            
+          }else{
+            var filteredItems = data.filter(function(i) {return selectedItems.indexOf(i) < 0;});
+            setItemsFn(filteredItems);            
+          }
           ctrl.sizeSearchInput();
         });
       }
@@ -299,12 +304,13 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      if ( typeof itemScope[ctrl.itemProperty] === 'undefined') {
-        return false;
-      }
+      return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
     };
 
     ctrl.isDisabled = function(itemScope) {
+      
+      if (!ctrl.open) return;
+
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       var isDisabled = false;
       var item;
@@ -319,14 +325,9 @@
     };
 
     // When the user clicks on an item inside the dropdown
-    ctrl.select = function(item) {
+    ctrl.select = function(item, skipFocusser) {
 
-      if (!item || !item._uiSelectChoiceDisabled) {
-        if(ctrl.tagging.isActivated && !item && ctrl.search.length > 0) {
-          // create new item on the fly
-          item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
-        }
-
+      if (item === undefined || !item._uiSelectChoiceDisabled) {
         var locals = {};
         locals[ctrl.parserResult.itemName] = item;
 
@@ -341,17 +342,19 @@
         } else {
           ctrl.selected = item;
         }
-        ctrl.close();
+        ctrl.close(skipFocusser);
       }
     };
 
     // Closes the dropdown
-    ctrl.close = function() {
-      if (ctrl.open) {
-        _resetSearchInput();
-        ctrl.open = false;
+    ctrl.close = function(skipFocusser) {
+      if (!ctrl.open) return;        
+      _resetSearchInput();
+      ctrl.open = false;
+      if (!ctrl.multiple){
         $timeout(function(){
-          ctrl.focusser[0].focus();
+          ctrl.focusser.prop('disabled', false);
+          if (!skipFocusser) ctrl.focusser[0].focus();
         },0,false);
       }
     };
@@ -365,25 +368,48 @@
 
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
+      var removedChoice = ctrl.selected[index];
+      var locals = {};
+      locals[ctrl.parserResult.itemName] = removedChoice;
+
       ctrl.selected.splice(index, 1);
       ctrl.activeMatchIndex = -1;
       ctrl.sizeSearchInput();
+
+      ctrl.onRemoveCallback($scope, {
+        $item: removedChoice,
+        $model: ctrl.parserResult.modelMapper($scope, locals)
+      });
     };
 
     ctrl.getPlaceholder = function(){
       //Refactor single?
-      if(ctrl.multiple && (ctrl.selected === undefined || ctrl.selected.length)) return;
+      if(ctrl.multiple && ctrl.selected.length) return;
       return ctrl.placeholder;
     };
 
+    var containerSizeWatch; 
     ctrl.sizeSearchInput = function(){
       var input = _searchInput[0],
           container = _searchInput.parent().parent()[0];
       _searchInput.css('width','10px');
-      $timeout(function(){
+      var calculate = function(){
         var newWidth = container.clientWidth - input.offsetLeft - 10;
         if(newWidth < 50) newWidth = container.clientWidth;
         _searchInput.css('width',newWidth+'px');
+      };
+      $timeout(function(){ //Give tags time to render correctly
+        if (container.clientWidth === 0 && !containerSizeWatch){
+          containerSizeWatch = $scope.$watch(function(){ return container.clientWidth;}, function(newValue){
+            if (newValue !== 0){
+              calculate();
+              containerSizeWatch();
+              containerSizeWatch = null;
+            }
+          });
+        }else if (!containerSizeWatch) {
+          calculate();
+        }
       }, 0, false);
     };
 
@@ -396,11 +422,10 @@
           break;
         case KEY.UP:
           if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-          else if (ctrl.activeIndex > 0 || (ctrl.search.length === 0 && ctrl.tagging.isActivated)) { ctrl.activeIndex--; }
+          else if (ctrl.activeIndex > 0) { ctrl.activeIndex--; }
           break;
         case KEY.TAB:
-          //TODO: Que hacemos en modo multiple?
-          if (!ctrl.multiple) ctrl.select(ctrl.items[ctrl.activeIndex]);
+          if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
           break;
         case KEY.ENTER:
           if(ctrl.open){
@@ -421,7 +446,7 @@
     // Handles selected options in "multiple" mode
     function _handleMatchSelection(key){
       var caretPosition = _getCaretPosition(_searchInput[0]),
-          length = ctrl.selected.length,
+          length = ctrl.selected.length, 
           // none  = -1,
           first = 0,
           last  = length-1,
@@ -444,7 +469,7 @@
             break;
           case KEY.RIGHT:
             // Open drop-down
-            if(!~ctrl.activeMatchIndex || curr === last){
+            if(!~ctrl.activeMatchIndex || curr === last){ 
               ctrl.activate();
               return false;
             }
@@ -467,7 +492,7 @@
               return curr;
             }
             else return false;
-        }
+        }      
       }
 
       newIndex = getNewActiveMatchIndex();
@@ -495,10 +520,10 @@
           processed = _handleMatchSelection(key);
         }
 
-        if (!processed && (ctrl.items.length > 0 || ctrl.tagging.isActivated)) {
+        if (!processed && ctrl.items.length > 0) {
           processed = _handleDropDownSelection(key);
         }
-
+        
         if (processed  && key != KEY.TAB) {
           //TODO Check si el tab selecciona aun correctamente
           //Crear test
@@ -516,7 +541,6 @@
     _searchInput.on('blur', function() {
       $timeout(function() {
         ctrl.activeMatchIndex = -1;
-        ctrl.activeIndex = 0;
       });
     });
 
@@ -577,11 +601,10 @@
 
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
-        $select.multiple = angular.isDefined(attrs.multiple);
+        $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
 
         $select.onSelectCallback = $parse(attrs.onSelect);
-
-        $select.tagging = {isActivated: false, fct: undefined};
+        $select.onRemoveCallback = $parse(attrs.onRemove);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
@@ -606,7 +629,7 @@
 
         //From model --> view
         ngModel.$formatters.unshift(function (inputValue) {
-          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
+          var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search 
               locals = {},
               result;
           if (data){
@@ -658,7 +681,7 @@
         if(attrs.tabindex){
           //tabindex might be an expression, wait until it contains the actual value before we set the focusser tabindex
           attrs.$observe('tabindex', function(value) {
-            //If we are using multiple, add tabindex to the search input
+            //If we are using multiple, add tabindex to the search input 
             if($select.multiple){
               searchInput.attr("tabindex", value);
             } else {
@@ -691,7 +714,7 @@
               e.preventDefault();
               e.stopPropagation();
               $select.select(undefined);
-              scope.$digest();
+              scope.$apply();
               return;
             }
 
@@ -713,7 +736,7 @@
             if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e) || e.which === KEY.ESC || e.which == KEY.ENTER || e.which === KEY.BACKSPACE) {
               return;
             }
-
+            
             $select.activate(focusser.val()); //User pressed some regular key, so we pass it to the search input
             focusser.val('');
             scope.$digest();
@@ -739,20 +762,11 @@
           $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
         });
 
-        attrs.$observe('tagging', function() {
-          if(attrs.tagging !== undefined)
-          {
-            // $eval() is needed otherwise we get a string instead of a function or a boolean
-            var taggingEval = scope.$eval(attrs.tagging);
-            $select.tagging = {isActivated: true, fct: taggingEval !== true ? taggingEval : undefined};
-          }
-          else
-          {
-            $select.tagging = {isActivated: false, fct: undefined};
-          }
-        });
-
         if ($select.multiple){
+          scope.$watchCollection(function(){ return ngModel.$modelValue; }, function(newValue, oldValue) {
+            if (oldValue != newValue)
+              ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          });
           scope.$watchCollection('$select.selected', function() {
             ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
           });
@@ -851,7 +865,7 @@
         if (!tAttrs.repeat) throw uiSelectMinErr('repeat', "Expected 'repeat' expression.");
 
         return function link(scope, element, attrs, $select, transcludeFn) {
-
+          
           // var repeat = RepeatParser.parse(attrs.repeat);
           var groupByExp = attrs.groupBy;
 
@@ -882,7 +896,7 @@
 
           scope.$watch('$select.search', function(newValue) {
             if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
-            $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
+            $select.activeIndex = 0;
             $select.refresh(attrs.refresh);
           });
 
@@ -923,7 +937,7 @@
         });
 
         if($select.multiple){
-          $select.sizeSearchInput();
+            $select.sizeSearchInput();
         }
 
       }
