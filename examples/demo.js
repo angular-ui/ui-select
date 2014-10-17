@@ -99,6 +99,13 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     $scope.eventResult = {item: item, model: model};
   };
 
+  $scope.removed = function (item, model) {
+    $scope.lastRemoved = {
+        item: item,
+        model: model
+    };
+  };
+
   $scope.person = {};
   $scope.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },

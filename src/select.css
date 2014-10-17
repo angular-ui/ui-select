@@ -113,6 +113,10 @@
   line-height: 0.75;
 }
 
+.ui-select-multiple.ui-select-bootstrap .ui-select-match-item{
+  outline: 0;
+}
+
 .ui-select-bootstrap .ui-select-choices-row>a {
     display: block;
     padding: 3px 20px;
