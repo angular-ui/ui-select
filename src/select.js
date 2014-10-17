@@ -301,13 +301,16 @@
 
     ctrl.setActiveItem = function(item) {
       ctrl.activeIndex = ctrl.items.indexOf(item);
-      ctrl.onHighlightCallback($scope, {
-            $item: item
-        });
     };
 
     ctrl.isActive = function(itemScope) {
-      return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+      var isActive = ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+
+      if (isActive && !angular.isUndefined(ctrl.onHighlightCallback)) {
+        itemScope.$eval(ctrl.onHighlightCallback);
+      }
+
+      return isActive;
     };
 
     ctrl.isDisabled = function(itemScope) {
@@ -608,7 +611,6 @@
 
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
-        $select.onHighlightCallback = $parse(attrs.onHighlight);
 
         //From view --> model
         ngModel.$parsers.unshift(function (inputValue) {
@@ -876,6 +878,7 @@
           $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
 
           $select.disableChoiceExpression = attrs.uiDisableChoice;
+          $select.onHighlightCallback = attrs.onHighlight;
 
           if(groupByExp) {
             var groups = element.querySelectorAll('.ui-select-choices-group');
