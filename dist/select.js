@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.8.3 - 2014-10-17T16:24:21.429Z
+ * Version: 0.8.3 - 2014-10-17T18:44:25.084Z
  * License: MIT
  */
 
@@ -28,6 +28,10 @@
     BACKSPACE: 8,
     DELETE: 46,
     COMMAND: 91,
+
+    MAP: { 91 : "COMMAND", 8 : "BACKSPACE" , 9 : "TAB" , 13 : "ENTER" , 16 : "SHIFT" , 17 : "CTRL" , 18 : "ALT" , 19 : "PAUSEBREAK" , 20 : "CAPSLOCK" , 27 : "ESC" , 32 : "SPACE" , 33 : "PAGE_UP", 34 : "PAGE_DOWN" , 35 : "END" , 36 : "HOME" , 37 : "LEFT" , 38 : "UP" , 39 : "RIGHT" , 40 : "DOWN" , 43 : "+" , 44 : "PRINTSCREEN" , 45 : "INSERT" , 46 : "DELETE", 48 : "0" , 49 : "1" , 50 : "2" , 51 : "3" , 52 : "4" , 53 : "5" , 54 : "6" , 55 : "7" , 56 : "8" , 57 : "9" , 59 : ";", 61 : "=" , 65 : "A" , 66 : "B" , 67 : "C" , 68 : "D" , 69 : "E" , 70 : "F" , 71 : "G" , 72 : "H" , 73 : "I" , 74 : "J" , 75 : "K" , 76 : "L", 77 : "M" , 78 : "N" , 79 : "O" , 80 : "P" , 81 : "Q" , 82 : "R" , 83 : "S" , 84 : "T" , 85 : "U" , 86 : "V" , 87 : "W" , 88 : "X" , 89 : "Y" , 90 : "Z", 96 : "0" , 97 : "1" , 98 : "2" , 99 : "3" , 100 : "4" , 101 : "5" , 102 : "6" , 103 : "7" , 104 : "8" , 105 : "9", 106 : "*" , 107 : "+" , 109 : "-" , 110 : "." , 111 : "/", 112 : "F1" , 113 : "F2" , 114 : "F3" , 115 : "F4" , 116 : "F5" , 117 : "F6" , 118 : "F7" , 119 : "F8" , 120 : "F9" , 121 : "F10" , 122 : "F11" , 123 : "F12", 144 : "NUMLOCK" , 145 : "SCROLLLOCK" , 186 : ";" , 187 : "=" , 188 : "SPACE" , 189 : "-" , 190 : "." , 191 : "/" , 192 : "`" , 219 : "[" , 220 : "\\" , 221 : "]" , 222 : "'"
+    },
+
     isControl: function (e) {
         var k = e.which;
         switch (k) {
@@ -312,6 +316,9 @@
     };
 
     ctrl.isActive = function(itemScope) {
+      if ( typeof itemScope[ctrl.itemProperty] === 'undefined') {
+        return false;
+      }
       return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
     };
 
@@ -339,6 +346,11 @@
         if(ctrl.tagging.isActivated && !item && ctrl.search.length > 0) {
           // create new item on the fly
           item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
+          // if(ctrl.taggingTokens.isActivated) {
+          //   setTimeout(function() {}, 10);
+          //   _resetSearchInput();
+
+          // }
         }
 
         var locals = {};
@@ -535,6 +547,15 @@
 
         if (!processed && (ctrl.items.length > 0 || ctrl.tagging.isActivated)) {
           processed = _handleDropDownSelection(key);
+          if ( ctrl.taggingTokens.isActivated ) {
+            for (var i = 0; i < ctrl.taggingTokens.tokens.length; i++) {
+              console.log(ctrl.taggingTokens.tokens[i])
+              if ( ctrl.taggingTokens.tokens[i] === KEY.MAP[e.keyCode] ) {
+                ctrl.select(null, true);
+                _searchInput.triggerHandler('tagged')
+              }
+            };
+          }
         }
 
         if (processed  && key != KEY.TAB) {
@@ -549,6 +570,14 @@
         _ensureHighlightVisible();
       }
 
+    });
+
+    _searchInput.on('tagged', function() {
+      $timeout(function() {
+        console.log('tagged');
+        debugger;
+        _resetSearchInput();
+      });
     });
 
     _searchInput.on('blur', function() {
@@ -785,6 +814,18 @@
           else
           {
             $select.tagging = {isActivated: false, fct: undefined};
+          }
+        });
+
+        attrs.$observe('taggingTokens', function() {
+          if(attrs.tagging !== undefined && attrs.taggingTokens !== undefined)
+          {
+            var tokens = attrs.taggingTokens !== undefined ? attrs.taggingTokens.split('|') : [','];
+              $select.taggingTokens = {isActivated: true, tokens: tokens };
+          }
+          else
+          {
+            $select.taggingTokens = {isActivated: false, tokens: undefined};
           }
         });
 

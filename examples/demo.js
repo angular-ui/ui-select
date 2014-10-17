@@ -106,6 +106,17 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     };
   };
 
+  $scope.tagTransform = function (newTag) {
+    var item = {
+        name: newTag,
+        email: newTag+'@email.com',
+        age: 'unknown',
+        country: 'unknown'
+    };
+
+    return item;
+  };
+
   $scope.person = {};
   $scope.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
