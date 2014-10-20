@@ -308,10 +308,14 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      if ( typeof itemScope[ctrl.itemProperty] === 'undefined') {
-        return false;
+      var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
+      if ( ctrl.open && ( ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex ) ) {
+        var item = ctrl.items[itemIndex];
+        if ( typeof item === 'undefined' ) {
+          return ctrl.open && false;
+        }
       }
-      return ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+      return ctrl.open && itemIndex === ctrl.activeIndex;
     };
 
     ctrl.isDisabled = function(itemScope) {
