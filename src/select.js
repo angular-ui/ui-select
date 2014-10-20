@@ -536,12 +536,11 @@
           processed = _handleDropDownSelection(key);
           if ( ctrl.taggingTokens.isActivated ) {
             for (var i = 0; i < ctrl.taggingTokens.tokens.length; i++) {
-              console.log(ctrl.taggingTokens.tokens[i])
               if ( ctrl.taggingTokens.tokens[i] === KEY.MAP[e.keyCode] ) {
                 ctrl.select(null, true);
-                _searchInput.triggerHandler('tagged')
+                _searchInput.triggerHandler('tagged');
               }
-            };
+            }
           }
         }
 
