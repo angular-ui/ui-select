@@ -74,7 +74,8 @@
   <p>Selected: {{multipleDemo.colors}}</p>
   <hr>
 
-  <h3>Simple String Tags (No Labels)</h3>
+  <h3>Simple String Tags </h3>
+  <h4>(Predictive Search Model / No Labels)</h4>
   <ui-select multiple tagging tagging-label="false" ng-model="multipleDemo.colors2" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
     <ui-select-choices repeat="color in availableColors | filter:$select.search">

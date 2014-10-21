@@ -312,6 +312,9 @@
 
     ctrl.isActive = function(itemScope) {
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
+      if ( ctrl.taggingLabel === false && ctrl.activeIndex === -1 ) {
+        return false;
+      }
       return ctrl.open && itemIndex === ctrl.activeIndex;
     };
 
@@ -593,6 +596,11 @@
     });
 
     _searchInput.on('keyup', function(e) {
+      if ( ! KEY.isVerticalMovement(e.which) ) {
+        $scope.$evalAsync( function () {
+          ctrl.activeIndex = ctrl.taggingLabel === false ? -1 : 0;
+        });
+      }
       // Push a "create new" item into array if there is a search string
       if ( ctrl.tagging.isActivated && ctrl.search.length > 0 ) {
 
