@@ -22,7 +22,7 @@ describe('ui-select tests', function() {
     $compile = _$compile_;
     $timeout = _$timeout_;
     scope.selection = {};
-    
+
     scope.getGroupLabel = function(person) {
       return person.age % 2 ? 'even' : 'odd';
     };
@@ -209,7 +209,7 @@ describe('ui-select tests', function() {
     var el = createUiSelect({theme : 'select2'});
     var searchInput = el.find('.ui-select-search');
     var $select = el.scope().$select;
-    
+
     expect($select.open).toEqual(false);
 
     el.find(".ui-select-toggle").click();
@@ -282,7 +282,8 @@ describe('ui-select tests', function() {
     clickMatch(el);
 
     $(el).scope().$select.search = 'idontexist';
-    $(el).scope().$select.select();
+    $(el).scope().$select.activeIndex = 0;
+    $(el).scope().$select.select('idontexist');
 
     expect($(el).scope().$select.selected).toEqual({
       name: 'idontexist',
@@ -519,9 +520,9 @@ describe('ui-select tests', function() {
       el.scope().$select.search = 't';
       scope.$digest();
       var choices = el.find('.ui-select-choices-row');
-      
+
       openDropdown(el);
-      
+
       expect(choices.eq(0)).toHaveClass('active');
       expect(getGroupLabel(choices.eq(0)).text()).toBe('Foo');
 
@@ -605,7 +606,7 @@ describe('ui-select tests', function() {
     clickItem(el, 'Samantha');
 	  expect(scope.selection.selected).toBe(scope.people[5]);
   });
-  
+
   it('should parse the model correctly using alias', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -620,7 +621,7 @@ describe('ui-select tests', function() {
     scope.$digest();
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
-  
+
   it('should format the model correctly using property of alias', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -634,7 +635,7 @@ describe('ui-select tests', function() {
     clickItem(el, 'Samantha');
 	  expect(scope.selection.selected).toBe('Samantha');
   });
-  
+
   it('should parse the model correctly using property of alias', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -649,7 +650,7 @@ describe('ui-select tests', function() {
     scope.$digest();
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
-  
+
   it('should parse the model correctly using property of alias with async choices data', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -688,13 +689,13 @@ describe('ui-select tests', function() {
     scope.$digest();
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
-  
+
   it('should format the model correctly without alias', function() {
     var el = createUiSelect();
     clickItem(el, 'Samantha');
 	  expect(scope.selection.selected).toBe(scope.people[5]);
   });
-  
+
   it('should parse the model correctly without alias', function() {
     var el = createUiSelect();
     scope.selection.selected = scope.people[5];
@@ -956,8 +957,8 @@ describe('ui-select tests', function() {
     scope.fetchFromServer = function(searching){
 
       if (searching == 's')
-        return scope.people 
-      
+        return scope.people
+
       if (searching == 'o'){
         scope.people = []; //To simulate cases were previously selected item isnt in the list anymore
       }
@@ -1065,7 +1066,7 @@ describe('ui-select tests', function() {
     });
 
     it('should set model as an empty array if ngModel isnt defined', function () {
-      
+
       // scope.selection.selectedMultiple = [];
       var el = createUiSelectMultiple();
 
@@ -1151,7 +1152,7 @@ describe('ui-select tests', function() {
         triggerKeydown(searchInput, Key.Left);
         triggerKeydown(searchInput, Key.Backspace);
         expect(el.scope().$select.selected).toEqual([scope.people[4], scope.people[6]]); //Wladimir & Nicole
-        
+
         expect(el.scope().$select.activeMatchIndex).toBe(0);
 
     });
@@ -1167,7 +1168,7 @@ describe('ui-select tests', function() {
         triggerKeydown(searchInput, Key.Left);
         triggerKeydown(searchInput, Key.Delete);
         expect(el.scope().$select.selected).toEqual([scope.people[4], scope.people[6]]); //Wladimir & Nicole
-        
+
         expect(el.scope().$select.activeMatchIndex).toBe(1);
 
     });
@@ -1382,7 +1383,7 @@ describe('ui-select tests', function() {
     });
 
     it('should format view value correctly when using single property binding and refresh funcion', function () {
-      
+
       scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
 
       var el = compileTemplate(
@@ -1401,8 +1402,8 @@ describe('ui-select tests', function() {
       scope.fetchFromServer = function(searching){
 
         if (searching == 'n')
-          return scope.people 
-        
+          return scope.people
+
         if (searching == 'o'){
           scope.people = []; //To simulate cases were previously selected item isnt in the list anymore
         }
@@ -1423,7 +1424,7 @@ describe('ui-select tests', function() {
     });
 
     it('should watch changes for $select.selected and update formatted value correctly', function () {
-      
+
       scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
 
       var el = compileTemplate(
@@ -1452,7 +1453,7 @@ describe('ui-select tests', function() {
     });
 
     it('should change viewvalue only once when updating modelvalue', function () {
-      
+
       scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
 
       var el = compileTemplate(
@@ -1479,7 +1480,7 @@ describe('ui-select tests', function() {
 
 
     it('should run $formatters when changing model directly', function () {
-      
+
       scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
 
       var el = compileTemplate(
