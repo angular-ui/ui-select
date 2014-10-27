@@ -311,11 +311,14 @@
     };
 
     ctrl.isActive = function(itemScope) {
+      if ( !ctrl.open ) {
+        return false;
+      }
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       if ( ctrl.taggingLabel === false && ctrl.activeIndex === -1 ) {
         return false;
       }
-      return ctrl.open && itemIndex === ctrl.activeIndex;
+      return itemIndex === ctrl.activeIndex;
     };
 
     ctrl.isDisabled = function(itemScope) {
