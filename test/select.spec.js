@@ -144,6 +144,7 @@ describe('ui-select tests', function() {
     var choicesContainerEl = $(el).find('.ui-select-choices');
     expect(choicesContainerEl.length).toEqual(1);
 
+    openDropdown(el);
     var choicesEls = $(el).find('.ui-select-choices-row');
     expect(choicesEls.length).toEqual(8);
   });
@@ -367,12 +368,14 @@ describe('ui-select tests', function() {
       });
 
       it('should set a disabled class on the option', function() {
-        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
-        var container = option.closest('.ui-select-choices-row');
 
         openDropdown(this.el);
 
+        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
+        var container = option.closest('.ui-select-choices-row');
+
         expect(container.hasClass('disabled')).toBeTruthy();
+
       });
     });
 
@@ -398,10 +401,10 @@ describe('ui-select tests', function() {
       });
 
       it('should set a disabled class on the option', function() {
+        openDropdown(this.el);
+
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
-
-        openDropdown(this.el);
 
         expect(container.hasClass('disabled')).toBeTruthy();
       });
@@ -429,10 +432,10 @@ describe('ui-select tests', function() {
       });
 
       it('should set a disabled class on the option', function() {
+        openDropdown(this.el);
+
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
-
-        openDropdown(this.el);
 
         expect(container.hasClass('disabled')).toBeTruthy();
       });
@@ -485,9 +488,8 @@ describe('ui-select tests', function() {
       var el = createUiSelect();
       el.scope().$select.search = 't';
       scope.$digest();
-      var choices = el.find('.ui-select-choices-row');
-
       openDropdown(el);
+      var choices = el.find('.ui-select-choices-row');
 
       expect(choices.eq(0)).toHaveClass('active');
       expect(getGroupLabel(choices.eq(0)).text()).toBe('Foo');
@@ -844,6 +846,7 @@ describe('ui-select tests', function() {
       </ui-select>'
     );
 
+    openDropdown(el);
     expect($(el).find('.only-once').length).toEqual(1);
 
 
