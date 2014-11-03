@@ -55,7 +55,7 @@
    *
    * jqLite find() is limited to lookups by tag name.
    * TODO This will change with future versions of AngularJS, to be removed when this happens
-5   *
+   *
    * See jqLite.find - why not use querySelectorAll? https://github.com/angular/angular.js/issues/3586
    * See feat(jqLite): use querySelectorAll instead of getElementsByTagName in jqLite.find https://github.com/angular/angular.js/pull/3598
    */
@@ -349,9 +349,7 @@
           if ( ctrl.taggingLabel === false ) {
             if ( ctrl.activeIndex < 0 ) {
               item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
-              if ( ! angular.equals( ctrl.items[0], item ) ) {
-                item = item;
-              } else {
+              if ( angular.equals( ctrl.items[0], item ) ) {
                 return;
               }
             } else {
@@ -366,7 +364,6 @@
               // for `item` if it is a detected duplicate
               if ( item === undefined ) return;
               // create new item on the fly
-              if ( ctrl.taggingLabel && ctrl.taggingLabel.length > 0 ) {}
               item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'');
             }
           }
