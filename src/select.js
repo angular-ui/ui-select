@@ -164,6 +164,7 @@
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
     ctrl.$filter = $filter;
+    ctrl.taggingTokens = {isActivated: false, tokens: undefined};
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -176,7 +177,7 @@
 
     // Most of the time the user does not want to empty the search input when in typeahead mode
     function _resetSearchInput() {
-      if (ctrl.resetSearchInput) {
+      if (ctrl.resetSearchInput || ctrl.tagging.isActivated ) {
         ctrl.search = EMPTY_SEARCH;
         //reset activeIndex
         if (ctrl.selected && ctrl.items.length && !ctrl.multiple) {
@@ -970,21 +971,18 @@
             // associated with tagging
             if ( attrs.taggingLabel === 'false' ) {
               $select.taggingLabel = false;
-            } else {
+            }
+            else
+            {
               $select.taggingLabel = attrs.taggingLabel !== undefined ? attrs.taggingLabel : '(new)';
             }
           }
         });
 
         attrs.$observe('taggingTokens', function() {
-          if(attrs.tagging !== undefined && attrs.taggingTokens !== undefined)
-          {
-            var tokens = attrs.taggingTokens !== undefined ? attrs.taggingTokens.split('|') : [','];
-              $select.taggingTokens = {isActivated: true, tokens: tokens };
-          }
-          else
-          {
-            $select.taggingTokens = {isActivated: false, tokens: undefined};
+          if (attrs.tagging !== undefined) {
+            var tokens = attrs.taggingTokens !== undefined ? attrs.taggingTokens.split('|') : [',','ENTER'];
+            $select.taggingTokens = {isActivated: true, tokens: tokens };
           }
         });
 
