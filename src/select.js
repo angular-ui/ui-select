@@ -381,6 +381,10 @@
     // Remove item from multiple select
     ctrl.removeChoice = function(index){
       var removedChoice = ctrl.selected[index];
+
+      // if the choice is locked, can't remove it
+      if(removedChoice._uiSelectChoiceLocked) return;
+
       var locals = {};
       locals[ctrl.parserResult.itemName] = removedChoice;
 
