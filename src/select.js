@@ -141,8 +141,8 @@
    * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
    */
   .controller('uiSelectCtrl',
-    ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr', 'uiSelectConfig',
-    function($scope, $element, $timeout, RepeatParser, uiSelectMinErr, uiSelectConfig) {
+    ['$scope', '$element', '$timeout', '$filter', 'RepeatParser', 'uiSelectMinErr', 'uiSelectConfig',
+    function($scope, $element, $timeout, $filter, RepeatParser, uiSelectMinErr, uiSelectConfig) {
 
     var ctrl = this;
 
@@ -313,9 +313,15 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      if ( !ctrl.open ) {
+      var isActive = ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+
+      if ( !isActive ) {
         return false;
       }
+      if (isActive && !angular.isUndefined(ctrl.onHighlightCallback)) {
+        itemScope.$eval(ctrl.onHighlightCallback);
+      }
+
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       if ( ctrl.taggingLabel === false && ctrl.activeIndex === -1 ) {
         return false;
