@@ -255,7 +255,7 @@ describe('ui-select tests', function() {
     expect(isDropdownOpened(el2)).toEqual(true);
 
     var el3 = createUiSelect();
-    expect(el3.scope().$select.disabled).toEqual(false);
+    expect(el3.scope().$select.disabled).toEqual(false || undefined);
     clickMatch(el3);
     expect(isDropdownOpened(el3)).toEqual(true);
   });
