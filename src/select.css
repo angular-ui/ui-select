@@ -28,6 +28,10 @@
   padding-left: 0;
 }
 
+.select2-locked > .select2-search-choice-close{
+  display:none;
+}
+
 /* Selectize theme */
 
 /* Helper class to show styles when focus */

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ui-select tests', function() {
-  var scope, $rootScope, $compile, $timeout;
+  var scope, $rootScope, $compile, $timeout, $injector;
 
   var Key = {
     Enter: 13,
@@ -16,11 +16,12 @@ describe('ui-select tests', function() {
   };
 
   beforeEach(module('ngSanitize', 'ui.select'));
-  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
     $timeout = _$timeout_;
+    $injector = _$injector_;
     scope.selection = {};
 
     scope.getGroupLabel = function(person) {
@@ -144,6 +145,7 @@ describe('ui-select tests', function() {
     var choicesContainerEl = $(el).find('.ui-select-choices');
     expect(choicesContainerEl.length).toEqual(1);
 
+    openDropdown(el);
     var choicesEls = $(el).find('.ui-select-choices-row');
     expect(choicesEls.length).toEqual(8);
   });
@@ -254,7 +256,7 @@ describe('ui-select tests', function() {
     expect(isDropdownOpened(el2)).toEqual(true);
 
     var el3 = createUiSelect();
-    expect(el3.scope().$select.disabled).toEqual(false);
+    expect(el3.scope().$select.disabled).toEqual(false || undefined);
     clickMatch(el3);
     expect(isDropdownOpened(el3)).toEqual(true);
   });
@@ -401,12 +403,14 @@ describe('ui-select tests', function() {
       });
 
       it('should set a disabled class on the option', function() {
-        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
-        var container = option.closest('.ui-select-choices-row');
 
         openDropdown(this.el);
 
+        var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
+        var container = option.closest('.ui-select-choices-row');
+
         expect(container.hasClass('disabled')).toBeTruthy();
+
       });
     });
 
@@ -432,10 +436,10 @@ describe('ui-select tests', function() {
       });
 
       it('should set a disabled class on the option', function() {
+        openDropdown(this.el);
+
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
-
-        openDropdown(this.el);
 
         expect(container.hasClass('disabled')).toBeTruthy();
       });
@@ -463,10 +467,10 @@ describe('ui-select tests', function() {
       });
 
       it('should set a disabled class on the option', function() {
+        openDropdown(this.el);
+
         var option = $(this.el).find('.ui-select-choices-row div:contains("Wladimir")');
         var container = option.closest('.ui-select-choices-row');
-
-        openDropdown(this.el);
 
         expect(container.hasClass('disabled')).toBeTruthy();
       });
@@ -519,9 +523,8 @@ describe('ui-select tests', function() {
       var el = createUiSelect();
       el.scope().$select.search = 't';
       scope.$digest();
-      var choices = el.find('.ui-select-choices-row');
-
       openDropdown(el);
+      var choices = el.find('.ui-select-choices-row');
 
       expect(choices.eq(0)).toHaveClass('active');
       expect(getGroupLabel(choices.eq(0)).text()).toBe('Foo');
@@ -759,6 +762,35 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should invoke hover callback', function(){
+
+    var highlighted;
+    scope.onHighlightFn = function ($item) {
+      highlighted = $item;
+    };
+
+    var el = compileTemplate(
+      '<ui-select on-select="onSelectFn($item, $model)" ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices on-highlight="onHighlightFn(person)" repeat="person.name as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    expect(highlighted).toBeFalsy();
+
+    if (!isDropdownOpened(el)){
+      openDropdown(el);
+    }
+
+    $(el).find('.ui-select-choices-row div:contains("Samantha")').trigger('mouseover');
+    scope.$digest();
+
+    expect(highlighted).toBe(scope.people[5]);
+  })
+
   it('should set $item & $model correctly when invoking callback on select and no single prop. binding', function () {
 
     scope.onSelectFn = function ($item, $model, $label) {
@@ -878,6 +910,7 @@ describe('ui-select tests', function() {
       </ui-select>'
     );
 
+    openDropdown(el);
     expect($(el).find('.only-once').length).toEqual(1);
 
 
@@ -993,12 +1026,12 @@ describe('ui-select tests', function() {
     describe('selectize theme', function() {
 
       it('should show search input when true', function() {
-        setupSelectComponent('true', 'selectize');
+        setupSelectComponent(true, 'selectize');
         expect($(el).find('.ui-select-search')).not.toHaveClass('ng-hide');
       });
 
       it('should hide search input when false', function() {
-        setupSelectComponent('false', 'selectize');
+        setupSelectComponent(false, 'selectize');
         expect($(el).find('.ui-select-search')).toHaveClass('ng-hide');
       });
 
@@ -1507,5 +1540,64 @@ describe('ui-select tests', function() {
     });
   });
 
+  describe('default configuration via uiSelectConfig', function() {
 
+    describe('searchEnabled option', function() {
+
+      function setupWithoutAttr(){
+        return compileTemplate(
+          '<ui-select ng-model="selection.selected"> \
+            <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+            <ui-select-choices repeat="person in people | filter: $select.search"> \
+              <div ng-bind-html="person.name | highlight: $select.search"></div> \
+              <div ng-bind-html="person.email | highlight: $select.search"></div> \
+            </ui-select-choices> \
+          </ui-select>'
+        );
+      }
+
+      function setupWithAttr(searchEnabled){
+        return compileTemplate(
+          '<ui-select ng-model="selection.selected" search-enabled="'+searchEnabled+'"> \
+            <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+            <ui-select-choices repeat="person in people | filter: $select.search"> \
+              <div ng-bind-html="person.name | highlight: $select.search"></div> \
+              <div ng-bind-html="person.email | highlight: $select.search"></div> \
+            </ui-select-choices> \
+          </ui-select>'
+        );
+      }
+
+      it('should be true by default', function(){
+        var el = setupWithoutAttr();
+        expect(el.scope().$select.searchEnabled).toBe(true);
+      });
+
+      it('should disable search if default set to false', function(){
+        var uiSelectConfig = $injector.get('uiSelectConfig');
+        uiSelectConfig.searchEnabled = false;
+
+        var el = setupWithoutAttr();
+        expect(el.scope().$select.searchEnabled).not.toBe(true);
+      });
+
+      it('should be overridden by inline option search-enabled=true', function(){
+        var uiSelectConfig = $injector.get('uiSelectConfig');
+        uiSelectConfig.searchEnabled = false;
+
+        var el = setupWithAttr(true);
+        expect(el.scope().$select.searchEnabled).toBe(true);
+      });
+
+      it('should be overridden by inline option search-enabled=false', function(){
+        var uiSelectConfig = $injector.get('uiSelectConfig');
+        uiSelectConfig.searchEnabled = true;
+
+        var el = setupWithAttr(false);
+        expect(el.scope().$select.searchEnabled).not.toBe(true);
+      });
+
+    });
+
+  });
 });
