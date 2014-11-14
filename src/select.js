@@ -164,6 +164,7 @@
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
     ctrl.$filter = $filter;
+    ctrl.tagging = {isActivated: false, fct: undefined};
     ctrl.taggingTokens = {isActivated: false, tokens: undefined};
     ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
 
