@@ -137,8 +137,8 @@
    * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
    */
   .controller('uiSelectCtrl',
-    ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr',
-    function($scope, $element, $timeout, RepeatParser, uiSelectMinErr) {
+    ['$scope', '$element', '$timeout', 'RepeatParser', 'uiSelectMinErr', 'uiSelectConfig',
+    function($scope, $element, $timeout, RepeatParser, uiSelectMinErr, uiSelectConfig) {
 
     var ctrl = this;
 
@@ -171,7 +171,7 @@
 
     // Most of the time the user does not want to empty the search input when in typeahead mode
     function _resetSearchInput() {
-      if (ctrl.resetSearchInput) {
+      if (ctrl.resetSearchInput || (ctrl.resetSearchInput === undefined && uiSelectConfig.resetSearchInput)) {
         ctrl.search = EMPTY_SEARCH;
         //reset activeIndex
         if (ctrl.selected && ctrl.items.length && !ctrl.multiple) {
