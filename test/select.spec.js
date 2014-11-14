@@ -727,6 +727,35 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should invoke hover callback', function(){
+
+    var highlighted;
+    scope.onHighlightFn = function ($item) {
+      highlighted = $item;
+    };
+
+    var el = compileTemplate(
+      '<ui-select on-select="onSelectFn($item, $model)" ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices on-highlight="onHighlightFn(person)" repeat="person.name as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    expect(highlighted).toBeFalsy();
+
+    if (!isDropdownOpened(el)){
+      openDropdown(el);
+    }
+
+    $(el).find('.ui-select-choices-row div:contains("Samantha")').trigger('mouseover');
+    scope.$digest();
+
+    expect(highlighted).toBe(scope.people[5]);
+  })
+
   it('should set $item & $model correctly when invoking callback on select and no single prop. binding', function () {
 
     scope.onSelectFn = function ($item, $model, $label) {
