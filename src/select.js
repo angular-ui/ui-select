@@ -630,7 +630,11 @@
 
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
-        $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
+        $select.multiple = angular.isDefined(attrs.multiple) && (
+            attrs.multiple === '' ||
+            attrs.multiple.toLowerCase() === 'true'
+        );
+
         $select.closeOnSelect = (angular.isDefined(attrs.closeOnSelect) && attrs.closeOnSelect.toLowerCase() === 'false') ? false : uiSelectConfig.closeOnSelect;
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
