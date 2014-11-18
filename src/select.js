@@ -632,6 +632,7 @@
 
         $select.multiple = angular.isDefined(attrs.multiple) && (
             attrs.multiple === '' ||
+            attrs.multiple.toLowerCase() === 'multiple' ||
             attrs.multiple.toLowerCase() === 'true'
         );
 
