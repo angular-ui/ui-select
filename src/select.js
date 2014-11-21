@@ -67,7 +67,8 @@
     theme: 'bootstrap',
     searchEnabled: true,
     placeholder: '', // Empty by default, like HTML tag <select>
-    refreshDelay: 1000 // In milliseconds
+    refreshDelay: 1000, // In milliseconds
+    closeOnSelect: true
   })
 
   // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -160,6 +161,8 @@
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
     ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
+    ctrl.closeOnSelect = true; // Initialized inside uiSelect directive link function
+    ctrl.clickTriggeredSelect = false;
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -332,8 +335,7 @@
     };
 
     // When the user clicks on an item inside the dropdown
-    ctrl.select = function(item, skipFocusser) {
-
+    ctrl.select = function(item, skipFocusser, $event) {
       if (item === undefined || !item._uiSelectChoiceDisabled) {
         var locals = {};
         locals[ctrl.parserResult.itemName] = item;
@@ -343,13 +345,18 @@
             $model: ctrl.parserResult.modelMapper($scope, locals)
         });
 
-        if(ctrl.multiple){
+        if(ctrl.multiple) {
           ctrl.selected.push(item);
           ctrl.sizeSearchInput();
         } else {
           ctrl.selected = item;
         }
-        ctrl.close(skipFocusser);
+        if (!ctrl.multiple || ctrl.closeOnSelect) {
+          ctrl.close(skipFocusser);
+        }
+        if ($event && $event.type === 'click') {
+          ctrl.clickTriggeredSelect = true;
+        }
       }
     };
 
@@ -624,7 +631,7 @@
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
         $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
-
+        $select.closeOnSelect = (angular.isDefined(attrs.closeOnSelect) && attrs.closeOnSelect.toLowerCase() === 'false') ? false : uiSelectConfig.closeOnSelect;
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
 
@@ -827,10 +834,11 @@
             contains = element[0].contains(e.target);
           }
 
-          if (!contains) {
+          if (!contains && !$select.clickTriggeredSelect) {
             $select.close();
             scope.$digest();
           }
+          $select.clickTriggeredSelect = false;
         }
 
         // See Click everywhere but here event http://stackoverflow.com/questions/12931369
@@ -910,7 +918,7 @@
           choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression($select.parserResult.itemName, '$select.items', $select.parserResult.trackByExp, groupByExp))
               .attr('ng-if', '$select.open') //Prevent unnecessary watches when dropdown is closed
               .attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
-              .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ')');
+              .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',false,$event)');
 
           var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
           if (rowsInner.length !== 1) throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);

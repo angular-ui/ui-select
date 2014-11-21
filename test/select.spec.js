@@ -256,7 +256,7 @@ describe('ui-select tests', function() {
     expect(isDropdownOpened(el2)).toEqual(true);
 
     var el3 = createUiSelect();
-    expect(el3.scope().$select.disabled).toEqual(false || undefined);
+    expect(el3.scope().$select.disabled).toBeFalsy();
     clickMatch(el3);
     expect(isDropdownOpened(el3)).toEqual(true);
   });
@@ -1077,6 +1077,7 @@ describe('ui-select tests', function() {
             if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
             if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
             if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
+            if (attrs.closeOnSelect !== undefined) { attrsHtml += ' close-on-select="' + attrs.closeOnSelect + '"'; }
         }
 
         return compileTemplate(
@@ -1309,6 +1310,22 @@ describe('ui-select tests', function() {
         clickItem(el, 'Wladimir');
 
         expect(isDropdownOpened(el)).toEqual(false);
+
+    });
+
+    it('should not close dropdown after selecting if closeOnSelect=false', function() {
+
+        scope.selection.selectedMultiple = [scope.people[5]]; //Samantha
+        var el = createUiSelectMultiple({closeOnSelect: false});
+        var searchInput = el.find('.ui-select-search');
+
+        expect(isDropdownOpened(el)).toEqual(false);
+        triggerKeydown(searchInput, Key.Down)
+        expect(isDropdownOpened(el)).toEqual(true);
+
+        clickItem(el, 'Wladimir');
+
+        expect(isDropdownOpened(el)).toEqual(true);
 
     });
 
