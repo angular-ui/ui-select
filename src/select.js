@@ -71,7 +71,8 @@
     theme: 'bootstrap',
     searchEnabled: true,
     placeholder: '', // Empty by default, like HTML tag <select>
-    refreshDelay: 1000 // In milliseconds
+    refreshDelay: 1000, // In milliseconds
+    closeOnSelect: true
   })
 
   // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -166,6 +167,8 @@
     ctrl.tagging = {isActivated: false, fct: undefined};
     ctrl.taggingTokens = {isActivated: false, tokens: undefined};
     ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
+    ctrl.closeOnSelect = true; // Initialized inside uiSelect directive link function
+    ctrl.clickTriggeredSelect = false;
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -346,57 +349,65 @@
       return isDisabled;
     };
 
+
     // When the user selects an item with ENTER or clicks the dropdown
-    ctrl.select = function(item, skipFocusser) {
+    ctrl.select = function(item, skipFocusser, $event) {
+      if (item === undefined || !item._uiSelectChoiceDisabled) {
 
-      if ( ! ctrl.items && ! ctrl.search ) return;
+        if ( ! ctrl.items && ! ctrl.search ) return;
 
-      if (!item || !item._uiSelectChoiceDisabled) {
-        if(ctrl.tagging.isActivated) {
-          // if taggingLabel is disabled, we pull from ctrl.search val
-          if ( ctrl.taggingLabel === false ) {
-            if ( ctrl.activeIndex < 0 ) {
-              item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
-              if ( angular.equals( ctrl.items[0], item ) ) {
-                return;
+        if (!item || !item._uiSelectChoiceDisabled) {
+          if(ctrl.tagging.isActivated) {
+            // if taggingLabel is disabled, we pull from ctrl.search val
+            if ( ctrl.taggingLabel === false ) {
+              if ( ctrl.activeIndex < 0 ) {
+                item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : ctrl.search;
+                if ( angular.equals( ctrl.items[0], item ) ) {
+                  return;
+                }
+              } else {
+                // keyboard nav happened first, user selected from dropdown
+                item = ctrl.items[ctrl.activeIndex];
               }
             } else {
-              // keyboard nav happened first, user selected from dropdown
-              item = ctrl.items[ctrl.activeIndex];
+              // tagging always operates at index zero, taggingLabel === false pushes
+              // the ctrl.search value without having it injected
+              if ( ctrl.activeIndex === 0 ) {
+                // ctrl.tagging pushes items to ctrl.items, so we only have empty val
+                // for `item` if it is a detected duplicate
+                if ( item === undefined ) return;
+                // create new item on the fly
+                item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'');
+              }
             }
+            // search ctrl.selected for dupes potentially caused by tagging and return early if found
+            if ( ctrl.selected && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
+              ctrl.close(skipFocusser);
+              return;
+            }
+          }
+
+          var locals = {};
+          locals[ctrl.parserResult.itemName] = item;
+
+          ctrl.onSelectCallback($scope, {
+              $item: item,
+              $model: ctrl.parserResult.modelMapper($scope, locals)
+          });
+
+          if(ctrl.multiple) {
+            ctrl.selected.push(item);
+            ctrl.sizeSearchInput();
           } else {
-            // tagging always operates at index zero, taggingLabel === false pushes
-            // the ctrl.search value without having it injected
-            if ( ctrl.activeIndex === 0 ) {
-              // ctrl.tagging pushes items to ctrl.items, so we only have empty val
-              // for `item` if it is a detected duplicate
-              if ( item === undefined ) return;
-              // create new item on the fly
-              item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'');
-            }
+            ctrl.selected = item;
           }
-          // search ctrl.selected for dupes potentially caused by tagging and return early if found
-          if ( ctrl.selected && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
+          if (!ctrl.multiple || ctrl.closeOnSelect) {
             ctrl.close(skipFocusser);
-            return;
+          }
+          if ($event && $event.type === 'click') {
+            ctrl.clickTriggeredSelect = true;
           }
         }
-
-        var locals = {};
-        locals[ctrl.parserResult.itemName] = item;
-
-        ctrl.onSelectCallback($scope, {
-            $item: item,
-            $model: ctrl.parserResult.modelMapper($scope, locals)
-        });
-
-        if(ctrl.multiple){
-          ctrl.selected.push(item);
-          ctrl.sizeSearchInput();
-        } else {
-          ctrl.selected = item;
-        }
-        ctrl.close(skipFocusser);
       }
     };
 
@@ -813,7 +824,7 @@
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
         $select.multiple = (angular.isDefined(attrs.multiple)) ? (attrs.multiple === '') ? true : (attrs.multiple.toLowerCase() === 'true') : false;
-
+        $select.closeOnSelect = (angular.isDefined(attrs.closeOnSelect) && attrs.closeOnSelect.toLowerCase() === 'false') ? false : uiSelectConfig.closeOnSelect;
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
 
@@ -1051,10 +1062,11 @@
             contains = element[0].contains(e.target);
           }
 
-          if (!contains) {
+          if (!contains && !$select.clickTriggeredSelect) {
             $select.close();
             scope.$digest();
           }
+          $select.clickTriggeredSelect = false;
         }
 
         // See Click everywhere but here event http://stackoverflow.com/questions/12931369
@@ -1134,7 +1146,7 @@
           choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression($select.parserResult.itemName, '$select.items', $select.parserResult.trackByExp, groupByExp))
               .attr('ng-if', '$select.open') //Prevent unnecessary watches when dropdown is closed
               .attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
-              .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ')');
+              .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',false,$event)');
 
           var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
           if (rowsInner.length !== 1) throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);
