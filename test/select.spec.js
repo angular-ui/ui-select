@@ -1520,6 +1520,22 @@ describe('ui-select tests', function() {
          .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>Nicole <nicole@email.com>");
 
     });
+
+    it('should support multiple="multiple" attribute', function() {
+
+      var el = compileTemplate(
+          '<ui-select multiple="multiple" ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+              <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+              <ui-select-choices repeat="person.email as person in people | filter: $select.search"> \
+                <div ng-bind-html="person.name | highlight: $select.search"></div> \
+                <div ng-bind-html="person.email | highlight: $select.search"></div> \
+              </ui-select-choices> \
+          </ui-select> \
+          '
+      );
+
+      expect(el.scope().$select.multiple).toBe(true);
+    });
   });
 
   describe('default configuration via uiSelectConfig', function() {
