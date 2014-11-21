@@ -163,7 +163,6 @@
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
     ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
-    ctrl.$filter = $filter;
     ctrl.tagging = {isActivated: false, fct: undefined};
     ctrl.taggingTokens = {isActivated: false, tokens: undefined};
     ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
@@ -977,7 +976,7 @@
         attrs.$observe('tagging', function() {
           if(attrs.tagging !== undefined)
           {
-            // $eval() is needed otherwise we get a string instead of a function or a boolean
+            // $eval() is needed otherwise we get a string instead of a boolean
             var taggingEval = scope.$eval(attrs.tagging);
             $select.tagging = {isActivated: true, fct: taggingEval !== true ? taggingEval : undefined};
           }
