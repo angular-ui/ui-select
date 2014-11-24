@@ -8,5 +8,6 @@
    ng-click="$select.activate()">
   <span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span>
   <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude></span>
+  <abbr ng-if="$select.allowClear && !$select.isEmpty()" class="select2-search-choice-close" ng-click="$select.select(undefined)"></abbr>
   <span class="select2-arrow ui-select-toggle" ng-click="$select.toggle($event)"><b></b></span>
 </a>
