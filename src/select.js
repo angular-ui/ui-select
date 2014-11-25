@@ -1023,10 +1023,6 @@
               $select.taggingLabel = attrs.taggingLabel !== undefined ? attrs.taggingLabel : '(new)';
             }
           }
-          else
-          {
-            $select.taggingLabel = false;
-          }
         });
 
         attrs.$observe('taggingTokens', function() {
