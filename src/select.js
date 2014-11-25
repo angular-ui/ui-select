@@ -169,6 +169,7 @@
     ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
     ctrl.closeOnSelect = true; // Initialized inside uiSelect directive link function
     ctrl.clickTriggeredSelect = false;
+    ctrl.$filter = $filter;
 
     ctrl.isEmpty = function() {
       return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
@@ -316,16 +317,19 @@
     };
 
     ctrl.isActive = function(itemScope) {
-      var isActive = ctrl.open && ctrl.items.indexOf(itemScope[ctrl.itemProperty]) === ctrl.activeIndex;
+      if ( !ctrl.open ) {
+        return false;
+      }
+      var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
+      var isActive =  itemIndex === ctrl.activeIndex;
 
-      if ( !isActive ) {
+      if ( !isActive || itemIndex < 0 ) {
         return false;
       }
       if (isActive && !angular.isUndefined(ctrl.onHighlightCallback)) {
         itemScope.$eval(ctrl.onHighlightCallback);
       }
 
-      var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       if ( ctrl.taggingLabel === false && ctrl.activeIndex === -1 ) {
         return false;
       }
