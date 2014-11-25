@@ -201,6 +201,12 @@
 
         ctrl.activeIndex = ctrl.activeIndex >= ctrl.items.length ? 0 : ctrl.activeIndex;
 
+        // ensure that the index is set to zero for tagging variants
+        // that where first option is auto-selected
+        if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false ) {
+          ctrl.activeIndex = 0;
+        }
+
         // Give it time to appear before focus
         $timeout(function() {
           ctrl.search = initSearchValue || ctrl.search;
@@ -323,17 +329,15 @@
       var itemIndex = ctrl.items.indexOf(itemScope[ctrl.itemProperty]);
       var isActive =  itemIndex === ctrl.activeIndex;
 
-      if ( !isActive || itemIndex < 0 ) {
+      if ( !isActive || ( itemIndex < 0 && ctrl.taggingLabel !== false ) ||( itemIndex < 0 && ctrl.taggingLabel === false) ) {
         return false;
       }
+
       if (isActive && !angular.isUndefined(ctrl.onHighlightCallback)) {
         itemScope.$eval(ctrl.onHighlightCallback);
       }
 
-      if ( ctrl.taggingLabel === false && ctrl.activeIndex === -1 ) {
-        return false;
-      }
-      return itemIndex === ctrl.activeIndex;
+      return isActive;
     };
 
     ctrl.isDisabled = function(itemScope) {
@@ -1013,6 +1017,10 @@
             {
               $select.taggingLabel = attrs.taggingLabel !== undefined ? attrs.taggingLabel : '(new)';
             }
+          }
+          else
+          {
+            $select.taggingLabel = false;
           }
         });
 
