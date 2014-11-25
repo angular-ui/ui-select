@@ -106,6 +106,17 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     };
   };
 
+  $scope.tagTransform = function (newTag) {
+    var item = {
+        name: newTag,
+        email: newTag+'@email.com',
+        age: 'unknown',
+        country: 'unknown'
+    };
+
+    return item;
+  };
+
   $scope.person = {};
   $scope.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
@@ -124,7 +135,9 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
 
   $scope.multipleDemo = {};
   $scope.multipleDemo.colors = ['Blue','Red'];
+  $scope.multipleDemo.colors2 = ['Blue','Red'];
   $scope.multipleDemo.selectedPeople = [$scope.people[5], $scope.people[4]];
+  $scope.multipleDemo.selectedPeople2 = $scope.multipleDemo.selectedPeople;
   $scope.multipleDemo.selectedPeopleWithGroupBy = [$scope.people[8], $scope.people[6]];
   $scope.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
 
