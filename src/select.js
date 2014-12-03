@@ -910,6 +910,10 @@
         //Set reference to ngModel from uiSelectCtrl
         $select.ngModel = ngModel;
 
+        $select.choiceGrouped = function(group){
+          return $select.isGrouped && group && group.name;
+        };
+
         //Idea from: https://github.com/ivaynberg/select2/blob/79b5bf6db918d7560bdd959109b7bcfb47edaf43/select2.js#L1954
         var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' aria-haspopup='true' role='button' />");
 
