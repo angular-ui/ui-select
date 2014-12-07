@@ -211,7 +211,7 @@
         $timeout(function() {
           ctrl.search = initSearchValue || ctrl.search;
           _searchInput[0].focus();
-        });
+        }, 50);
       }
     };
 
@@ -434,9 +434,13 @@
 
     // Toggle dropdown
     ctrl.toggle = function(e) {
-      if (ctrl.open) ctrl.close(); else ctrl.activate();
-      e.preventDefault();
-      e.stopPropagation();
+      if (ctrl.open) {
+        ctrl.close(); 
+        e.preventDefault();
+        e.stopPropagation();        
+      } else {
+        ctrl.activate();
+      }
     };
 
     ctrl.isLocked = function(itemScope, itemIndex) {
