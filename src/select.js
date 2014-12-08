@@ -604,6 +604,7 @@
 
       $scope.$apply(function() {
         var processed = false;
+        var tagged = false;
 
         if(ctrl.multiple && KEY.isHorizontalMovement(key)){
           processed = _handleMatchSelection(key);
@@ -616,16 +617,19 @@
               if ( ctrl.taggingTokens.tokens[i] === KEY.MAP[e.keyCode] ) {
                 // make sure there is a new value to push via tagging
                 if ( ctrl.search.length > 0 ) {
-                  $timeout(function() {
-                    _searchInput.triggerHandler('tagged', ctrl.items);
-                    var newItem = ctrl.search.replace(KEY.MAP[e.keyCode],'').trim();
-                    if ( ctrl.tagging.fct ) {
-                      newItem = ctrl.tagging.fct( newItem );
-                    }
-                    ctrl.select( newItem, true);
-                  });
+                  tagged = true;
                 }
               }
+            }
+            if ( tagged ) {
+              $timeout(function() {
+                _searchInput.triggerHandler('tagged', ctrl.items);
+                var newItem = ctrl.search.replace(KEY.MAP[e.keyCode],'').trim();
+                if ( ctrl.tagging.fct ) {
+                  newItem = ctrl.tagging.fct( newItem );
+                }
+                ctrl.select( newItem, true);
+              });
             }
           }
         }
@@ -662,7 +666,7 @@
         // taggingLabel === false bypasses all of this
         if (ctrl.taggingLabel === false) return;
 
-        var items = angular.copy( ctrl.items )
+        var items = angular.copy( ctrl.items );
         var stashArr = angular.copy( ctrl.items );
         var newItem;
         var item;
