@@ -615,7 +615,7 @@
               if ( ctrl.taggingTokens.tokens[i] === KEY.MAP[e.keyCode] ) {
                 // make sure there is a new value to push via tagging
                 if ( ctrl.search.length > 0 ) {
-                  ctrl.select(null, true);
+                  ctrl.select(undefined, true);
                   _searchInput.triggerHandler('tagged');
                 }
               }
@@ -704,7 +704,7 @@
           }
           // verify the the tag doesn't match the value of an existing item from
           // the searched data set
-          if ( stashArr.filter( function (origItem) { return origItem.toUpperCase() === ctrl.search.toUpperCase(); }).length > 0 ) {
+          if ( _findCaseInsensitiveDupe(stashArr) ) {
             // if there is a tag from prev iteration, strip it / queue the change
             // and return early
             if ( hasTag ) {
@@ -716,7 +716,7 @@
             }
             return;
           }
-          if ( ctrl.selected.filter( function (selection) { return selection.toUpperCase() === ctrl.search.toUpperCase(); } ).length > 0 ) {
+          if ( _findCaseInsensitiveDupe(stashArr) ) {
             // if there is a tag from prev iteration, strip it
             if ( hasTag ) {
               ctrl.items = stashArr.slice(1,stashArr.length);
@@ -751,6 +751,20 @@
         ctrl.activeMatchIndex = -1;
       });
     });
+
+    function _findCaseInsensitiveDupe(arr) {
+      if ( arr === undefined || ctrl.search === undefined ) {
+        return false;
+      }
+      var hasDupe = arr.filter( function (origItem) {
+        if ( ctrl.search.toUpperCase() === undefined ) {
+          return false;
+        }
+        return origItem.toUpperCase() === ctrl.search.toUpperCase();
+      }).length > 0;
+
+      return hasDupe;
+    }
 
     function _findApproxDupe(haystack, needle) {
       var tempArr = angular.copy(haystack);
@@ -1220,7 +1234,7 @@
         attrs.$observe('placeholder', function(placeholder) {
           $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
         });
-        
+
         $select.allowClear = (angular.isDefined(attrs.allowClear)) ? (attrs.allowClear === '') ? true : (attrs.allowClear.toLowerCase() === 'true') : false;
 
         if($select.multiple){
