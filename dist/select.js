@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.9.1 - 2014-12-03T16:41:44.798Z
+ * Version: 0.9.2 - 2014-12-08T14:55:46.399Z
  * License: MIT
  */
 
@@ -623,7 +623,7 @@
               if ( ctrl.taggingTokens.tokens[i] === KEY.MAP[e.keyCode] ) {
                 // make sure there is a new value to push via tagging
                 if ( ctrl.search.length > 0 ) {
-                  ctrl.select(null, true);
+                  ctrl.select(undefined, true);
                   _searchInput.triggerHandler('tagged');
                 }
               }
@@ -712,7 +712,7 @@
           }
           // verify the the tag doesn't match the value of an existing item from
           // the searched data set
-          if ( stashArr.filter( function (origItem) { return origItem.toUpperCase() === ctrl.search.toUpperCase(); }).length > 0 ) {
+          if ( _findCaseInsensitiveDupe(stashArr) ) {
             // if there is a tag from prev iteration, strip it / queue the change
             // and return early
             if ( hasTag ) {
@@ -724,7 +724,7 @@
             }
             return;
           }
-          if ( ctrl.selected.filter( function (selection) { return selection.toUpperCase() === ctrl.search.toUpperCase(); } ).length > 0 ) {
+          if ( _findCaseInsensitiveDupe(stashArr) ) {
             // if there is a tag from prev iteration, strip it
             if ( hasTag ) {
               ctrl.items = stashArr.slice(1,stashArr.length);
@@ -759,6 +759,20 @@
         ctrl.activeMatchIndex = -1;
       });
     });
+
+    function _findCaseInsensitiveDupe(arr) {
+      if ( arr === undefined || ctrl.search === undefined ) {
+        return false;
+      }
+      var hasDupe = arr.filter( function (origItem) {
+        if ( ctrl.search.toUpperCase() === undefined ) {
+          return false;
+        }
+        return origItem.toUpperCase() === ctrl.search.toUpperCase();
+      }).length > 0;
+
+      return hasDupe;
+    }
 
     function _findApproxDupe(haystack, needle) {
       var tempArr = angular.copy(haystack);
@@ -845,7 +859,14 @@
             attrs.multiple.toLowerCase() === 'true'
         );
 
-        $select.closeOnSelect = (angular.isDefined(attrs.closeOnSelect) && attrs.closeOnSelect.toLowerCase() === 'false') ? false : uiSelectConfig.closeOnSelect;
+        $select.closeOnSelect = function() {
+          if (angular.isDefined(attrs.closeOnSelect)) {
+            return $parse(attrs.closeOnSelect)();
+          } else {
+            return uiSelectConfig.closeOnSelect;
+          }
+        }();
+
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
 
@@ -1221,7 +1242,7 @@
         attrs.$observe('placeholder', function(placeholder) {
           $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
         });
-        
+
         $select.allowClear = (angular.isDefined(attrs.allowClear)) ? (attrs.allowClear === '') ? true : (attrs.allowClear.toLowerCase() === 'true') : false;
 
         if($select.multiple){
