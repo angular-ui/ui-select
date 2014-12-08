@@ -211,7 +211,7 @@
         $timeout(function() {
           ctrl.search = initSearchValue || ctrl.search;
           _searchInput[0].focus();
-        }, 50);
+        });
       }
     };
 
@@ -1079,6 +1079,24 @@
           $select.selected = ngModel.$viewValue;
         };
 
+        /**
+         * Checks if the current target is a ui-select-match element
+         *
+         * @param target
+         * @returns {boolean}
+         */
+        function isClosedUiSelect(target) {
+          var node = target.parentNode;
+          while (node !== null) {
+            if (angular.element(node).hasClass('ui-select-container') &&
+                angular.element(node).hasClass('open')) {
+              return true;
+            }
+            node = node.parentNode;
+          }
+          return false;
+        }
+
         function onDocumentClick(e) {
           var contains = false;
 
@@ -1091,7 +1109,7 @@
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
-            $select.close();
+            $select.close(isClosedUiSelect(e.target)); // Skip focusser if the target is another select
             scope.$digest();
           }
           $select.clickTriggeredSelect = false;
