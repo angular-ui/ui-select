@@ -109,7 +109,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
   $scope.tagTransform = function (newTag) {
     var item = {
         name: newTag,
-        email: newTag+'@email.com',
+        email: newTag.toLowerCase()+'@email.com',
         age: 'unknown',
         country: 'unknown'
     };

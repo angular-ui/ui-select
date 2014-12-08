@@ -18,8 +18,8 @@
     </script>
   <![endif]-->
 
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular-sanitize.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.js"></script>
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
 
   <!-- ui-select files -->
@@ -106,7 +106,7 @@
   <ui-select multiple tagging="tagTransform" tagging-tokens="SPACE|,|/" ng-model="multipleDemo.selectedPeople2" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
-      <div ng-if="person.isTag" ng-bind-html="person.name +' <small>(new)</small>'| highlight: $select.search"></div>
+      <div ng-if="person.isTag" ng-bind-html="person.name + ' ' + $select.taggingLabel | highlight: $select.search"></div>
       <div ng-if="!person.isTag" ng-bind-html="person.name| highlight: $select.search"></div>
       <small>
         email: {{person.email}}
