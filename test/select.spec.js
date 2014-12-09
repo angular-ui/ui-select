@@ -83,7 +83,7 @@ describe('ui-select tests', function() {
   }
 
   function getMatchLabel(el) {
-    return $(el).find('.ui-select-match > span[ng-transclude]:not(.ng-hide)').text();
+    return $(el).find('.ui-select-match > button:first > span[ng-transclude]:not(.ng-hide)').text();
   }
 
   function clickItem(el, text) {
@@ -97,7 +97,7 @@ describe('ui-select tests', function() {
   }
 
   function clickMatch(el) {
-    $(el).find('.ui-select-match').click();
+    $(el).find('.ui-select-match > button:first').click();
     scope.$digest();
   }
 
