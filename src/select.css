@@ -32,6 +32,10 @@
   display:none;
 }
 
+.select-locked > .ui-select-match-close{
+    display:none;
+}
+
 /* Selectize theme */
 
 /* Helper class to show styles when focus */
