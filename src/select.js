@@ -65,6 +65,25 @@
     };
   }
 
+  /**
+   * Add closest() to jqLite.
+   */
+  if (angular.element.prototype.closest === undefined) {
+    angular.element.prototype.closest = function( selector) {
+      var elem = this[0];
+      var matchesSelector = elem.matches || elem.webkitMatchesSelector || elem.mozMatchesSelector || elem.msMatchesSelector;
+
+      while (elem) {
+        if (matchesSelector.bind(elem)(selector)) {
+          return elem;
+        } else {
+          elem = elem.parentElement;
+        }
+      }
+      return false;
+    };
+  }
+
   angular.module('ui.select', [])
 
   .constant('uiSelectConfig', {
@@ -435,9 +454,13 @@
 
     // Toggle dropdown
     ctrl.toggle = function(e) {
-      if (ctrl.open) ctrl.close(); else ctrl.activate();
-      e.preventDefault();
-      e.stopPropagation();
+      if (ctrl.open) {
+        ctrl.close(); 
+        e.preventDefault();
+        e.stopPropagation();        
+      } else {
+        ctrl.activate();
+      }
     };
 
     ctrl.isLocked = function(itemScope, itemIndex) {
@@ -1112,7 +1135,7 @@
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
-            $select.close();
+            $select.close(angular.element(e.target).closest('.ui-select-container.open').length > 0); // Skip focusser if the target is another select
             scope.$digest();
           }
           $select.clickTriggeredSelect = false;
