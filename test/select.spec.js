@@ -318,6 +318,8 @@ describe('ui-select tests', function() {
   it('should close an opened select when another one is opened', function() {
     var el1 = createUiSelect();
     var el2 = createUiSelect();
+    el1.appendTo(document.body);
+    el2.appendTo(document.body);
 
     expect(isDropdownOpened(el1)).toEqual(false);
     expect(isDropdownOpened(el2)).toEqual(false);
@@ -327,7 +329,10 @@ describe('ui-select tests', function() {
     clickMatch(el2);
     expect(isDropdownOpened(el1)).toEqual(false);
     expect(isDropdownOpened(el2)).toEqual(true);
-  });  
+
+    el1.remove();
+    el2.remove();
+  });
 
   describe('disabled options', function() {
     function createUiSelect(attrs) {

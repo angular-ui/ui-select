@@ -65,6 +65,25 @@
     };
   }
 
+  /**
+   * Add closest() to jqLite.
+   */
+  if (angular.element.prototype.closest === undefined) {
+    angular.element.prototype.closest = function( selector) {
+      var elem = this[0];
+      var matchesSelector = elem.matches || elem.webkitMatchesSelector || elem.mozMatchesSelector || elem.msMatchesSelector;
+
+      while (elem) {
+        if (matchesSelector.bind(elem)(selector)) {
+          return elem;
+        } else {
+          elem = elem.parentElement;
+        }
+      }
+      return false;
+    };
+  }
+
   angular.module('ui.select', [])
 
   .constant('uiSelectConfig', {
@@ -1079,24 +1098,6 @@
           $select.selected = ngModel.$viewValue;
         };
 
-        /**
-         * Checks if the current target is a ui-select-match element
-         *
-         * @param target
-         * @returns {boolean}
-         */
-        function isClosedUiSelect(target) {
-          var node = target.parentNode;
-          while (node !== null) {
-            if (angular.element(node).hasClass('ui-select-container') &&
-                angular.element(node).hasClass('open')) {
-              return true;
-            }
-            node = node.parentNode;
-          }
-          return false;
-        }
-
         function onDocumentClick(e) {
           var contains = false;
 
@@ -1109,7 +1110,7 @@
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
-            $select.close(isClosedUiSelect(e.target)); // Skip focusser if the target is another select
+            $select.close(angular.element(e.target).closest('.ui-select-container.open').length > 0); // Skip focusser if the target is another select
             scope.$digest();
           }
           $select.clickTriggeredSelect = false;
