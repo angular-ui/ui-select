@@ -431,9 +431,11 @@
             ctrl.selected = item;
           }
 
-          ctrl.onSelectCallback($scope, {
+          $timeout(function(){
+            ctrl.onSelectCallback($scope, {
               $item: item,
               $model: ctrl.parserResult.modelMapper($scope, locals)
+            });
           });
 
           if (!ctrl.multiple || ctrl.closeOnSelect) {
