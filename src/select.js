@@ -495,9 +495,12 @@
       ctrl.activeMatchIndex = -1;
       ctrl.sizeSearchInput();
 
-      ctrl.onRemoveCallback($scope, {
-        $item: removedChoice,
-        $model: ctrl.parserResult.modelMapper($scope, locals)
+      // Give some time for scope propagation.
+      $timeout(function(){
+        ctrl.onRemoveCallback($scope, {
+          $item: removedChoice,
+          $model: ctrl.parserResult.modelMapper($scope, locals)
+        });
       });
     };
 
