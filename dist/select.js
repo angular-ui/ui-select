@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.9.4 - 2014-12-09T22:43:18.211Z
+ * Version: 0.9.5 - 2014-12-12T16:07:20.856Z
  * License: MIT
  */
 
@@ -411,8 +411,15 @@
                 // ctrl.tagging pushes items to ctrl.items, so we only have empty val
                 // for `item` if it is a detected duplicate
                 if ( item === undefined ) return;
-                // create new item on the fly
-                item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'');
+
+                // create new item on the fly if we don't already have one;
+                // use tagging function if we have one
+                if ( ctrl.tagging.fct !== undefined && typeof item === 'string' ) {
+                  item = ctrl.tagging.fct(ctrl.search);
+                // if item type is 'string', apply the tagging label
+                } else if ( typeof item === 'string' ) {
+                  item = item.replace(ctrl.taggingLabel,'');
+                }
               }
             }
             // search ctrl.selected for dupes potentially caused by tagging and return early if found
@@ -463,9 +470,9 @@
     // Toggle dropdown
     ctrl.toggle = function(e) {
       if (ctrl.open) {
-        ctrl.close(); 
+        ctrl.close();
         e.preventDefault();
-        e.stopPropagation();        
+        e.stopPropagation();
       } else {
         ctrl.activate();
       }
@@ -654,7 +661,7 @@
             }
             if ( tagged ) {
               $timeout(function() {
-                _searchInput.triggerHandler('tagged', ctrl.items);
+                _searchInput.triggerHandler('tagged');
                 var newItem = ctrl.search.replace(KEY.MAP[e.keyCode],'').trim();
                 if ( ctrl.tagging.fct ) {
                   newItem = ctrl.tagging.fct( newItem );
