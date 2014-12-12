@@ -403,10 +403,12 @@
                 // ctrl.tagging pushes items to ctrl.items, so we only have empty val
                 // for `item` if it is a detected duplicate
                 if ( item === undefined ) return;
+
                 // create new item on the fly if we don't already have one;
-                // use tagging function if we have one, otherwise, push a string
-                if ( ctrl.tagging.fct !== undefined && item === undefined ) {
+                // use tagging function if we have one
+                if ( ctrl.tagging.fct !== undefined && typeof item === 'string' ) {
                   item = ctrl.tagging.fct(ctrl.search);
+                // if item type is 'string', apply the tagging label
                 } else if ( typeof item === 'string' ) {
                   item = item.replace(ctrl.taggingLabel,'');
                 }
