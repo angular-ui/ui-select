@@ -410,7 +410,8 @@
                   item = ctrl.tagging.fct(ctrl.search);
                 // if item type is 'string', apply the tagging label
                 } else if ( typeof item === 'string' ) {
-                  item = item.replace(ctrl.taggingLabel,'');
+                  // trim the trailing space
+                  item = item.replace(ctrl.taggingLabel,'').trim();
                 }
               }
             }
