@@ -404,7 +404,7 @@
                 // for `item` if it is a detected duplicate
                 if ( item === undefined ) return;
                 // create new item on the fly
-                item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'');
+                item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'').trim();
               }
             }
             // search ctrl.selected for dupes potentially caused by tagging and return early if found
