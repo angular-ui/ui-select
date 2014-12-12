@@ -403,8 +403,13 @@
                 // ctrl.tagging pushes items to ctrl.items, so we only have empty val
                 // for `item` if it is a detected duplicate
                 if ( item === undefined ) return;
-                // create new item on the fly
-                item = ctrl.tagging.fct !== undefined ? ctrl.tagging.fct(ctrl.search) : item.replace(ctrl.taggingLabel,'').trim();
+                // create new item on the fly if we don't already have one;
+                // use tagging function if we have one, otherwise, push a string
+                if ( ctrl.tagging.fct !== undefined && item === undefined ) {
+                  item = ctrl.tagging.fct(ctrl.search);
+                } else if ( typeof item === 'string' ) {
+                  item = item.replace(ctrl.taggingLabel,'');
+                }
               }
             }
             // search ctrl.selected for dupes potentially caused by tagging and return early if found
@@ -455,9 +460,9 @@
     // Toggle dropdown
     ctrl.toggle = function(e) {
       if (ctrl.open) {
-        ctrl.close(); 
+        ctrl.close();
         e.preventDefault();
-        e.stopPropagation();        
+        e.stopPropagation();
       } else {
         ctrl.activate();
       }
@@ -646,7 +651,7 @@
             }
             if ( tagged ) {
               $timeout(function() {
-                _searchInput.triggerHandler('tagged', ctrl.items);
+                _searchInput.triggerHandler('tagged');
                 var newItem = ctrl.search.replace(KEY.MAP[e.keyCode],'').trim();
                 if ( ctrl.tagging.fct ) {
                   newItem = ctrl.tagging.fct( newItem );
