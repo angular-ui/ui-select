@@ -774,6 +774,9 @@ describe('ui-select tests', function() {
     expect(scope.$model).toBeFalsy();
 
     clickItem(el, 'Samantha');
+    $timeout.flush();
+
+
     expect(scope.selection.selected).toBe('Samantha');
 
     expect(scope.$item).toEqual(scope.people[5]);
@@ -858,6 +861,7 @@ describe('ui-select tests', function() {
     clickItem(el, 'Samantha');
     clickItem(el, 'Adrian');
     el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+    $timeout.flush();
 
     expect(scope.$item).toBe(scope.people[5]);
     expect(scope.$model).toBe('Samantha');
@@ -887,6 +891,7 @@ describe('ui-select tests', function() {
     clickItem(el, 'Samantha');
     clickItem(el, 'Adrian');
     el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+    $timeout.flush();
 
     expect(scope.$item).toBe(scope.people[5]);
     expect(scope.$model).toBe(scope.$item);

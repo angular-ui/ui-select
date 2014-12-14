@@ -431,9 +431,11 @@
             ctrl.selected = item;
           }
 
-          ctrl.onSelectCallback($scope, {
+          $timeout(function(){
+            ctrl.onSelectCallback($scope, {
               $item: item,
               $model: ctrl.parserResult.modelMapper($scope, locals)
+            });
           });
 
           if (!ctrl.multiple || ctrl.closeOnSelect) {
@@ -495,9 +497,12 @@
       ctrl.activeMatchIndex = -1;
       ctrl.sizeSearchInput();
 
-      ctrl.onRemoveCallback($scope, {
-        $item: removedChoice,
-        $model: ctrl.parserResult.modelMapper($scope, locals)
+      // Give some time for scope propagation.
+      $timeout(function(){
+        ctrl.onRemoveCallback($scope, {
+          $item: removedChoice,
+          $model: ctrl.parserResult.modelMapper($scope, locals)
+        });
       });
     };
 
