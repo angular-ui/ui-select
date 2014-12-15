@@ -1109,8 +1109,12 @@
             if (oldValue != newValue)
               ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
           });
+          $select.firstPass = true; // so the form doesn't get dirty as soon as it loads
           scope.$watchCollection('$select.selected', function() {
-            ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
+            if (!$select.firstPass)
+              ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
+            else
+              $select.firstPass = false;
           });
           focusser.prop('disabled', true); //Focusser isn't needed if multiple
         }else{
