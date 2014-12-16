@@ -1111,10 +1111,11 @@
           });
           $select.firstPass = true; // so the form doesn't get dirty as soon as it loads
           scope.$watchCollection('$select.selected', function() {
-            if (!$select.firstPass)
+            if (!$select.firstPass) {
               ngModel.$setViewValue(Date.now()); //Set timestamp as a unique string to force changes
-            else
+            } else {
               $select.firstPass = false;
+            }
           });
           focusser.prop('disabled', true); //Focusser isn't needed if multiple
         }else{
