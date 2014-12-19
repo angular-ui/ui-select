@@ -404,7 +404,7 @@ describe('ui-select tests', function() {
       beforeEach(function() {
         disablePerson({
           disableAttr : 'inactive',
-          disableBool : true,
+          disableBool : true
         });
         this.el = createUiSelect({
           disabled: 'person.inactive'
@@ -437,7 +437,7 @@ describe('ui-select tests', function() {
       beforeEach(function() {
         disablePerson({
           disableAttr : 'active',
-          disableBool : false,
+          disableBool : false
         });
         this.el = createUiSelect({
           disabled: '!person.active'
@@ -1123,13 +1123,13 @@ describe('ui-select tests', function() {
         expect(el.find('.ui-select-match-item').length).toBe(0);
     });
 
-    it('should set model as an empty array if ngModel isnt defined', function () {
+    it('should set model as an empty array if ngModel isnt defined after an item is selected', function () {
 
       // scope.selection.selectedMultiple = [];
       var el = createUiSelectMultiple();
-
+      expect(scope.selection.selectedMultiple instanceof Array).toBe(false);
+      clickItem(el, 'Samantha');
       expect(scope.selection.selectedMultiple instanceof Array).toBe(true);
-
     });
 
     it('should render initial selected items', function() {
