@@ -84,6 +84,7 @@
     };
   }
 
+  var latestId = 0;
   angular.module('ui.select', [])
 
   .constant('uiSelectConfig', {
@@ -91,7 +92,10 @@
     searchEnabled: true,
     placeholder: '', // Empty by default, like HTML tag <select>
     refreshDelay: 1000, // In milliseconds
-    closeOnSelect: true
+    closeOnSelect: true,
+    generateId: function() {
+      return latestId++;
+    }
   })
 
   // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -892,6 +896,8 @@
 
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
+        $select.generatedId = uiSelectConfig.generateId();
+        $select.ariaLabel = attrs.title;
         $select.multiple = angular.isDefined(attrs.multiple) && (
             attrs.multiple === '' ||
             attrs.multiple.toLowerCase() === 'multiple' ||
