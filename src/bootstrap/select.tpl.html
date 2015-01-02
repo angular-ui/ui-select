@@ -1,6 +1,10 @@
 <div class="ui-select-container ui-select-bootstrap dropdown" ng-class="{open: $select.open}">
   <div class="ui-select-match"></div>
   <input type="text" autocomplete="off" tabindex="-1"
+         aria-expanded="true"
+         aria-label="{{ $select.baseTitle }}"
+         aria-owns="ui-select-choices-{{ $select.generatedId }}"
+         aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}"
          class="form-control ui-select-search"
          placeholder="{{$select.placeholder}}"
          ng-model="$select.search"

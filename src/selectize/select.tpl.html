@@ -9,7 +9,8 @@
            placeholder="{{$select.placeholder}}"
            ng-model="$select.search"
            ng-hide="!$select.searchEnabled || ($select.selected && !$select.open)"
-           ng-disabled="$select.disabled">
+           ng-disabled="$select.disabled"
+           aria-label="{{ $select.baseTitle }}">
   </div>
   <div class="ui-select-choices"></div>
 </div>
