@@ -1,11 +1,12 @@
 {
   "name": "ui-select",
+  "main": "dist/select.js",
   "author": "http://github.com/angular-ui/ui-select/graphs/contributors",
   "homepage": "http://github.com/angular-ui/ui-select",
   "repository": {
     "url": "git://github.com/angular-ui/ui-select.git"
   },
-  "version": "0.7.0",
+  "version": "0.9.5",
   "devDependencies": {
     "bower": "~1.3",
     "del": "~0.1.1",

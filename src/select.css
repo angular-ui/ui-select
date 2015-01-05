@@ -28,6 +28,14 @@
   padding-left: 0;
 }
 
+.select2-locked > .select2-search-choice-close{
+  display:none;
+}
+
+.select-locked > .ui-select-match-close{
+    display:none;
+}
+
 /* Selectize theme */
 
 /* Helper class to show styles when focus */
@@ -111,6 +119,10 @@
 .ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
   font-size: 1.6em;
   line-height: 0.75;
+}
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match-item{
+  outline: 0;
 }
 
 .ui-select-bootstrap .ui-select-choices-row>a {

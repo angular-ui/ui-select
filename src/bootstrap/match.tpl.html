@@ -1,9 +1,12 @@
-<button type="button" class="btn btn-default form-control ui-select-match" tabindex="-1"
-        ng-hide="$select.open"
-        ng-disabled="$select.disabled"
-        ng-class="{'btn-default-focus':$select.focus}";
-        ng-click="$select.activate()">
-  <span ng-show="$select.searchEnabled && $select.isEmpty()" class="text-muted">{{$select.placeholder}}</span>
-  <span ng-hide="$select.isEmpty()" ng-transclude></span>
-  <span class="caret ui-select-toggle" ng-click="$select.toggle($event)"></span>
-</button>
+<div class="btn-group ui-select-match btn-block" ng-hide="$select.open" ng-disabled="$select.disabled" ng-class="{'btn-default-focus':$select.focus}">
+  <button type="button" class="btn btn-default" ng-class="{'col-sm-8 col-md-10': $select.allowClear && !$select.isEmpty(),'col-sm-10 col-md-11': !$select.allowClear || $select.isEmpty()}" tabindex="-1" ;="" ng-click="$select.activate()">
+    <span ng-show="$select.isEmpty()" class="text-muted">{{$select.placeholder}}</span>
+    <span ng-hide="$select.isEmpty()" ng-transclude=""></span>
+  </button>
+  <button class="btn btn-default col-sm-2 col-md-1" ng-if="$select.allowClear && !$select.isEmpty()" ng-click="$select.select(undefined)">
+    <span class="glyphicon glyphicon-remove ui-select-toggle"></span>
+  </button>
+  <button class="btn btn-default col-sm-2 col-md-1" ng-click="$select.activate()">
+    <span class="caret ui-select-toggle" ng-click="$select.toggle($event)"></span>
+  </button>
+</div>

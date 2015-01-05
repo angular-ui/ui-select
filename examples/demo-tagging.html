@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo">
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS ui-select</title>
+
+  <!--
+    IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
+    For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
+  -->
+  <!--[if lt IE 9]>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+    <script>
+      document.createElement('ui-select');
+      document.createElement('ui-select-match');
+      document.createElement('ui-select-choices');
+    </script>
+  <![endif]-->
+
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-sanitize.js"></script>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
+
+  <!-- ui-select files -->
+  <script src="../dist/select.js"></script>
+  <link rel="stylesheet" href="../dist/select.css">
+
+  <script src="demo.js"></script>
+
+  <!-- Select2 theme -->
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+
+  <!--
+    Selectize theme
+    Less versions are available at https://github.com/brianreavis/selectize.js/tree/master/dist/less
+  -->
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+  <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap2.css"> -->
+  <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css"> -->
+
+  <style>
+    body {
+      padding: 15px;
+    }
+
+    .select2 > .select2-choice.ui-select-match {
+      /* Because of the inclusion of Bootstrap */
+      height: 29px;
+    }
+
+    .selectize-control > .selectize-dropdown {
+      top: 36px;
+    }
+  </style>
+</head>
+
+<body ng-controller="DemoCtrl">
+  <script src="demo.js"></script>
+
+  <button class="btn btn-default btn-xs" ng-click="enable()">Enable ui-select</button>
+  <button class="btn btn-default btn-xs" ng-click="disable()">Disable ui-select</button>
+  <button class="btn btn-default btn-xs" ng-click="clear()">Clear ng-model</button>
+
+  <h1>Tagging Demos</h1>
+
+  <h3>Simple String Tags</h3>
+  <h4>(With Custom Tag Label)</h4>
+  <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+    <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
+    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+      {{color}}
+    </ui-select-choices>
+  </ui-select>
+  <p>Selected: {{multipleDemo.colors}}</p>
+  <hr>
+
+  <h3>Simple String Tags </h3>
+  <h4>(Predictive Search Model / No Labels)</h4>
+  <ui-select multiple tagging tagging-label="false" ng-model="multipleDemo.colors2" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+    <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
+    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+      {{color}}
+    </ui-select-choices>
+  </ui-select>
+  <p>Selected: {{multipleDemo.colors2}}</p>
+  <hr>
+
+  <h3>Object Tags</h3>
+  <ui-select multiple tagging="tagTransform" ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
+      <div ng-if="person.isTag" ng-bind-html="person.name +' <small>(new)</small>'| highlight: $select.search"></div>
+      <div ng-if="!person.isTag" ng-bind-html="person.name + person.isTag| highlight: $select.search"></div>
+      <small>
+        email: {{person.email}}
+        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+      </small>
+    </ui-select-choices>
+  </ui-select>
+  <p>Selected: {{multipleDemo.selectedPeople}}</p>
+  <hr>
+
+  <h3>Object Tags with Tokenization (Space, Forward Slash, Comma)</h3>
+  <strong>Note that the SPACE character can't be used literally, use the keyword SPACE</strong>
+  <ui-select multiple tagging="tagTransform" tagging-tokens="SPACE|,|/" ng-model="multipleDemo.selectedPeople2" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
+      <div ng-if="person.isTag" ng-bind-html="person.name + ' ' + $select.taggingLabel | highlight: $select.search"></div>
+      <div ng-if="!person.isTag" ng-bind-html="person.name| highlight: $select.search"></div>
+      <small>
+        email: {{person.email}}
+        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+      </small>
+    </ui-select-choices>
+  </ui-select>
+  <p>Selected: {{multipleDemo.selectedPeople2}}</p>
+
+  <div style="height:500px"></div>
+
+</body>
+</html>
