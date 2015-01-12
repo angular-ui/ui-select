@@ -63,7 +63,7 @@
 
           <ui-select ng-model="person.selected" theme="bootstrap">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
-            <ui-select-choices group-by="'group'" repeat="item in people | filter: $select.search">
+            <ui-select-choices group-by="'country'" repeat="item in people | filter: $select.search">
               <span ng-bind-html="item.name | highlight: $select.search"></span>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
             </ui-select-choices>
@@ -77,7 +77,7 @@
         <div class="col-sm-6">
           <div class="input-group">
 
-            <ui-select ng-model="person.selected" theme="bootstrap">
+            <ui-select allow-clear ng-model="person.selected" theme="bootstrap">
               <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
               <ui-select-choices repeat="item in people | filter: $select.search">
                 <span ng-bind-html="item.name | highlight: $select.search"></span>
