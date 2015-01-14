@@ -66,7 +66,7 @@
 
   <h3>Simple String Tags</h3>
   <h4>(With Custom Tag Label)</h4>
-  <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+  <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
     <ui-select-choices repeat="color in availableColors | filter:$select.search">
       {{color}}
@@ -77,7 +77,7 @@
 
   <h3>Simple String Tags </h3>
   <h4>(Predictive Search Model / No Labels)</h4>
-  <ui-select multiple tagging tagging-label="false" ng-model="multipleDemo.colors2" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+  <ui-select multiple tagging tagging-label="false" ng-model="multipleDemo.colors2" theme="bootstrap" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
     <ui-select-choices repeat="color in availableColors | filter:$select.search">
       {{color}}
@@ -87,7 +87,7 @@
   <hr>
 
   <h3>Object Tags</h3>
-  <ui-select multiple tagging="tagTransform" ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+  <ui-select multiple tagging="tagTransform" ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-if="person.isTag" ng-bind-html="person.name +' <small>(new)</small>'| highlight: $select.search"></div>
@@ -103,7 +103,7 @@
 
   <h3>Object Tags with Tokenization (Space, Forward Slash, Comma)</h3>
   <strong>Note that the SPACE character can't be used literally, use the keyword SPACE</strong>
-  <ui-select multiple tagging="tagTransform" tagging-tokens="SPACE|,|/" ng-model="multipleDemo.selectedPeople2" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+  <ui-select multiple tagging="tagTransform" tagging-tokens="SPACE|,|/" ng-model="multipleDemo.selectedPeople2" theme="bootstrap" ng-disabled="disabled" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-if="person.isTag" ng-bind-html="person.name + ' ' + $select.taggingLabel | highlight: $select.search"></div>

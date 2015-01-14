@@ -84,6 +84,7 @@
     };
   }
 
+  var latestId = 0;
   angular.module('ui.select', [])
 
   .constant('uiSelectConfig', {
@@ -91,7 +92,10 @@
     searchEnabled: true,
     placeholder: '', // Empty by default, like HTML tag <select>
     refreshDelay: 1000, // In milliseconds
-    closeOnSelect: true
+    closeOnSelect: true,
+    generateId: function() {
+      return latestId++;
+    }
   })
 
   // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -892,6 +896,11 @@
 
         var searchInput = element.querySelectorAll('input.ui-select-search');
 
+        $select.generatedId = uiSelectConfig.generateId();
+        $select.baseTitle = attrs.title || 'Select box';
+        $select.focusserTitle = $select.baseTitle + ' focus';
+        $select.focusserId = 'focusser-' + $select.generatedId;
+
         $select.multiple = angular.isDefined(attrs.multiple) && (
             attrs.multiple === '' ||
             attrs.multiple.toLowerCase() === 'multiple' ||
@@ -983,7 +992,7 @@
         };
 
         //Idea from: https://github.com/ivaynberg/select2/blob/79b5bf6db918d7560bdd959109b7bcfb47edaf43/select2.js#L1954
-        var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' aria-haspopup='true' role='button' />");
+        var focusser = angular.element("<input ng-disabled='$select.disabled' class='ui-select-focusser ui-select-offscreen' type='text' id='{{ $select.focusserId }}' aria-label='{{ $select.focusserTitle }}' aria-haspopup='true' role='button' />");
 
         if(attrs.tabindex){
           //tabindex might be an expression, wait until it contains the actual value before we set the focusser tabindex

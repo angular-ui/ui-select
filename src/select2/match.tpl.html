@@ -5,7 +5,7 @@
 -->
 <a class="select2-choice ui-select-match"
    ng-class="{'select2-default': $select.isEmpty()}"
-   ng-click="$select.activate()">
+   ng-click="$select.activate()" aria-label="{{ $select.baseTitle }} select">
   <span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span>
   <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude></span>
   <abbr ng-if="$select.allowClear && !$select.isEmpty()" class="select2-search-choice-close" ng-click="$select.select(undefined)"></abbr>

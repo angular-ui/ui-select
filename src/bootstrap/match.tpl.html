@@ -1,10 +1,9 @@
 <div class="ui-select-match" ng-hide="$select.open" ng-disabled="$select.disabled" ng-class="{'btn-default-focus':$select.focus}">
-  <button type="button" class="btn btn-default btn-block ui-select-toggle" tabindex="-1" ;="" ng-disabled="$select.disabled" ng-click="$select.activate()">
+  <button aria-label="{{ $select.baseTitle }} activate" type="button" class="btn btn-default btn-block ui-select-toggle" tabindex="-1" ;="" ng-disabled="$select.disabled" ng-click="$select.activate()">
     <span ng-show="$select.isEmpty()" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span>
     <span ng-hide="$select.isEmpty()" class="ui-select-match-text" ng-class="{'ui-select-allow-clear': $select.allowClear && !$select.isEmpty()}" ng-transclude=""></span>
     <i class="caret pull-right" ng-click="$select.toggle($event)"></i>
-  </button>
-  <button type="button" class="ui-select-clear" ng-if="$select.allowClear && !$select.isEmpty()" ng-click="$select.select(undefined)">
+  <button aria-label="{{ $select.baseTitle }} clear" type="button" class="ui-select-clear" ng-if="$select.allowClear && !$select.isEmpty()" ng-click="$select.select(undefined)">
     <i class="glyphicon glyphicon-remove"></i>
   </button>
 </div>

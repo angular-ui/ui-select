@@ -4,13 +4,18 @@
   <ul class="select2-choices">
     <span class="ui-select-match"></span>
     <li class="select2-search-field">
-      <input 
-        type="text" 
-        autocomplete="off" 
-        autocorrect="off" 
-        autocapitalize="off" 
-        spellcheck="false" 
-        class="select2-input ui-select-search" 
+      <input
+        type="text"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        role="combobox"
+        aria-expanded="true"
+        aria-owns="ui-select-choices-{{ $select.generatedId }}"
+        aria-label="{{ $select.baseTitle }}"
+        aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}"
+        class="select2-input ui-select-search"
         placeholder="{{$select.getPlaceholder()}}"
         ng-disabled="$select.disabled"
         ng-hide="$select.disabled"

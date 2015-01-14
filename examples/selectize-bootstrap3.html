@@ -68,7 +68,7 @@
         <label class="col-sm-3 control-label">Default</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="selectize">
+          <ui-select ng-model="person.selected" theme="selectize" title="Choose a person">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
             <ui-select-choices repeat="item in people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>
@@ -83,7 +83,7 @@
         <label class="col-sm-3 control-label">Grouped</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="selectize">
+          <ui-select ng-model="person.selected" theme="selectize" title="Choose a person">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
             <ui-select-choices group-by="'group'" repeat="item in people | filter: $select.search">
               <span ng-bind-html="item.name | highlight: $select.search"></span>
@@ -121,7 +121,7 @@
         <label class="col-sm-3 control-label">Disabled</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="selectize" class="form-control" ng-disabled="true">
+          <ui-select ng-model="person.selected" theme="selectize" class="form-control" ng-disabled="true" title="Choose a person">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
             <ui-select-choices repeat="item in people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>

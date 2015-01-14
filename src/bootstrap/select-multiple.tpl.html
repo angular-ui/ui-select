@@ -11,7 +11,9 @@
            ng-disabled="$select.disabled"
            ng-hide="$select.disabled"
            ng-click="$select.activate()"
-           ng-model="$select.search">
+           ng-model="$select.search"
+           role="combobox"
+           aria-label="{{ $select.baseTitle }}">
   </div>
   <div class="ui-select-choices"></div>
 </div>
