@@ -952,6 +952,13 @@
                 for (var p = list.length - 1; p >= 0; p--) {
                   locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
+                  if($select.parserResult.trackByExp){
+                      var matches = /\.(.+)/.exec($select.parserResult.trackByExp);
+                      if(matches.length>0 && result[matches[1]] == value[matches[1]]){
+                          resultMultiple.unshift(list[p]);
+                          return true;
+                      }
+                  }
                   if (result == value){
                     resultMultiple.unshift(list[p]);
                     return true;
