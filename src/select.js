@@ -557,8 +557,8 @@
           if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
           break;
         case KEY.ENTER:
-          if(ctrl.open){
-            ctrl.select(ctrl.items[ctrl.activeIndex]);
+          if(ctrl.open && ctrl.activeIndex >= 0){
+            ctrl.select(ctrl.items[ctrl.activeIndex]); // Make sure at least one dropdown item is highlighted before adding.
           } else {
             ctrl.activate(false, true); //In case its the search input in 'multiple' mode
           }
