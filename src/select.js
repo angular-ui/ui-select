@@ -853,6 +853,10 @@
         throw uiSelectMinErr('choices', "Expected multiple .ui-select-choices-row but got '{0}'.", choices.length);
       }
 
+      if (ctrl.activeIndex < 0) {
+        return;
+      }
+
       var highlighted = choices[ctrl.activeIndex];
       var posY = highlighted.offsetTop + highlighted.clientHeight - container[0].scrollTop;
       var height = container[0].offsetHeight;
@@ -1329,4 +1333,3 @@
     };
   });
 }());
-
