@@ -65,8 +65,8 @@
   <h1>Tagging Demos</h1>
 
   <h3>Simple String Tags</h3>
-  <h4>(With Custom Tag Label)</h4>
-  <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+  <h4>(With Custom Tag Label / Sort Enabled)</h4>
+  <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="multipleDemo.colors" theme="bootstrap" sort-enabled="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
     <ui-select-choices repeat="color in availableColors | filter:$select.search">
       {{color}}
