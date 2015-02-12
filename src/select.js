@@ -420,7 +420,7 @@
               }
             }
             // search ctrl.selected for dupes potentially caused by tagging and return early if found
-            if ( ctrl.selected && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
+            if ( ctrl.selected && angular.isArray(ctrl.selected) && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
               ctrl.close(skipFocusser);
               return;
             }
@@ -818,24 +818,26 @@
     }
 
     function _findApproxDupe(haystack, needle) {
-      var tempArr = angular.copy(haystack);
       var dupeIndex = -1;
-      for (var i = 0; i <tempArr.length; i++) {
-        // handle the simple string version of tagging
-        if ( ctrl.tagging.fct === undefined ) {
-          // search the array for the match
-          if ( tempArr[i]+' '+ctrl.taggingLabel === needle ) {
-            dupeIndex = i;
-          }
-        // handle the object tagging implementation
-        } else {
-          var mockObj = tempArr[i];
-          mockObj.isTag = true;
-          if ( angular.equals(mockObj, needle) ) {
-            dupeIndex = i;
-          }
-        }
-      }
+	  if(angular.isArray(haystack)) {
+		  var tempArr = angular.copy(haystack);
+		  for (var i = 0; i <tempArr.length; i++) {
+			// handle the simple string version of tagging
+			if ( ctrl.tagging.fct === undefined ) {
+			  // search the array for the match
+			  if ( tempArr[i]+' '+ctrl.taggingLabel === needle ) {
+				dupeIndex = i;
+			  }
+			// handle the object tagging implementation
+			} else {
+			  var mockObj = tempArr[i];
+			  mockObj.isTag = true;
+			  if ( angular.equals(mockObj, needle) ) {
+				dupeIndex = i;
+			  }
+			}
+		  }
+	  }
       return dupeIndex;
     }
 

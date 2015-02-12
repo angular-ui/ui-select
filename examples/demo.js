@@ -153,6 +153,13 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
     });
   };
 
+  $scope.addPerson = function(item, model){
+    if(item.hasOwnProperty('isTag')) {
+      delete item.isTag;
+      $scope.people.push(item);
+    }
+  }
+
   $scope.country = {};
   $scope.countries = [ // Taken from https://gist.github.com/unceus/6501985
     {name: 'Afghanistan', code: 'AF'},
