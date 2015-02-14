@@ -688,6 +688,24 @@
 
     });
 
+    // If tagging try to split by tokens and add items
+    _searchInput.on('paste', function (e) {
+      var data = e.originalEvent.clipboardData.getData('text/plain');
+      if (data && data.length > 0 && ctrl.taggingTokens.isActivated && ctrl.tagging.fct) {
+        var items = data.split(ctrl.taggingTokens.tokens[0]); // split by first token only
+        if (items && items.length > 0) {
+          angular.forEach(items, function (item) {
+            var newItem = ctrl.tagging.fct(item);
+            if (newItem) {
+              ctrl.select(newItem, true);
+            }
+          });
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    });
+
     _searchInput.on('keyup', function(e) {
       if ( ! KEY.isVerticalMovement(e.which) ) {
         $scope.$evalAsync( function () {
@@ -872,7 +890,7 @@
     }
 
     $scope.$on('$destroy', function() {
-      _searchInput.off('keyup keydown tagged blur');
+      _searchInput.off('keyup keydown tagged blur paste');
     });
   }])
 

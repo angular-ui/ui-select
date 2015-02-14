@@ -69,6 +69,7 @@ describe('ui-select tests', function() {
       if (attrs.theme !== undefined) { attrsHtml += ' theme="' + attrs.theme + '"'; }
       if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
       if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
+      if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
       if (attrs.title !== undefined) { attrsHtml += ' title="' + attrs.title + '"'; }
     }
 
@@ -113,6 +114,17 @@ describe('ui-select tests', function() {
     var e = jQuery.Event("keydown");
     e.which = keyCode;
     e.keyCode = keyCode;
+    element.trigger(e);
+  }
+  function triggerPaste(element, text) {
+    var e = jQuery.Event("paste");
+    e.originalEvent = {
+        clipboardData : {
+            getData : function() {
+                return text;
+            }
+        }
+    };
     element.trigger(e);
   }
 
@@ -1119,6 +1131,8 @@ describe('ui-select tests', function() {
             if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
             if (attrs.tabindex !== undefined) { attrsHtml += ' tabindex="' + attrs.tabindex + '"'; }
             if (attrs.closeOnSelect !== undefined) { attrsHtml += ' close-on-select="' + attrs.closeOnSelect + '"'; }
+            if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
+            if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
         }
 
         return compileTemplate(
@@ -1610,6 +1624,40 @@ describe('ui-select tests', function() {
       );
 
       expect(el.scope().$select.multiple).toBe(true);
+    });
+
+    it('should allow paste tag from clipboard', function() {
+       scope.taggingFunc = function (name) {
+         return {
+           name: name,
+           email: name + '@email.com',
+           group: 'Foo',
+           age: 12
+         };
+       };
+
+       var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
+       clickMatch(el);
+       triggerPaste(el.find('input'), 'tag1');
+
+       expect($(el).scope().$select.selected.length).toBe(1);
+    });
+
+    it('should allow paste multiple tags', function() {
+      scope.taggingFunc = function (name) {
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
+
+      var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), ',tag1,tag2,tag3,,tag5,');
+
+      expect($(el).scope().$select.selected.length).toBe(5);
     });
   });
 
