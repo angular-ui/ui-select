@@ -1,15 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.9.7 - 2015-02-13T15:09:21.838Z
- * License: MIT
- */
-
-
-/*!
- * ui-select
- * http://github.com/angular-ui/ui-select
- * Version: 0.9.5 - 2014-12-12T16:07:20.859Z
+ * Version: 0.9.8 - 2015-02-16T15:10:00.891Z
  * License: MIT
  */
 
@@ -90,6 +82,9 @@
 
 .ui-select-bootstrap .ui-select-toggle {
   position: relative;
+
+  /* Instead of center because of .btn */
+  text-align: left;
 }
 
 .ui-select-bootstrap .ui-select-toggle > .caret {
@@ -110,11 +105,6 @@
   border-radius: 4px; /* FIXME hardcoded value :-/ */
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-}
-
-.ui-select-bootstrap > .ui-select-match {
-  /* Instead of center because of .btn */
-  text-align: left;
 }
 
 .ui-select-bootstrap > .ui-select-match > .caret {

@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.9.7 - 2015-02-13T15:09:21.834Z
+ * Version: 0.9.8 - 2015-02-16T15:10:00.887Z
  * License: MIT
  */
 
@@ -428,7 +428,7 @@
               }
             }
             // search ctrl.selected for dupes potentially caused by tagging and return early if found
-            if ( ctrl.selected && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
+            if ( ctrl.selected && angular.isArray(ctrl.selected) && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
               ctrl.close(skipFocusser);
               return;
             }
@@ -464,6 +464,7 @@
     // Closes the dropdown
     ctrl.close = function(skipFocusser) {
       if (!ctrl.open) return;
+      if (ctrl.ngModel && ctrl.ngModel.$setTouched) ctrl.ngModel.$setTouched();
       _resetSearchInput();
       ctrl.open = false;
       if (!ctrl.multiple){
@@ -696,6 +697,24 @@
 
     });
 
+    // If tagging try to split by tokens and add items
+    _searchInput.on('paste', function (e) {
+      var data = e.originalEvent.clipboardData.getData('text/plain');
+      if (data && data.length > 0 && ctrl.taggingTokens.isActivated && ctrl.tagging.fct) {
+        var items = data.split(ctrl.taggingTokens.tokens[0]); // split by first token only
+        if (items && items.length > 0) {
+          angular.forEach(items, function (item) {
+            var newItem = ctrl.tagging.fct(item);
+            if (newItem) {
+              ctrl.select(newItem, true);
+            }
+          });
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    });
+
     _searchInput.on('keyup', function(e) {
       if ( ! KEY.isVerticalMovement(e.which) ) {
         $scope.$evalAsync( function () {
@@ -826,24 +845,26 @@
     }
 
     function _findApproxDupe(haystack, needle) {
-      var tempArr = angular.copy(haystack);
       var dupeIndex = -1;
-      for (var i = 0; i <tempArr.length; i++) {
-        // handle the simple string version of tagging
-        if ( ctrl.tagging.fct === undefined ) {
-          // search the array for the match
-          if ( tempArr[i]+' '+ctrl.taggingLabel === needle ) {
-            dupeIndex = i;
-          }
-        // handle the object tagging implementation
-        } else {
-          var mockObj = tempArr[i];
-          mockObj.isTag = true;
-          if ( angular.equals(mockObj, needle) ) {
-            dupeIndex = i;
-          }
-        }
-      }
+	  if(angular.isArray(haystack)) {
+		  var tempArr = angular.copy(haystack);
+		  for (var i = 0; i <tempArr.length; i++) {
+			// handle the simple string version of tagging
+			if ( ctrl.tagging.fct === undefined ) {
+			  // search the array for the match
+			  if ( tempArr[i]+' '+ctrl.taggingLabel === needle ) {
+				dupeIndex = i;
+			  }
+			// handle the object tagging implementation
+			} else {
+			  var mockObj = tempArr[i];
+			  mockObj.isTag = true;
+			  if ( angular.equals(mockObj, needle) ) {
+				dupeIndex = i;
+			  }
+			}
+		  }
+	  }
       return dupeIndex;
     }
 
@@ -880,7 +901,7 @@
     }
 
     $scope.$on('$destroy', function() {
-      _searchInput.off('keyup keydown tagged blur');
+      _searchInput.off('keyup keydown tagged blur paste');
     });
   }])
 
@@ -960,7 +981,11 @@
             if ($select.multiple){
               var resultMultiple = [];
               var checkFnMultiple = function(list, value){
-                if (!list || !list.length) return;
+                //if the list is empty add the value to the list
+                if (!list || !list.length){
+                    resultMultiple.unshift(value);
+                    return true;
+                }
                 for (var p = list.length - 1; p >= 0; p--) {
                   locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
@@ -1205,6 +1230,7 @@
 
           var transcludedMatch = transcluded.querySelectorAll('.ui-select-match');
           transcludedMatch.removeAttr('ui-select-match'); //To avoid loop in case directive as attr
+          transcludedMatch.removeAttr('data-ui-select-match'); // Properly handle HTML5 data-attributes
           if (transcludedMatch.length !== 1) {
             throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-match but got '{0}'.", transcludedMatch.length);
           }
@@ -1212,6 +1238,7 @@
 
           var transcludedChoices = transcluded.querySelectorAll('.ui-select-choices');
           transcludedChoices.removeAttr('ui-select-choices'); //To avoid loop in case directive as attr
+          transcludedChoices.removeAttr('data-ui-select-choices'); // Properly handle HTML5 data-attributes
           if (transcludedChoices.length !== 1) {
             throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-choices but got '{0}'.", transcludedChoices.length);
           }
@@ -1344,7 +1371,7 @@
 
 angular.module("ui.select").run(["$templateCache", function($templateCache) {$templateCache.put("bootstrap/choices.tpl.html","<ul class=\"ui-select-choices ui-select-choices-content dropdown-menu\" role=\"listbox\" ng-show=\"$select.items.length > 0\"><li class=\"ui-select-choices-group\" id=\"ui-select-choices-{{ $select.generatedId }}\"><div class=\"divider\" ng-show=\"$select.isGrouped && $index > 0\"></div><div ng-show=\"$select.isGrouped\" class=\"ui-select-choices-group-label dropdown-header\" ng-bind=\"$group.name\"></div><div id=\"ui-select-choices-row-{{ $select.generatedId }}-{{$index}}\" class=\"ui-select-choices-row\" ng-class=\"{active: $select.isActive(this), disabled: $select.isDisabled(this)}\" role=\"option\"><a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\"></a></div></li></ul>");
 $templateCache.put("bootstrap/match-multiple.tpl.html","<span class=\"ui-select-match\"><span ng-repeat=\"$item in $select.selected\"><span style=\"margin-right: 3px;\" class=\"ui-select-match-item btn btn-default btn-xs\" tabindex=\"-1\" type=\"button\" ng-disabled=\"$select.disabled\" ng-click=\"$select.activeMatchIndex = $index;\" ng-class=\"{\'btn-primary\':$select.activeMatchIndex === $index, \'select-locked\':$select.isLocked(this, $index)}\"><span class=\"close ui-select-match-close\" ng-hide=\"$select.disabled\" ng-click=\"$select.removeChoice($index)\">&nbsp;&times;</span> <span uis-transclude-append=\"\"></span></span></span></span>");
-$templateCache.put("bootstrap/match.tpl.html","<div class=\"ui-select-match\" ng-hide=\"$select.open\" ng-disabled=\"$select.disabled\" ng-class=\"{\'btn-default-focus\':$select.focus}\"><button aria-label=\"{{ $select.baseTitle }} activate\" type=\"button\" class=\"btn btn-default btn-block ui-select-toggle\" tabindex=\"-1\" ;=\"\" ng-disabled=\"$select.disabled\" ng-click=\"$select.activate()\"><span ng-show=\"$select.isEmpty()\" class=\"ui-select-placeholder text-muted\">{{$select.placeholder}}</span> <span ng-hide=\"$select.isEmpty()\" class=\"ui-select-match-text\" ng-class=\"{\'ui-select-allow-clear\': $select.allowClear && !$select.isEmpty()}\" ng-transclude=\"\"></span> <i class=\"caret pull-right\" ng-click=\"$select.toggle($event)\"></i></button><button aria-label=\"{{ $select.baseTitle }} clear\" type=\"button\" class=\"ui-select-clear\" ng-if=\"$select.allowClear && !$select.isEmpty()\" ng-click=\"$select.select(undefined)\"><i class=\"glyphicon glyphicon-remove\"></i></button></div>");
+$templateCache.put("bootstrap/match.tpl.html","<div class=\"ui-select-match\" ng-hide=\"$select.open\" ng-disabled=\"$select.disabled\" ng-class=\"{\'btn-default-focus\':$select.focus}\"><button aria-label=\"{{ $select.baseTitle }} activate\" type=\"button\" class=\"btn btn-default form-control ui-select-toggle\" tabindex=\"-1\" ;=\"\" ng-disabled=\"$select.disabled\" ng-click=\"$select.activate()\"><span ng-show=\"$select.isEmpty()\" class=\"ui-select-placeholder text-muted\">{{$select.placeholder}}</span> <span ng-hide=\"$select.isEmpty()\" class=\"ui-select-match-text\" ng-class=\"{\'ui-select-allow-clear\': $select.allowClear && !$select.isEmpty()}\" ng-transclude=\"\"></span> <i class=\"caret pull-right\" ng-click=\"$select.toggle($event)\"></i></button><button aria-label=\"{{ $select.baseTitle }} clear\" type=\"button\" class=\"ui-select-clear\" ng-if=\"$select.allowClear && !$select.isEmpty()\" ng-click=\"$select.select(undefined)\"><i class=\"glyphicon glyphicon-remove\"></i></button></div>");
 $templateCache.put("bootstrap/select-multiple.tpl.html","<div class=\"ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control\" ng-class=\"{open: $select.open}\"><div><div class=\"ui-select-match\"></div><input type=\"text\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" class=\"ui-select-search input-xs\" placeholder=\"{{$select.getPlaceholder()}}\" ng-disabled=\"$select.disabled\" ng-hide=\"$select.disabled\" ng-click=\"$select.activate()\" ng-model=\"$select.search\" role=\"combobox\" aria-label=\"{{ $select.baseTitle }}\"></div><div class=\"ui-select-choices\"></div></div>");
 $templateCache.put("bootstrap/select.tpl.html","<div class=\"ui-select-container ui-select-bootstrap dropdown\" ng-class=\"{open: $select.open}\"><div class=\"ui-select-match\"></div><input type=\"text\" autocomplete=\"off\" tabindex=\"-1\" aria-expanded=\"true\" aria-label=\"{{ $select.baseTitle }}\" aria-owns=\"ui-select-choices-{{ $select.generatedId }}\" aria-activedescendant=\"ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}\" class=\"form-control ui-select-search\" placeholder=\"{{$select.placeholder}}\" ng-model=\"$select.search\" ng-show=\"$select.searchEnabled && $select.open\"><div class=\"ui-select-choices\"></div></div>");
 $templateCache.put("select2/choices.tpl.html","<ul class=\"ui-select-choices ui-select-choices-content select2-results\"><li class=\"ui-select-choices-group\" ng-class=\"{\'select2-result-with-children\': $select.choiceGrouped($group) }\"><div ng-show=\"$select.choiceGrouped($group)\" class=\"ui-select-choices-group-label select2-result-label\" ng-bind=\"$group.name\"></div><ul role=\"listbox\" id=\"ui-select-choices-{{ $select.generatedId }}\" ng-class=\"{\'select2-result-sub\': $select.choiceGrouped($group), \'select2-result-single\': !$select.choiceGrouped($group) }\"><li role=\"option\" id=\"ui-select-choices-row-{{ $select.generatedId }}-{{$index}}\" class=\"ui-select-choices-row\" ng-class=\"{\'select2-highlighted\': $select.isActive(this), \'select2-disabled\': $select.isDisabled(this)}\"><div class=\"select2-result-label ui-select-choices-row-inner\"></div></li></ul></li></ul>");
