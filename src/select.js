@@ -973,7 +973,11 @@
             if ($select.multiple){
               var resultMultiple = [];
               var checkFnMultiple = function(list, value){
-                if (!list || !list.length) return;
+                //if the list is empty add the value to the list
+                if (!list || !list.length){
+                    resultMultiple.unshift(value);
+                    return true;
+                }
                 for (var p = list.length - 1; p >= 0; p--) {
                   locals[$select.parserResult.itemName] = list[p];
                   result = $select.parserResult.modelMapper(scope, locals);
