@@ -827,7 +827,7 @@
         return false;
       }
       var hasDupe = arr.filter( function (origItem) {
-        if ( ctrl.search.toUpperCase() === undefined ) {
+        if ( ctrl.search.toUpperCase() === undefined || origItem === undefined ) {
           return false;
         }
         return origItem.toUpperCase() === ctrl.search.toUpperCase();
