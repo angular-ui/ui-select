@@ -456,6 +456,7 @@
     // Closes the dropdown
     ctrl.close = function(skipFocusser) {
       if (!ctrl.open) return;
+      if (ctrl.ngModel && ctrl.ngModel.$setTouched) ctrl.ngModel.$setTouched();
       _resetSearchInput();
       ctrl.open = false;
       if (!ctrl.multiple){
