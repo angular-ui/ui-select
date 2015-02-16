@@ -467,6 +467,12 @@
       }
     };
 
+    ctrl.clear = function($event) {
+      ctrl.select(undefined);
+      $event.stopPropagation();
+      ctrl.focusser[0].focus();
+    };
+
     // Toggle dropdown
     ctrl.toggle = function(e) {
       if (ctrl.open) {
