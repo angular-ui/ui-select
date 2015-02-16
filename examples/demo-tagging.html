@@ -117,7 +117,7 @@
   <p>Selected: {{multipleDemo.selectedPeople2}}</p>
 
   <h3>Tagging without multiple</h3>
-  <ui-select tagging="tagTransform" ng-model="person.selected" on-select="addPerson($item, $model)" theme="bootstrap" ng-disabled="disabled" style="width: 800px;" title="Choose a person">
+  <ui-select tagging="tagTransform" ng-model="person.selected" theme="bootstrap" ng-disabled="disabled" style="width: 800px;" title="Choose a person">
   <ui-select-match placeholder="Select person...">{{$select.selected.name}} &lt;{{$select.selected.email}}&gt;</ui-select-match>
   <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
     <div ng-if="person.isTag" ng-bind-html="person.name +' <small>(new)</small>'| highlight: $select.search"></div>
