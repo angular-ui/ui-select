@@ -8,7 +8,7 @@
     <span ng-hide="$select.isEmpty()" class="ui-select-match-text" ng-class="{'ui-select-allow-clear': $select.allowClear && !$select.isEmpty()}" ng-transclude=""></span>
     <i class="caret pull-right" ng-click="$select.toggle($event)"></i>
     <a ng-show="$select.allowClear && !$select.isEmpty()" aria-label="{{ $select.baseTitle }} clear" style="margin-right: 10px" 
-      ng-click="$select.clear($event)" class="btn btn-xs pull-right">
+      ng-click="$select.clear($event)" class="btn btn-xs btn-link pull-right">
       <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
     </a>
   </button>
