@@ -1191,7 +1191,8 @@
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
-            $select.close(angular.element(e.target).closest('.ui-select-container.open').length > 0); // Skip focusser if the target is another select
+            var targetScope = angular.element(e.target).scope();
+            $select.close(targetScope && targetScope.$select && targetScope.$select !== $select); // Skip focusser if the target is another select
             scope.$digest();
           }
           $select.clickTriggeredSelect = false;
