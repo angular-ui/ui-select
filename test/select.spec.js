@@ -211,7 +211,7 @@ describe('ui-select tests', function() {
     var el = compileTemplate('<wrapper-ui-select ng-model="selection.selected"/>');
     scope.selection.selected =  { name: 'Samantha',  email: 'something different than array source',  group: 'bar', age: 30 };
     scope.$digest();
-    expect($(el).find('.ui-select-container > .ui-select-match > button:first > span[ng-transclude]:not(.ng-hide)').text()).toEqual('Samantha');
+    expect($(el).find('.ui-select-container > .ui-select-match > span:first > span[ng-transclude]:not(.ng-hide)').text()).toEqual('Samantha');
   });
 
   it('should display the choices when activated', function() {
