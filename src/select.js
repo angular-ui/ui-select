@@ -915,7 +915,7 @@
       },
       replace: true,
       transclude: true,
-      require: ['uiSelect', 'ngModel'],
+      require: ['uiSelect', '^ngModel'],
       scope: true,
 
       controller: 'uiSelectCtrl',

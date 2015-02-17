@@ -15,7 +15,28 @@ describe('ui-select tests', function() {
     Escape: 27
   };
 
-  beforeEach(module('ngSanitize', 'ui.select'));
+  //create a directive that wraps ui-select
+  angular.module('wrapperDirective',['ui.select']);
+  angular.module('wrapperDirective').directive('wrapperUiSelect', function(){
+    return {
+      restrict: 'EA',
+      template: '<ui-select> \
+            <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+            <ui-select-choices repeat="person in people | filter: $select.search"> \
+              <div ng-bind-html="person.name | highlight: $select.search"></div> \
+            </ui-select-choices> \
+          </ui-select>',
+      require: 'ngModel',
+      scope: true,
+
+      link: function (scope, element, attrs, ctrl) {
+
+      }
+    }
+
+  });
+
+  beforeEach(module('ngSanitize', 'ui.select', 'wrapperDirective'));
   beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
@@ -184,6 +205,13 @@ describe('ui-select tests', function() {
     scope.selection.selected =  { name: 'Samantha',  email: 'something different than array source',  group: 'bar', age: 30 };
     scope.$digest();
     expect(getMatchLabel(el)).toEqual('Samantha');
+  });
+
+  it('should utilize wrapper directive ng-model', function() {
+    var el = compileTemplate('<wrapper-ui-select ng-model="selection.selected"/>');
+    scope.selection.selected =  { name: 'Samantha',  email: 'something different than array source',  group: 'bar', age: 30 };
+    scope.$digest();
+    expect($(el).find('.ui-select-container > .ui-select-match > button:first > span[ng-transclude]:not(.ng-hide)').text()).toEqual('Samantha');
   });
 
   it('should display the choices when activated', function() {
