@@ -133,6 +133,8 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
 
   $scope.availableColors = ['Red','Green','Blue','Yellow','Magenta','Maroon','Umbra','Turquoise'];
 
+  $scope.singleDemo = {};
+  $scope.singleDemo.color = '';
   $scope.multipleDemo = {};
   $scope.multipleDemo.colors = ['Blue','Red'];
   $scope.multipleDemo.colors2 = ['Blue','Red'];
