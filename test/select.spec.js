@@ -317,6 +317,21 @@ describe('ui-select tests', function() {
     expect(isDropdownOpened(el3)).toEqual(true);
   });
 
+  it('should allow decline tags when tagging function returns null', function() {
+    scope.taggingFunc = function (name) {
+      return null;
+    };
+
+    var el = createUiSelect({tagging: 'taggingFunc'});
+    clickMatch(el);
+
+    $(el).scope().$select.search = 'idontexist';
+    $(el).scope().$select.activeIndex = 0;
+    $(el).scope().$select.select('idontexist');
+
+    expect($(el).scope().$select.selected).not.toBeDefined();
+  });
+
   it('should allow tagging if the attribute says so', function() {
     var el = createUiSelect({tagging: true});
     clickMatch(el);
