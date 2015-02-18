@@ -130,6 +130,15 @@
   </ui-select>
   <p>Selected: {{person.selected}}</p>
 
+  <h3>Tagging without multiple, with simple strings</h3>
+  <ui-select tagging="true" tagging-label="('new')" ng-cloak ng-model="color.selected" theme="bootstrap" style="width: 800px;" title="Choose a color">
+    <ui-select-match placeholder="Select color...">{{$select.selected}}</ui-select-match>
+    <ui-select-choices repeat="color in availableColors | filter: $select.search">
+      <div ng-bind-html="color | highlight: $select.search"></div>
+    </ui-select-choices>
+  </ui-select>
+  <p>Selected: {{color.selected}}</p>
+
 
   <div style="height:500px"></div>
 
