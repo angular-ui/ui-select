@@ -1193,6 +1193,8 @@
         };
 
         function onDocumentClick(e) {
+          if (!$select.open) return; //Skip it if dropdown is close
+
           var contains = false;
 
           if (window.jQuery) {
@@ -1204,7 +1206,12 @@
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
-            $select.close(angular.element(e.target).closest('.ui-select-container.open').length > 0); // Skip focusser if the target is another select
+            //Will lose focus only with certain targets
+            var focusableControls = ['input','button','textarea'];
+            var targetScope = angular.element(e.target).scope(); //To check if target is other ui-select
+            var skipFocusser = targetScope && targetScope.$select && targetScope.$select !== $select; //To check if target is other ui-select
+            if (!skipFocusser) skipFocusser =  ~focusableControls.indexOf(e.target.tagName.toLowerCase()); //Check if target is input, button or textarea
+            $select.close(skipFocusser);
             scope.$digest();
           }
           $select.clickTriggeredSelect = false;
