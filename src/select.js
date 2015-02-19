@@ -90,7 +90,7 @@
   .constant('uiSelectConfig', {
     theme: 'bootstrap',
     searchEnabled: true,
-    sortEnabled: false,
+    sortable: false,
     placeholder: '', // Empty by default, like HTML tag <select>
     refreshDelay: 1000, // In milliseconds
     closeOnSelect: true,
@@ -184,7 +184,7 @@
     ctrl.focusser = undefined; //Reference to input element used to handle focus events
     ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
     ctrl.searchEnabled = undefined; // Initialized inside uiSelect directive link function
-    ctrl.sortEnabled = undefined; // Initialized inside uiSelect directive link function
+    ctrl.sortable = undefined; // Initialized inside uiSelect directive link function
     ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
     ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
     ctrl.multiple = false; // Initialized inside uiSelect directive link function
@@ -1080,9 +1080,9 @@
             $select.searchEnabled = searchEnabled !== undefined ? searchEnabled : uiSelectConfig.searchEnabled;
         });
 
-        scope.$watch('sortEnabled', function() {
-            var sortEnabled = scope.$eval(attrs.sortEnabled);
-            $select.sortEnabled = sortEnabled !== undefined ? sortEnabled : uiSelectConfig.sortEnabled;
+        scope.$watch('sortable', function() {
+            var sortable = scope.$eval(attrs.sortable);
+            $select.sortable = sortable !== undefined ? sortable : uiSelectConfig.sortable;
         });
 
         attrs.$observe('disabled', function() {
@@ -1325,7 +1325,7 @@
   }])
 
   // Make multiple matches sortable
-  .directive('uiSelectSort', ['$timeout', '$log', 'uiSelectConfig', 'uiSelectMinErr', function($timeout, $log, uiSelectConfig, uiSelectMinErr) {
+  .directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', function($timeout, uiSelectConfig, uiSelectMinErr) {
     return {
       require: '^uiSelect',
       link: function(scope, element, attrs, $select) {
@@ -1345,9 +1345,8 @@
           droppingAfterClassName = 'dropping-after';
 
         scope.$watch(function(){
-          return $select.sortEnabled;
+          return $select.sortable;
         }, function(n){
-          $log.log(n);
           if (n) {
             element.attr('draggable', true);
           } else {

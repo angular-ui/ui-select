@@ -13,7 +13,8 @@
            ng-click="$select.activate()"
            ng-model="$select.search"
            role="combobox"
-           aria-label="{{ $select.baseTitle }}">
+           aria-label="{{ $select.baseTitle }}"
+           ondrop="return false;">
   </div>
   <div class="ui-select-choices"></div>
 </div>
