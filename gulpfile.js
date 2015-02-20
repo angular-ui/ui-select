@@ -4,6 +4,7 @@ var karma = require('karma').server;
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var header = require('gulp-header');
+var footer = require('gulp-footer');
 var rename = require('gulp-rename');
 var es = require('event-stream');
 var del = require('del');
@@ -50,10 +51,13 @@ gulp.task('scripts', ['clean'], function() {
   };
 
   var buildLib = function(){
-    return gulp.src('src/select.js')
+    return gulp.src(['src/common.js','src/*.js'])
       .pipe(plumber({
         errorHandler: handleError
       }))
+      .pipe(concat('select_without_templates.js'))
+      .pipe(header('(function () { \n"use strict";\n'))
+      .pipe(footer('\n}());'))
       .pipe(jshint())
       .pipe(jshint.reporter('jshint-stylish'))
       .pipe(jshint.reporter('fail'));
@@ -76,10 +80,11 @@ gulp.task('scripts', ['clean'], function() {
 
 gulp.task('styles', ['clean'], function() {
 
-  return gulp.src('src/select.css')
+  return gulp.src('src/common.css')
     .pipe(header(config.banner, {
       timestamp: (new Date()).toISOString(), pkg: config.pkg
     }))
+    .pipe(rename('select.css'))
     .pipe(gulp.dest('dist'))
     .pipe(minifyCSS())
     .pipe(rename({ext:'.min.css'}))
