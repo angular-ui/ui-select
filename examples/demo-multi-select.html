@@ -121,8 +121,8 @@
   </ui-select>
   <p>Selected: {{multipleDemo.colors}}</p>
   <hr>
-  <h3>Array of objects</h3>
-  <ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" close-on-select="false" style="width: 800px;">
+  <h3>Array of objects (sorting enabled)</h3>
+  <ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" sortable="true" close-on-select="false" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
