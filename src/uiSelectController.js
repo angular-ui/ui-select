@@ -12,7 +12,7 @@ uis.controller('uiSelectCtrl',
 
   var EMPTY_SEARCH = '';
 
-  ctrl.placeholder = undefined;
+  ctrl.placeholder = uiSelectConfig.placeholder;
   ctrl.search = EMPTY_SEARCH;
   ctrl.activeIndex = 0;
   ctrl.activeMatchIndex = -1;
@@ -21,16 +21,16 @@ uis.controller('uiSelectCtrl',
   ctrl.open = false;
   ctrl.focus = false;
   ctrl.focusser = undefined; //Reference to input element used to handle focus events
-  ctrl.disabled = undefined; // Initialized inside uiSelect directive link function
-  ctrl.searchEnabled = undefined; // Initialized inside uiSelect directive link function
-  ctrl.sortable = undefined; // Initialized inside uiSelect directive link function
-  ctrl.resetSearchInput = undefined; // Initialized inside uiSelect directive link function
-  ctrl.refreshDelay = undefined; // Initialized inside uiSelectChoices directive link function
-  ctrl.multiple = false; // Initialized inside uiSelect directive link function
-  ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelect directive link function
+  ctrl.disabled = false;
+  ctrl.searchEnabled = uiSelectConfig.searchEnabled;
+  ctrl.sortable = uiSelectConfig.sortable;
+  ctrl.resetSearchInput = true;
+  ctrl.multiple = undefined; // Initialized inside uiSelect directive link function
+  ctrl.refreshDelay = uiSelectConfig.refreshDelay;
+  ctrl.disableChoiceExpression = undefined; // Initialized inside uiSelectChoices directive link function
   ctrl.tagging = {isActivated: false, fct: undefined};
   ctrl.taggingTokens = {isActivated: false, tokens: undefined};
-  ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelect directive link function
+  ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelectMatch directive link function
   ctrl.closeOnSelect = true; // Initialized inside uiSelect directive link function
   ctrl.clickTriggeredSelect = false;
   ctrl.$filter = $filter;
