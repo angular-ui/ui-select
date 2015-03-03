@@ -377,9 +377,12 @@ uis.controller('uiSelectCtrl',
       _searchInput.css('width',newWidth+'px');
     };
     $timeout(function(){ //Give tags time to render correctly
-      if (container.clientWidth === 0 && !containerSizeWatch){
-        containerSizeWatch = $scope.$watch(function(){ return container.clientWidth;}, function(newValue){
-          if (newValue !== 0){
+      if ((container.clientWidth === 0 || input.offsetParent === null) && !containerSizeWatch) {
+        containerSizeWatch = $scope.$watchGroup([
+          function(){ return container.clientWidth; },
+          function(){ return input.offsetParent; }
+        ], function(newValues){
+          if (newValues[0] !== 0 && newValues[1] !== null){
             calculate();
             containerSizeWatch();
             containerSizeWatch = null;
