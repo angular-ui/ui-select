@@ -366,32 +366,35 @@ uis.controller('uiSelectCtrl',
     return ctrl.placeholder;
   };
 
-  var containerSizeWatch;
-  ctrl.sizeSearchInput = function(){
+  var sizeWatch = null;
+  ctrl.sizeSearchInput = function() {
     var input = _searchInput[0],
-        container = _searchInput.parent().parent()[0];
-    _searchInput.css('width','10px');
-    var calculate = function(){
-      var newWidth = container.clientWidth - input.offsetLeft - 10;
-      if(newWidth < 50) newWidth = container.clientWidth;
-      _searchInput.css('width',newWidth+'px');
-    };
-    $timeout(function(){ //Give tags time to render correctly
-      if ((container.clientWidth === 0 || input.offsetParent === null) && !containerSizeWatch) {
-        containerSizeWatch = $scope.$watchGroup([
-          function(){ return container.clientWidth; },
-          function(){ return input.offsetParent; }
-        ], function(newValues){
-          if (newValues[0] !== 0 && newValues[1] !== null){
-            calculate();
-            containerSizeWatch();
-            containerSizeWatch = null;
+        container = _searchInput.parent().parent()[0],
+        calculateContainerWidth = function() {
+          // Return the container width only if the search input is visible
+          return container.clientWidth * !!input.offsetParent;
+        },
+        updateIfVisible = function(containerWidth) {
+          if (containerWidth === 0) {
+            return false;
+          }
+          var inputWidth = containerWidth - input.offsetLeft - 10;
+          if (inputWidth < 50) inputWidth = containerWidth;
+          _searchInput.css('width', inputWidth+'px');
+          return true;
+        };
+
+    _searchInput.css('width', '10px');
+    $timeout(function() { //Give tags time to render correctly
+      if (sizeWatch === null && !updateIfVisible(calculateContainerWidth())) {
+        sizeWatch = $scope.$watch(calculateContainerWidth, function(containerWidth) {
+          if (updateIfVisible(containerWidth)) {
+            sizeWatch();
+            sizeWatch = null;
           }
         });
-      }else if (!containerSizeWatch) {
-        calculate();
       }
-    }, 0, false);
+    });
   };
 
   function _handleDropDownSelection(key) {
