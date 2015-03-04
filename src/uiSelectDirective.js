@@ -1,6 +1,6 @@
 uis.directive('uiSelect',
-  ['$document', 'uiSelectConfig', 'uiSelectMinErr', '$compile', '$parse', '$timeout',
-  function($document, uiSelectConfig, uiSelectMinErr, $compile, $parse, $timeout) {
+  ['$document', 'uiSelectConfig', 'uiSelectMinErr', 'uisOffset', '$compile', '$parse', '$timeout',
+  function($document, uiSelectConfig, uiSelectMinErr, uisOffset, $compile, $parse, $timeout) {
 
   return {
     restrict: 'EA',
@@ -368,6 +368,59 @@ uis.directive('uiSelect',
         }
         element.querySelectorAll('.ui-select-choices').replaceWith(transcludedChoices);
       });
+
+      // Support for appending the select field to the body when its open
+      if (scope.$eval(attrs.appendToBody)) {
+        scope.$watch('$select.open', function(isOpen) {
+          if (isOpen) {
+            positionDropdown();
+          } else {
+            resetDropdown();
+          }
+        });
+
+        // Move the dropdown back to its original location when the scope is destroyed. Otherwise
+        // it might stick around when the user routes away or the select field is otherwise removed
+        scope.$on('$destroy', function() {
+          resetDropdown();
+        });
+      }
+
+      // Hold on to a reference to the .ui-select-container element for appendToBody support
+      var placeholder = null;
+
+      function positionDropdown() {
+        // Remember the absolute position of the element
+        var offset = uisOffset(element);
+
+        // Clone the element into a placeholder element to take its original place in the DOM
+        placeholder = angular.element('<div class="ui-select-placeholder"></div>');
+        placeholder[0].style.width = offset.width + 'px';
+        placeholder[0].style.height = offset.height + 'px';
+        element.after(placeholder);
+
+        // Now move the actual dropdown element to the end of the body
+        $document.find('body').append(element);
+
+        element[0].style.position = 'absolute';
+        element[0].style.left = offset.left + 'px';
+        element[0].style.top = offset.top + 'px';
+      }
+
+      function resetDropdown() {
+        if (placeholder === null) {
+          // The dropdown has not actually been display yet, so there's nothing to reset
+          return;
+        }
+
+        // Move the dropdown element back to its original location in the DOM
+        placeholder.replaceWith(element);
+        placeholder = null;
+
+        element[0].style.position = '';
+        element[0].style.left = '';
+        element[0].style.top = '';
+      }
     }
   };
 }]);

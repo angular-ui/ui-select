@@ -39,7 +39,7 @@ app.filter('propsFilter', function() {
   };
 });
 
-app.controller('DemoCtrl', function($scope, $http, $timeout) {
+app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   $scope.disabled = undefined;
   $scope.searchEnabled = undefined;
 
@@ -147,6 +147,23 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
   $scope.multipleDemo.selectedPeopleWithGroupBy = [$scope.people[8], $scope.people[6]];
   $scope.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
 
+  $scope.appendToBodyDemo = {
+    remainingToggleTime: 0,
+    present: true,
+    startToggleTimer: function() {
+      var scope = $scope.appendToBodyDemo;
+      var promise = $interval(function() {
+        if (scope.remainingTime < 1000) {
+          $interval.cancel(promise);
+          scope.present = !scope.present;
+          scope.remainingTime = 0;
+        } else {
+          scope.remainingTime -= 1000;
+        }
+      }, 1000);
+      scope.remainingTime = 3000;
+    }
+  };
 
   $scope.address = {};
   $scope.refreshAddresses = function(address) {
