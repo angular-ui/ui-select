@@ -309,6 +309,10 @@ uis.controller('uiSelectCtrl',
     }
   };
 
+  ctrl.setFocus = function(){
+    if (!ctrl.focus) ctrl.focusser[0].focus();    
+  };
+
   ctrl.clear = function($event) {
     ctrl.select(undefined);
     $event.stopPropagation();
