@@ -212,6 +212,8 @@ uis.directive('uiSelect',
       attrs.$observe('disabled', function() {
         // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
         $select.disabled = attrs.disabled !== undefined ? attrs.disabled : false;
+        // As the search input field may now become visible, it may be necessary to recompute its size
+        $select.sizeSearchInput();
       });
 
       attrs.$observe('resetSearchInput', function() {
