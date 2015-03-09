@@ -309,6 +309,11 @@ uis.controller('uiSelectCtrl',
     }
   };
 
+  ctrl.setFocus = function(){
+    if (!ctrl.focus && !ctrl.multiple) ctrl.focusser[0].focus();
+    if (!ctrl.focus && ctrl.multiple) _searchInput[0].focus();
+  };
+
   ctrl.clear = function($event) {
     ctrl.select(undefined);
     $event.stopPropagation();
