@@ -370,7 +370,8 @@ uis.directive('uiSelect',
       });
 
       // Support for appending the select field to the body when its open
-      if (scope.$eval(attrs.appendToBody)) {
+      var appendToBody = scope.$eval(attrs.appendToBody);
+      if (appendToBody !== undefined ? appendToBody : uiSelectConfig.appendToBody) {
         scope.$watch('$select.open', function(isOpen) {
           if (isOpen) {
             positionDropdown();
