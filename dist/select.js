@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.11.0 - 2015-03-09T00:55:08.441Z
+ * Version: 0.11.1 - 2015-03-09T14:30:26.109Z
  * License: MIT
  */
 
@@ -1236,8 +1236,10 @@ uis.directive('uiSelect',
       attrs.$observe('disabled', function() {
         // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
         $select.disabled = attrs.disabled !== undefined ? attrs.disabled : false;
-        // As the search input field may now become visible, it may be necessary to recompute its size
-        $select.sizeSearchInput();
+        if ($select.multiple) {
+          // As the search input field may now become visible, it may be necessary to recompute its size
+          $select.sizeSearchInput();
+        }
       });
 
       attrs.$observe('resetSearchInput', function() {
