@@ -405,6 +405,7 @@ uis.directive('uiSelect',
         element[0].style.position = 'absolute';
         element[0].style.left = offset.left + 'px';
         element[0].style.top = offset.top + 'px';
+        element[0].style.width = offset.width + 'px';
       }
 
       function resetDropdown() {
@@ -420,6 +421,7 @@ uis.directive('uiSelect',
         element[0].style.position = '';
         element[0].style.left = '';
         element[0].style.top = '';
+        element[0].style.width = '';
       }
     }
   };
