@@ -1848,6 +1848,9 @@ describe('ui-select tests', function() {
 
     it('should have specific position and dimensions', function() {
       var el = createUiSelect({appendToBody: true});
+      var originalPosition = el.css('position');
+      var originalTop = el.css('top');
+      var originalLeft = el.css('left');
       var originalWidth = el.css('width');
       openDropdown(el);
       expect(el.css('position')).toBe('absolute');
@@ -1855,9 +1858,9 @@ describe('ui-select tests', function() {
       expect(el.css('left')).toBe('200px');
       expect(el.css('width')).toBe('300px');
       closeDropdown(el);
-      expect(el.css('position')).toBe('');
-      expect(el.css('top')).toBe('');
-      expect(el.css('left')).toBe('');
+      expect(el.css('position')).toBe(originalPosition);
+      expect(el.css('top')).toBe(originalTop);
+      expect(el.css('left')).toBe(originalLeft);
       expect(el.css('width')).toBe(originalWidth);
     });
   });
