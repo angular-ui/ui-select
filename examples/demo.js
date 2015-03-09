@@ -43,6 +43,10 @@ app.controller('DemoCtrl', function($scope, $http, $timeout) {
   $scope.disabled = undefined;
   $scope.searchEnabled = undefined;
 
+  $scope.setInputFocus = function (){
+    $scope.$broadcast('UiSelectDemo1');
+  }
+
   $scope.enable = function() {
     $scope.disabled = false;
   };
