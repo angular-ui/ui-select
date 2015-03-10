@@ -37,6 +37,17 @@ describe('ui-select tests', function() {
   });
 
   beforeEach(module('ngSanitize', 'ui.select', 'wrapperDirective'));
+
+  beforeEach(function() {
+    module(function($provide) {
+      $provide.factory('uisOffset', function() {
+        return function(el) {
+          return {top: 100, left: 200, width: 300, height: 400};
+        };
+      });
+    });
+  });
+
   beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
@@ -92,6 +103,7 @@ describe('ui-select tests', function() {
       if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
       if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
       if (attrs.title !== undefined) { attrsHtml += ' title="' + attrs.title + '"'; }
+      if (attrs.appendToBody != undefined) { attrsHtml += ' append-to-body="' + attrs.appendToBody + '"'; }
     }
 
     return compileTemplate(
@@ -160,6 +172,12 @@ describe('ui-select tests', function() {
     $select.open = true;
     scope.$digest();
   };
+
+  function closeDropdown(el) {
+    var $select = el.scope().$select;
+    $select.open = false;
+    scope.$digest();
+  }
 
 
   // Tests
@@ -1791,4 +1809,60 @@ describe('ui-select tests', function() {
       }
     });
   });
+
+  describe('select with the append to body option', function() {
+    var body;
+
+    beforeEach(inject(function($document) {
+      body = $document.find('body')[0];
+    }));
+
+    it('should only be moved to the body when the appendToBody option is true', function() {
+      var el = createUiSelect({appendToBody: false});
+      openDropdown(el);
+      expect(el.parent()[0]).not.toBe(body);
+    });
+
+    it('should be moved to the body when the appendToBody is true in uiSelectConfig', inject(function(uiSelectConfig) {
+      uiSelectConfig.appendToBody = true;
+      var el = createUiSelect();
+      openDropdown(el);
+      expect(el.parent()[0]).toBe(body);
+    }));
+
+    it('should be moved to the body when opened', function() {
+      var el = createUiSelect({appendToBody: true});
+      openDropdown(el);
+      expect(el.parent()[0]).toBe(body);
+      closeDropdown(el);
+      expect(el.parent()[0]).not.toBe(body);
+    });
+
+    it('should remove itself from the body when the scope is destroyed', function() {
+      var el = createUiSelect({appendToBody: true});
+      openDropdown(el);
+      expect(el.parent()[0]).toBe(body);
+      el.scope().$destroy();
+      expect(el.parent()[0]).not.toBe(body);
+    });
+
+    it('should have specific position and dimensions', function() {
+      var el = createUiSelect({appendToBody: true});
+      var originalPosition = el.css('position');
+      var originalTop = el.css('top');
+      var originalLeft = el.css('left');
+      var originalWidth = el.css('width');
+      openDropdown(el);
+      expect(el.css('position')).toBe('absolute');
+      expect(el.css('top')).toBe('100px');
+      expect(el.css('left')).toBe('200px');
+      expect(el.css('width')).toBe('300px');
+      closeDropdown(el);
+      expect(el.css('position')).toBe(originalPosition);
+      expect(el.css('top')).toBe(originalTop);
+      expect(el.css('left')).toBe(originalLeft);
+      expect(el.css('width')).toBe(originalWidth);
+    });
+  });
+
 });

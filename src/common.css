@@ -36,6 +36,10 @@
     display:none;
 }
 
+body > .select2-container {
+  z-index: 9999; /* The z-index Select2 applies to the select2-drop */
+}
+
 /* Selectize theme */
 
 /* Helper class to show styles when focus */
@@ -114,6 +118,10 @@
   max-height: 200px;
   overflow-x: hidden;
   margin-top: -1px;
+}
+
+body > .ui-select-bootstrap {
+  z-index: 1000; /* Standard Bootstrap dropdown z-index */
 }
 
 .ui-select-multiple.ui-select-bootstrap {
