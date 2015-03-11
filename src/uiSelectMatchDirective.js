@@ -16,7 +16,13 @@ uis.directive('uiSelectMatch', ['uiSelectConfig', function(uiSelectConfig) {
         $select.placeholder = placeholder !== undefined ? placeholder : uiSelectConfig.placeholder;
       });
 
-      $select.allowClear = (angular.isDefined(attrs.allowClear)) ? (attrs.allowClear === '') ? true : (attrs.allowClear.toLowerCase() === 'true') : false;
+      function setAllowClear(allow)
+      {
+        $select.allowClear = (angular.isDefined(allow)) ? (allow === '') ? true : (allow.toLowerCase() === 'true') : false;
+      }
+
+      attrs.$observe('allowClear', setAllowClear);
+      setAllowClear(attrs.allowClear);
 
       if($select.multiple){
         $select.sizeSearchInput();
