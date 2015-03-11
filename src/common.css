@@ -36,7 +36,7 @@
     display:none;
 }
 
-body > .select2-container {
+body > .select2-container.open {
   z-index: 9999; /* The z-index Select2 applies to the select2-drop */
 }
 
@@ -120,7 +120,7 @@ body > .select2-container {
   margin-top: -1px;
 }
 
-body > .ui-select-bootstrap {
+body > .ui-select-bootstrap.open {
   z-index: 1000; /* Standard Bootstrap dropdown z-index */
 }
 
