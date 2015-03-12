@@ -181,7 +181,8 @@ uis.directive('uiSelect',
         }
 
         // Hold on to a reference to the .ui-select-container element for appendToBody support
-        var placeholder = null;
+        var placeholder = null,
+            originalWidth = '';
 
         function positionDropdown() {
           // Remember the absolute position of the element
@@ -192,6 +193,10 @@ uis.directive('uiSelect',
           placeholder[0].style.width = offset.width + 'px';
           placeholder[0].style.height = offset.height + 'px';
           element.after(placeholder);
+
+          // Remember the original value of the element width inline style, so it can be restored
+          // when the dropdown is closed
+          originalWidth = element[0].style.width;
 
           // Now move the actual dropdown element to the end of the body
           $document.find('body').append(element);
@@ -215,7 +220,7 @@ uis.directive('uiSelect',
           element[0].style.position = '';
           element[0].style.left = '';
           element[0].style.top = '';
-          element[0].style.width = '';
+          element[0].style.width = originalWidth;
         }
 
         // Move transcluded elements to their correct position in main template
