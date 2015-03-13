@@ -1325,7 +1325,7 @@ describe('ui-select tests', function() {
         expect(isDropdownOpened(el)).toEqual(false);
         triggerKeydown(searchInput, Key.Backspace);
         expect(isDropdownOpened(el)).toEqual(false);
-        expect(el.scope().$select.activeMatchIndex).toBe(el.scope().$select.selected.length - 1);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(el.scope().$select.selected.length - 1);
 
     });
 
@@ -1341,7 +1341,7 @@ describe('ui-select tests', function() {
         triggerKeydown(searchInput, Key.Backspace);
         expect(el.scope().$select.selected).toEqual([scope.people[4], scope.people[6]]); //Wladimir & Nicole
 
-        expect(el.scope().$select.activeMatchIndex).toBe(0);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(0);
 
     });
 
@@ -1357,7 +1357,7 @@ describe('ui-select tests', function() {
         triggerKeydown(searchInput, Key.Delete);
         expect(el.scope().$select.selected).toEqual([scope.people[4], scope.people[6]]); //Wladimir & Nicole
 
-        expect(el.scope().$select.activeMatchIndex).toBe(1);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(1);
 
     });
 
@@ -1369,7 +1369,7 @@ describe('ui-select tests', function() {
         expect(isDropdownOpened(el)).toEqual(false);
         triggerKeydown(searchInput, Key.Left);
         expect(isDropdownOpened(el)).toEqual(false);
-        expect(el.scope().$select.activeMatchIndex).toBe(el.scope().$select.selected.length - 1);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(el.scope().$select.selected.length - 1);
 
     });
 
@@ -1383,37 +1383,37 @@ describe('ui-select tests', function() {
         triggerKeydown(searchInput, Key.Left)
         triggerKeydown(searchInput, Key.Left)
         expect(isDropdownOpened(el)).toEqual(false);
-        expect(el.scope().$select.activeMatchIndex).toBe(el.scope().$select.selected.length - 2);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(el.scope().$select.selected.length - 2);
         triggerKeydown(searchInput, Key.Left)
         triggerKeydown(searchInput, Key.Left)
         triggerKeydown(searchInput, Key.Left)
-        expect(el.scope().$select.activeMatchIndex).toBe(0);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(0);
 
     });
 
-    it('should decrease $select.activeMatchIndex when pressing LEFT key', function() {
+    it('should decrease $selectMultiple.activeMatchIndex when pressing LEFT key', function() {
 
         scope.selection.selectedMultiple = [scope.people[4], scope.people[5], scope.people[6]]; //Wladimir, Samantha & Nicole
         var el = createUiSelectMultiple();
         var searchInput = el.find('.ui-select-search');
 
-        el.scope().$select.activeMatchIndex = 3
+        el.scope().$selectMultiple.activeMatchIndex = 3
         triggerKeydown(searchInput, Key.Left)
         triggerKeydown(searchInput, Key.Left)
-        expect(el.scope().$select.activeMatchIndex).toBe(1);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(1);
 
     });
 
-    it('should increase $select.activeMatchIndex when pressing RIGHT key', function() {
+    it('should increase $selectMultiple.activeMatchIndex when pressing RIGHT key', function() {
 
         scope.selection.selectedMultiple = [scope.people[4], scope.people[5], scope.people[6]]; //Wladimir, Samantha & Nicole
         var el = createUiSelectMultiple();
         var searchInput = el.find('.ui-select-search');
 
-        el.scope().$select.activeMatchIndex = 0
+        el.scope().$selectMultiple.activeMatchIndex = 0
         triggerKeydown(searchInput, Key.Right)
         triggerKeydown(searchInput, Key.Right)
-        expect(el.scope().$select.activeMatchIndex).toBe(2);
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(2);
 
     });
 

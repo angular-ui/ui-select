@@ -8,7 +8,7 @@
  * https://github.com/angular-ui/ui-select/commit/5dd63ad#commitcomment-5504697
  */
 
-uis.service('RepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinErr, $parse) {
+uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinErr, $parse) {
   var self = this;
 
   /**

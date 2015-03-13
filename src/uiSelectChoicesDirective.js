@@ -1,5 +1,5 @@
 uis.directive('uiSelectChoices',
-  ['uiSelectConfig', 'RepeatParser', 'uiSelectMinErr', '$compile',
+  ['uiSelectConfig', 'uisRepeatParser', 'uiSelectMinErr', '$compile',
   function(uiSelectConfig, RepeatParser, uiSelectMinErr, $compile) {
 
   return {
