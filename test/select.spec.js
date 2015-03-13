@@ -2213,6 +2213,26 @@ describe('ui-select tests', function() {
 
       expect(el.scope().$select.multiple).toBe(true);
     });
+    
+    it('should preserve the model if tagging is enabled on select multiple', function() {
+      scope.selection.selectedMultiple = ["I am not on the list of choices"];
+
+      var el = compileTemplate(
+          '<ui-select multiple="multiple" tagging ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+              <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+              <ui-select-choices repeat="person.email as person in people | filter: $select.search"> \
+                <div ng-bind-html="person.name | highlight: $select.search"></div> \
+                <div ng-bind-html="person.email | highlight: $select.search"></div> \
+              </ui-select-choices> \
+          </ui-select> \
+          '
+      );
+
+      scope.$digest();
+
+      expect(scope.selection.selectedMultiple)
+         .toEqual(["I am not on the list of choices"]);
+    });
 
     it('should not call tagging function needlessly', function() {
       scope.slowTaggingFunc = function (name) {
