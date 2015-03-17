@@ -94,7 +94,8 @@ describe('ui-select tests', function() {
   }
 
   function createUiSelect(attrs) {
-    var attrsHtml = '';
+    var attrsHtml = '',
+        matchAttrsHtml = '';
     if (attrs !== undefined) {
       if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
       if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
@@ -104,11 +105,12 @@ describe('ui-select tests', function() {
       if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
       if (attrs.title !== undefined) { attrsHtml += ' title="' + attrs.title + '"'; }
       if (attrs.appendToBody != undefined) { attrsHtml += ' append-to-body="' + attrs.appendToBody + '"'; }
+      if (attrs.allowClear != undefined) { matchAttrsHtml += ' allow-clear="' + attrs.allowClear + '"';}
     }
 
     return compileTemplate(
       '<ui-select ng-model="selection.selected"' + attrsHtml + '> \
-        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-match placeholder="Pick one..."' + matchAttrsHtml + '>{{$select.selected.name}}</ui-select-match> \
         <ui-select-choices repeat="person in people | filter: $select.search"> \
           <div ng-bind-html="person.name | highlight: $select.search"></div> \
           <div ng-bind-html="person.email | highlight: $select.search"></div> \
@@ -295,6 +297,43 @@ describe('ui-select tests', function() {
     el.find(".ui-select-toggle").click();
     expect($select.open).toEqual(false);
   });
+
+  it('should clear selection', function() {
+    scope.selection.selected = scope.people[0];
+
+    var el = createUiSelect({theme : 'select2', allowClear: 'true'});
+    var $select = el.scope().$select;
+
+    // allowClear should be true.
+    expect($select.allowClear).toEqual(true);
+
+    // Trigger clear.
+    el.find('.select2-search-choice-close').click();
+    expect(scope.selection.selected).toEqual(undefined);
+
+    // If there is no selection it the X icon should be gone.
+    expect(el.find('.select2-search-choice-close').length).toEqual(0);
+
+  });
+
+  it('should toggle allow-clear directive', function() {
+    scope.selection.selected = scope.people[0];
+    scope.isClearAllowed = false;
+    
+    var el = createUiSelect({theme : 'select2', allowClear: '{{isClearAllowed}}'});
+    var $select = el.scope().$select;
+
+    expect($select.allowClear).toEqual(false);
+    expect(el.find('.select2-search-choice-close').length).toEqual(0);
+    
+    // Turn clear on
+    scope.isClearAllowed = true;
+    scope.$digest();
+
+    expect($select.allowClear).toEqual(true);
+    expect(el.find('.select2-search-choice-close').length).toEqual(1);
+  });
+
 
   it('should pass tabindex to focusser', function() {
     var el = createUiSelect({tabindex: 5});
