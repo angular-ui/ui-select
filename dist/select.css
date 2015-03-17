@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.11.1 - 2015-03-09T14:30:26.112Z
+ * Version: 0.11.2 - 2015-03-17T04:08:46.478Z
  * License: MIT
  */
 
@@ -42,6 +42,10 @@
 
 .select-locked > .ui-select-match-close{
     display:none;
+}
+
+body > .select2-container.open {
+  z-index: 9999; /* The z-index Select2 applies to the select2-drop */
 }
 
 /* Selectize theme */
@@ -104,9 +108,9 @@
   border-bottom-right-radius: 0;
 }
 
-.ui-select-bootstrap > .ui-select-match {
+.ui-select-bootstrap > .ui-select-match > .btn{
   /* Instead of center because of .btn */
-  text-align: left;
+  text-align: left !important;
 }
 
 .ui-select-bootstrap > .ui-select-match > .caret {
@@ -122,6 +126,10 @@
   max-height: 200px;
   overflow-x: hidden;
   margin-top: -1px;
+}
+
+body > .ui-select-bootstrap.open {
+  z-index: 1000; /* Standard Bootstrap dropdown z-index */
 }
 
 .ui-select-multiple.ui-select-bootstrap {
