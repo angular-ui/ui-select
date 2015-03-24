@@ -36,5 +36,9 @@
     "postinstall": "bower install",
     "test": "gulp test"
   },
+  "spm": {
+    "main": "dist/select.js",
+    "output": ["dist/select.css"]
+  },
   "license": "MIT"
 }
