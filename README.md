@@ -4,6 +4,8 @@
 
 AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [Selectize](http://brianreavis.github.io/selectize.js/).
 
+[Getting Started](https://github.com/angular-ui/ui-select/wiki/Getting-Started)  `bower install angular-ui-select`
+
 - [Demo](http://plnkr.co/edit/a3KlK8dKH3wwiiksDSn2?p=preview)
 - [Demo Multiselect](http://plnkr.co/edit/juqoNOt1z1Gb349XabQ2?p=preview)
 - [Examples](https://github.com/angular-ui/ui-select/blob/master/examples)
