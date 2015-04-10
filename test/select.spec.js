@@ -60,6 +60,22 @@ describe('ui-select tests', function() {
       return person.age % 2 ? 'even' : 'odd';
     };
 
+
+    scope.filterInvertOrder = function(groups) {
+      debugger;
+      var results = groups.sort(function(groupA, groupB){
+        return groupA.name.toLocaleLowerCase() < groupB.name.toLocaleLowerCase();
+      });
+      return results;
+    };
+
+    scope.filterBarAndBaz = function(groups) {
+      debugger;
+      return groups.sort(function(groupA, groupB){
+        return groupA.name.toLocaleLowerCase() < groupB.name.toLocaleLowerCase();
+      });
+    };
+
     scope.people = [
       { name: 'Adam',      email: 'adam@email.com',      group: 'Foo', age: 12 },
       { name: 'Amalie',    email: 'amalie@email.com',    group: 'Foo', age: 12 },
@@ -683,24 +699,47 @@ describe('ui-select tests', function() {
     });
   });
 
-  describe('choices group by function', function() {
+  describe('choices group filter function', function() {
     function createUiSelect() {
-      return compileTemplate(
-        '<ui-select ng-model="selection.selected"> \
-      <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
-      <ui-select-choices group-by="getGroupLabel" repeat="person in people | filter: $select.search"> \
-        <div ng-bind-html="person.name | highlight: $select.search"></div> \
-      </ui-select-choices> \
-    </ui-select>'
+      return compileTemplate('\
+        <ui-select ng-model="selection.selected"> \
+          <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+          <ui-select-choices group-by="\'group\'" group-filter="filterInvertOrder"  repeat="person in people | filter: $select.search"> \
+            <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          </ui-select-choices> \
+        </ui-select>'
       );
     }
-    it("should extract group value through function", function () {
+    it("should sort groups using filter", function () {
       var el = createUiSelect();
+      debugger;
       expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
         return this.textContent;
-      }).toArray()).toEqual(['odd', 'even']);
+      }).toArray()).toEqual(["Foo", "Baz", "bar"]);
     });
   });
+
+  describe('choices group filter array', function() {
+    function createUiSelect() {
+      return compileTemplate('\
+        <ui-select ng-model="selection.selected"> \
+          <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+          <ui-select-choices group-by="\'group\'" group-filter="[\'Foo\']" \
+              repeat="person in people | filter: $select.search"> \
+            <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          </ui-select-choices> \
+        </ui-select>'
+      );
+    }
+    it("should sort groups using filter", function () {
+      var el = createUiSelect();
+      debugger;
+      expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
+        return this.textContent;
+      }).toArray()).toEqual(["Foo"]);
+    });
+  });
+
 
   it('should throw when no ui-select-choices found', function() {
     expect(function() {
