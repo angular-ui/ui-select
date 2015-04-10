@@ -724,7 +724,6 @@ describe('ui-select tests', function() {
     }
     it("should sort groups using filter", function () {
       var el = createUiSelect();
-      debugger;
       expect(el.find('.ui-select-choices-group .ui-select-choices-group-label').map(function() {
         return this.textContent;
       }).toArray()).toEqual(["Foo", "Baz", "bar"]);
