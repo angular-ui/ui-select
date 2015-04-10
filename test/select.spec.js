@@ -61,10 +61,9 @@ describe('ui-select tests', function() {
     };
 
     scope.filterInvertOrder = function(groups) {
-      var results = groups.sort(function(groupA, groupB){
+      return groups.sort(function(groupA, groupB){
         return groupA.name.toLocaleLowerCase() < groupB.name.toLocaleLowerCase();
       });
-      return results;
     };
 
 
