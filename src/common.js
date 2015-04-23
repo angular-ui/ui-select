@@ -32,7 +32,7 @@ var KEY = {
             return true;
         }
 
-        if (e.metaKey) return true;
+        if (e.metaKey || e.ctrlKey || e.altKey) return true;
 
         return false;
     },
