@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.11.2 - 2015-03-31T12:42:23.152Z
+ * Version: 0.11.2 - 2015-04-27T15:06:50.893Z
  * License: MIT
  */
 
@@ -1035,7 +1035,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
           $select = $scope.$select,
           ngModel;
 
-      //Wait for link fn to inject it 
+      //Wait for link fn to inject it
       $scope.$evalAsync(function(){ ngModel = $scope.ngModel; });
 
       ctrl.activeMatchIndex = -1;
@@ -1047,7 +1047,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
 
       ctrl.refreshComponent = function(){
         //Remove already selected items
-        //e.g. When user clicks on a selection, the selected array changes and 
+        //e.g. When user clicks on a selection, the selected array changes and
         //the dropdown should remove that item
         $select.refreshItems();
         $select.sizeSearchInput();
@@ -1082,7 +1082,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
 
       ctrl.getPlaceholder = function(){
         //Refactor single?
-        if($select.selected.length) return;
+        if (!angular.isUndefined($select.selected) && $select.selected.length) return;
         return $select.placeholder;
       };
 
@@ -1146,7 +1146,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
         };
         if (!inputValue) return resultMultiple; //If ngModel was undefined
         for (var k = inputValue.length - 1; k >= 0; k--) {
-          //Check model array of currently selected items 
+          //Check model array of currently selected items
           if (!checkFnMultiple($select.selected, inputValue[k])){
             //Check model array of all items available
             if (!checkFnMultiple(data, inputValue[k])){
@@ -1157,8 +1157,8 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
         }
         return resultMultiple;
       });
-      
-      //Watch for external model changes 
+
+      //Watch for external model changes
       scope.$watchCollection(function(){ return ngModel.$modelValue; }, function(newValue, oldValue) {
         if (oldValue != newValue){
           ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
