@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.11.2 - 2015-04-27T15:06:50.893Z
+ * Version: 0.11.2 - 2015-04-27T15:33:22.845Z
  * License: MIT
  */
 
@@ -1035,6 +1035,9 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
           $select = $scope.$select,
           ngModel;
 
+      if (angular.isUndefined($select.selected))
+        $select.selected = [];
+
       //Wait for link fn to inject it
       $scope.$evalAsync(function(){ ngModel = $scope.ngModel; });
 
@@ -1082,7 +1085,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
 
       ctrl.getPlaceholder = function(){
         //Refactor single?
-        if (!angular.isUndefined($select.selected) && $select.selected.length) return;
+        if ($select.selected.length) return;
         return $select.placeholder;
       };
 

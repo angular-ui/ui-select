@@ -9,6 +9,9 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
           $select = $scope.$select,
           ngModel;
 
+      if (angular.isUndefined($select.selected))
+        $select.selected = [];
+
       //Wait for link fn to inject it
       $scope.$evalAsync(function(){ ngModel = $scope.ngModel; });
 
@@ -56,7 +59,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
 
       ctrl.getPlaceholder = function(){
         //Refactor single?
-        if (!angular.isUndefined($select.selected) && $select.selected.length) return;
+        if ($select.selected.length) return;
         return $select.placeholder;
       };
 
