@@ -1025,6 +1025,32 @@ describe('ui-select tests', function() {
     expect(scope.$model).toBe(scope.$item);
   });
 
+  it('should allow creating tag in single select mode with tagging enabled', function() {
+
+    scope.taggingFunc = function (name) {
+      return name;
+    };
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected" tagging="taggingFunc" tagging-label="false"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    clickMatch(el);
+
+    var searchInput = el.find('.ui-select-search');
+
+    el.scope().$select.search = 'idontexist';
+
+    triggerKeydown(searchInput, Key.Enter);
+
+    expect($(el).scope().$select.selected).toEqual('idontexist');
+  });
+
   it('should append/transclude content (with correct scope) that users add at <match> tag', function () {
 
     var el = compileTemplate(
