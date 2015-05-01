@@ -437,7 +437,7 @@ uis.controller('uiSelectCtrl',
       _ensureHighlightVisible();
     }
 
-    if (key === KEY.ENTER) {
+    if (key === KEY.ENTER || key === KEY.ESC) {
       e.preventDefault();
       e.stopPropagation();
     }
