@@ -1,6 +1,6 @@
 uis.directive('uiSelectChoices',
-  ['uiSelectConfig', 'uisRepeatParser', 'uiSelectMinErr', '$compile',
-  function(uiSelectConfig, RepeatParser, uiSelectMinErr, $compile) {
+  ['uiSelectConfig', 'uisRepeatParser', 'uiSelectMinErr', '$compile', '$window',
+  function(uiSelectConfig, RepeatParser, uiSelectMinErr, $compile, $window) {
 
   return {
     restrict: 'EA',
@@ -40,7 +40,7 @@ uis.directive('uiSelectChoices',
 
         choices.attr('ng-repeat', RepeatParser.getNgRepeatExpression($select.parserResult.itemName, '$select.items', $select.parserResult.trackByExp, groupByExp))
             .attr('ng-if', '$select.open'); //Prevent unnecessary watches when dropdown is closed
-        if (document.addEventListener) {  //crude way to exclude IE8, specifically, which also cannot capture events
+        if ($window.document.addEventListener) {  //crude way to exclude IE8, specifically, which also cannot capture events
           choices.attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
               .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',false,$event)');
         }
@@ -48,7 +48,7 @@ uis.directive('uiSelectChoices',
         var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
         if (rowsInner.length !== 1) throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row-inner but got '{0}'.", rowsInner.length);
         rowsInner.attr('uis-transclude-append', ''); //Adding uisTranscludeAppend directive to row element after choices element has ngRepeat
-        if (!document.addEventListener) {  //crude way to target IE8, specifically, which also cannot capture events - so event bindings must be here
+        if (!$window.document.addEventListener) {  //crude way to target IE8, specifically, which also cannot capture events - so event bindings must be here
           rowsInner.attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
               .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',false,$event)');
         }
