@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.11.2 - 2015-03-17T04:08:46.474Z
+ * Version: 0.11.2 - 2015-05-02T06:44:31.334Z
  * License: MIT
  */
 
@@ -190,8 +190,9 @@ uis.directive('uiSelectChoices',
 
         // var repeat = RepeatParser.parse(attrs.repeat);
         var groupByExp = attrs.groupBy;
+        var groupFilterExp = attrs.groupFilter;
 
-        $select.parseRepeatAttr(attrs.repeat, groupByExp); //Result ready at $select.parserResult
+        $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
         $select.disableChoiceExpression = attrs.uiDisableChoice;
         $select.onHighlightCallback = attrs.onHighlight;
@@ -295,6 +296,18 @@ uis.controller('uiSelectCtrl',
     }
   }
 
+    function _groupsFilter(groups, groupNames) {
+      var i, j, result = [];
+      for(i = 0; i < groupNames.length ;i++){
+        for(j = 0; j < groups.length ;j++){
+          if(groups[j].name == [groupNames[i]]){
+            result.push(groups[j]);
+          }
+        }
+      }
+      return result;
+    }
+
   // When the user clicks on ui-select, displays the dropdown list
   ctrl.activate = function(initSearchValue, avoidReset) {
     if (!ctrl.disabled  && !ctrl.open) {
@@ -326,11 +339,11 @@ uis.controller('uiSelectCtrl',
     })[0];
   };
 
-  ctrl.parseRepeatAttr = function(repeatAttr, groupByExp) {
+  ctrl.parseRepeatAttr = function(repeatAttr, groupByExp, groupFilterExp) {
     function updateGroups(items) {
+      var groupFn = $scope.$eval(groupByExp);
       ctrl.groups = [];
       angular.forEach(items, function(item) {
-        var groupFn = $scope.$eval(groupByExp);
         var groupName = angular.isFunction(groupFn) ? groupFn(item) : item[groupFn];
         var group = ctrl.findGroupByName(groupName);
         if(group) {
@@ -340,6 +353,14 @@ uis.controller('uiSelectCtrl',
           ctrl.groups.push({name: groupName, items: [item]});
         }
       });
+      if(groupFilterExp){
+        var groupFilterFn = $scope.$eval(groupFilterExp);
+        if( angular.isFunction(groupFilterFn)){
+          ctrl.groups = groupFilterFn(ctrl.groups);
+        } else if(angular.isArray(groupFilterFn)){
+          ctrl.groups = _groupsFilter(ctrl.groups, groupFilterFn);
+        }
+      }
       ctrl.items = [];
       ctrl.groups.forEach(function(group) {
         ctrl.items = ctrl.items.concat(group.items);
@@ -540,7 +561,9 @@ uis.controller('uiSelectCtrl',
   ctrl.clear = function($event) {
     ctrl.select(undefined);
     $event.stopPropagation();
-    ctrl.focusser[0].focus();
+    $timeout(function() {
+      ctrl.focusser[0].focus();
+    }, 0, false);
   };
 
   // Toggle dropdown
