@@ -437,6 +437,11 @@ uis.controller('uiSelectCtrl',
       _ensureHighlightVisible();
     }
 
+    if (key === KEY.ENTER || key === KEY.ESC) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
   });
 
   // If tagging try to split by tokens and add items

@@ -1510,6 +1510,34 @@ describe('ui-select tests', function() {
 
     });
 
+    it('should stop the propagation when pressing ENTER key from dropdown', function() {
+
+        var el = createUiSelectMultiple();
+        var searchInput = el.find('.ui-select-search');
+        spyOn(jQuery.Event.prototype, 'preventDefault');
+        spyOn(jQuery.Event.prototype, 'stopPropagation');
+
+        triggerKeydown(searchInput, Key.Down)
+        triggerKeydown(searchInput, Key.Enter)
+        expect(jQuery.Event.prototype.preventDefault).toHaveBeenCalled();
+        expect(jQuery.Event.prototype.stopPropagation).toHaveBeenCalled();
+
+    });
+
+    it('should stop the propagation when pressing ESC key from dropdown', function() {
+
+        var el = createUiSelectMultiple();
+        var searchInput = el.find('.ui-select-search');
+        spyOn(jQuery.Event.prototype, 'preventDefault');
+        spyOn(jQuery.Event.prototype, 'stopPropagation');
+
+        triggerKeydown(searchInput, Key.Down)
+        triggerKeydown(searchInput, Key.Escape)
+        expect(jQuery.Event.prototype.preventDefault).toHaveBeenCalled();
+        expect(jQuery.Event.prototype.stopPropagation).toHaveBeenCalled();
+
+    });
+
     it('should increase $select.activeIndex when pressing DOWN key from dropdown', function() {
 
         var el = createUiSelectMultiple();
