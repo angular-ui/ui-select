@@ -378,8 +378,8 @@ uis.controller('uiSelectCtrl',
         if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
         break;
       case KEY.ENTER:
-        if(ctrl.open && ctrl.activeIndex >= 0){
-          ctrl.select(ctrl.items[ctrl.activeIndex]); // Make sure at least one dropdown item is highlighted before adding.
+        if(ctrl.open && (ctrl.tagging.isActivated || ctrl.activeIndex >= 0)){
+          ctrl.select(ctrl.items[ctrl.activeIndex]); // Make sure at least one dropdown item is highlighted before adding if not in tagging mode
         } else {
           ctrl.activate(false, true); //In case its the search input in 'multiple' mode
         }
