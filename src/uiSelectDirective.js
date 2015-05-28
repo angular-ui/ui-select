@@ -248,6 +248,48 @@ uis.directive('uiSelect',
           element[0].style.top = '';
           element[0].style.width = originalWidth;
         }
+
+        // Hold on to a reference to the .ui-select-dropdown element for direction support.
+        var dropdown = null,
+            directionUpClassName = 'direction-up';
+
+        // Support changing the direction of the dropdown if there isn't enough space to render it.
+        scope.$watch('$select.open', function(isOpen) {
+          if (isOpen) {
+            dropdown = angular.element(element).querySelectorAll('.ui-select-dropdown');
+            if (dropdown === null) {
+              return;
+            }
+
+            // Hide the dropdown so there is no flicker until $timeout is done executing.
+            dropdown[0].style.visibility = 'hidden';
+
+            // Delay positioning the dropdown until all choices have been added so its height is correct.
+            $timeout(function(){
+              var offset = uisOffset(element);
+              var offsetDropdown = uisOffset(dropdown);
+
+              // Determine if the direction of the dropdown needs to be changed.
+              if (offset.top + offset.height + offsetDropdown.height > $document[0].documentElement.scrollTop + $document[0].documentElement.clientHeight) {
+                dropdown[0].style.position = 'absolute';
+                dropdown[0].style.top = (offsetDropdown.height * -1) + 'px';
+                element.addClass(directionUpClassName);
+              }
+
+              // Display the dropdown once it has been positioned.
+              dropdown[0].style.visibility = '';
+            });
+          } else {
+              if (dropdown === null) {
+                return;
+              }
+
+              // Reset the position of the dropdown.
+              dropdown[0].style.position = '';
+              dropdown[0].style.top = '';
+              element.removeClass(directionUpClassName);
+          }
+        });
       };
     }
   };
