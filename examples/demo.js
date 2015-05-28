@@ -79,6 +79,14 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
   };
 
+  $scope.firstLetterGroupFn = function (item){
+      return item.name[0];
+  };
+
+  $scope.reverseOrderFilterFn = function(groups) {
+    return groups.reverse();
+  };
+
   $scope.personAsync = {selected : "wladimir@email.com"};
   $scope.peopleAsync = [];
 
