@@ -33,7 +33,6 @@
     "karma-coverage": "~0.2"
   },
   "scripts": {
-    "postinstall": "bower install",
     "test": "gulp test"
   },
   "license": "MIT"
