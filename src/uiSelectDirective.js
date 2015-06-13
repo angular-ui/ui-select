@@ -186,6 +186,13 @@ uis.directive('uiSelect',
             throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-choices but got '{0}'.", transcludedChoices.length);
           }
           element.querySelectorAll('.ui-select-choices').replaceWith(transcludedChoices);
+
+          var transcludedNoChoice = transcluded.querySelectorAll('.ui-select-no-choice');
+          transcludedNoChoice.removeAttr('ui-select-no-choice'); //To avoid loop in case directive as attr
+          transcludedNoChoice.removeAttr('data-ui-select-no-choice'); // Properly handle HTML5 data-attributes
+          if (transcludedNoChoice.length == 1) {
+            element.querySelectorAll('.ui-select-no-choice').replaceWith(transcludedNoChoice);
+          }
         });
 
         // Support for appending the select field to the body when its open
