@@ -212,6 +212,12 @@ describe('ui-select tests', function() {
     scope.$digest();
   }
 
+  function showChoicesForSearch(el, search) {
+    setSearchText(el, search);
+    el.scope().$select.searchInput.trigger('keyup');
+    scope.$digest();
+  }
+
 
   // Tests
   //uisRepeatParser
@@ -2204,6 +2210,25 @@ describe('ui-select tests', function() {
       );
 
       expect(el.scope().$select.multiple).toBe(true);
+    });
+
+    it('should not call tagging function needlessly', function() {
+      scope.slowTaggingFunc = function (name) {
+        // for (var i = 0; i < 100000000; i++);
+        return {name: name};
+      };
+      spyOn(scope, 'slowTaggingFunc').and.callThrough();
+
+      var el = createUiSelectMultiple({tagging: 'slowTaggingFunc'});
+
+      showChoicesForSearch(el, 'Foo');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(6);
+
+      showChoicesForSearch(el, 'a');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(9);
+
+      expect(scope.slowTaggingFunc.calls.count()).toBe(2);
+      expect(scope.slowTaggingFunc.calls.count()).not.toBe(15);
     });
 
     it('should allow paste tag from clipboard', function() {

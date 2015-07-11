@@ -308,7 +308,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             // verify the new tag doesn't match the value of a possible selection choice or an already selected item.
             if (
               stashArr.some(function (origItem) {
-                 return angular.equals(origItem, $select.tagging.fct($select.search));
+                 return angular.equals(origItem, newItem);
               }) ||
               $select.selected.some(function (origItem) {
                 return angular.equals(origItem, newItem);
