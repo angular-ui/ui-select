@@ -7,9 +7,9 @@ beforeEach(function() {
           return {
             pass: pass,
             message: "Expected '" + actual + "'" + (pass ? ' not ' : ' ') + "to have class '" + cls + "'."
-          }
+          };
         }
-      }
+      };
     }
   });
 });
