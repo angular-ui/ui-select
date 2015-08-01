@@ -1754,34 +1754,67 @@ describe('ui-select tests', function() {
 
     });
 
-    it('should watch changes for $select.selected and update formatted value correctly', function () {
+      it('should watch changes for $select.selected and update formatted value correctly', function () {
 
-      scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
+          scope.selection.selectedMultiple = ['wladimir@email.com', 'samantha@email.com'];
 
-      var el = compileTemplate(
-          '<ui-select multiple ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
-              <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
-              <ui-select-choices repeat="person.email as person in people | filter: $select.search"> \
-                <div ng-bind-html="person.name | highlight: $select.search"></div> \
-                <div ng-bind-html="person.email | highlight: $select.search"></div> \
-              </ui-select-choices> \
-          </ui-select> \
-          '
-      );
+          var el = compileTemplate(
+              '<ui-select multiple ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+                  <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+                  <ui-select-choices repeat="person.email as person in people | filter: $select.search"> \
+                    <div ng-bind-html="person.name | highlight: $select.search"></div> \
+                    <div ng-bind-html="person.email | highlight: $select.search"></div> \
+                  </ui-select-choices> \
+              </ui-select> \
+              '
+          );
 
-      var el2 = compileTemplate('<span class="resultDiv" ng-bind="selection.selectedMultiple"></span>');
+          var el2 = compileTemplate('<span class="resultDiv" ng-bind="selection.selectedMultiple"></span>');
 
-      expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
-        .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>");
+          expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+              .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>");
 
-      clickItem(el, 'Nicole');
+          clickItem(el, 'Nicole');
 
-      expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
-        .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>Nicole <nicole@email.com>");
+          expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+              .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>Nicole <nicole@email.com>");
 
-      expect(scope.selection.selectedMultiple.length).toBe(3);
+          expect(scope.selection.selectedMultiple.length).toBe(3);
 
-    });
+      });
+
+      it('should ensure the multiple selection limit is respected', function () {
+
+          scope.selection.selectedMultiple = ['wladimir@email.com'];
+
+          var el = compileTemplate(
+              '<ui-select multiple limit="2" ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+                  <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+                  <ui-select-choices repeat="person.email as person in people | filter: $select.search"> \
+                    <div ng-bind-html="person.name | highlight: $select.search"></div> \
+                    <div ng-bind-html="person.email | highlight: $select.search"></div> \
+                  </ui-select-choices> \
+              </ui-select> \
+              '
+          );
+
+          var el2 = compileTemplate('<span class="resultDiv" ng-bind="selection.selectedMultiple"></span>');
+
+          expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+              .toBe("Wladimir <wladimir@email.com>");
+
+          clickItem(el, 'Samantha');
+          expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+              .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>");
+
+          clickItem(el, 'Nicole');
+
+          expect(el.find('.ui-select-match-item [uis-transclude-append]:not(.ng-hide)').text())
+              .toBe("Wladimir <wladimir@email.com>Samantha <samantha@email.com>");
+
+          expect(scope.selection.selectedMultiple.length).toBe(2);
+
+      });
 
     it('should change viewvalue only once when updating modelvalue', function () {
 
