@@ -44,6 +44,9 @@ uis.directive('uiSelect',
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
         
+        //Limit the number of selections allowed
+        $select.limit = (angular.isDefined(attrs.limit)) ? parseInt(attrs.limit, 10) : undefined;
+
         //Set reference to ngModel from uiSelectCtrl
         $select.ngModel = ngModel;
 

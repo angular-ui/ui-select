@@ -155,6 +155,9 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       };
 
       scope.$on('uis:select', function (event, item) {
+        if($select.selected.length >= $select.limit) {
+          return;
+        }
         $select.selected.push(item);
         $selectMultiple.updateModel();
       });
