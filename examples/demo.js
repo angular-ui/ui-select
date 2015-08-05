@@ -13,10 +13,11 @@ app.filter('propsFilter', function() {
     var out = [];
 
     if (angular.isArray(items)) {
+      var keys = Object.keys(props);
+        
       items.forEach(function(item) {
         var itemMatches = false;
 
-        var keys = Object.keys(props);
         for (var i = 0; i < keys.length; i++) {
           var prop = keys[i];
           var text = props[prop].toLowerCase();
