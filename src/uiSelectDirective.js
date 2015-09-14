@@ -260,7 +260,7 @@ uis.directive('uiSelect',
         scope.$watch('$select.open', function(isOpen) {
           if (isOpen) {
             dropdown = angular.element(element).querySelectorAll('.ui-select-dropdown');
-            if (dropdown === null) {
+            if (dropdown.length === 0) {
               return;
             }
 
@@ -283,7 +283,7 @@ uis.directive('uiSelect',
               dropdown[0].style.opacity = 1;
             });
           } else {
-              if (dropdown === null) {
+              if (dropdown === null || dropdown.length === 0) {
                 return;
               }
 
