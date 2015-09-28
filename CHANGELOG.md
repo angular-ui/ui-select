@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Do not run bower after install automatically [#982](https://github.com/angular-ui/ui-select/pull/982)
+- Avoid setting activeItem on mouseenter to improve performance [#1211](https://github.com/angular-ui/ui-select/pull/1211)
 
 ### Fixed
 - Scroll to selected item [#976](https://github.com/angular-ui/ui-select/issues/976)
