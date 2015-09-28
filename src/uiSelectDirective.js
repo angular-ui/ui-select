@@ -257,8 +257,12 @@ uis.directive('uiSelect',
             directionUpClassName = 'direction-up';
 
         // Support changing the direction of the dropdown if there isn't enough space to render it.
-        scope.$watch('$select.open', function(isOpen) {
-          if (isOpen) {
+        scope.$watch('$select.open', function() {
+          scope.calculateDropdownPos();
+        });
+
+        scope.calculateDropdownPos = function(){
+          if ($select.open) {
             dropdown = angular.element(element).querySelectorAll('.ui-select-dropdown');
             if (dropdown === null) {
               return;
@@ -269,14 +273,25 @@ uis.directive('uiSelect',
 
             // Delay positioning the dropdown until all choices have been added so its height is correct.
             $timeout(function(){
+
+              element.removeClass(directionUpClassName);
+
               var offset = uisOffset(element);
               var offsetDropdown = uisOffset(dropdown);
 
+              //https://code.google.com/p/chromium/issues/detail?id=342307#c4
+              var scrollTop = $document[0].documentElement.scrollTop || $document[0].body.scrollTop; //To make it cross browser (blink, webkit, IE, Firefox).
+
               // Determine if the direction of the dropdown needs to be changed.
-              if (offset.top + offset.height + offsetDropdown.height > $document[0].documentElement.scrollTop + $document[0].documentElement.clientHeight) {
+              if (offset.top + offset.height + offsetDropdown.height > scrollTop + $document[0].documentElement.clientHeight) {
+                //Go UP
                 dropdown[0].style.position = 'absolute';
                 dropdown[0].style.top = (offsetDropdown.height * -1) + 'px';
                 element.addClass(directionUpClassName);
+              }else{
+                //Go DOWN
+                dropdown[0].style.position = '';
+                dropdown[0].style.top = '';
               }
 
               // Display the dropdown once it has been positioned.
@@ -292,7 +307,7 @@ uis.directive('uiSelect',
               dropdown[0].style.top = '';
               element.removeClass(directionUpClassName);
           }
-        });
+        };
       };
     }
   };

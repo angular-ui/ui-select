@@ -142,6 +142,7 @@ uis.controller('uiSelectCtrl',
     ctrl.itemProperty = ctrl.parserResult.itemName;
 
     ctrl.refreshItems = function (data){
+      $scope.calculateDropdownPos();
       data = data || ctrl.parserResult.source($scope);
       var selectedItems = ctrl.selected;
       //TODO should implement for single mode removeSelected
