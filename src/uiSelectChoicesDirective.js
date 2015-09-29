@@ -41,7 +41,6 @@ uis.directive('uiSelectChoices',
 
         choices.attr('ng-repeat', $select.parserResult.repeatExpression(groupByExp))
             .attr('ng-if', '$select.open') //Prevent unnecessary watches when dropdown is closed
-            .attr('ng-mouseenter', '$select.setActiveItem('+$select.parserResult.itemName +')')
             .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',false,$event)');
 
         var rowsInner = element.querySelectorAll('.ui-select-choices-row-inner');
