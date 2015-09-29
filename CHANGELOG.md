@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased][unreleased]
+## [v0.13.0][v0.13.0] (2015-09-29)
 ### Added
 - Allow to configure default dropdown position [#1213](https://github.com/angular-ui/ui-select/pull/1213) 
 - Can use object as source with (key,value) syntax [#1208](https://github.com/angular-ui/ui-select/pull/1208) 
@@ -18,4 +18,5 @@ All notable changes to this project will be documented in this file.
 - Fix to work correctly with debugInfoEnabled(false) [#1131](https://github.com/angular-ui/ui-select/pull/1131)
 - Limit the maximum number of selections allowed in multiple mode [#1110](https://github.com/angular-ui/ui-select/pull/1110)
 
-[unreleased]: https://github.com/angular-ui/ui-select/compare/v0.12.1...HEAD
+[unreleased]: https://github.com/angular-ui/ui-select/compare/v0.13.0...HEAD
+[v0.13.0]: https://github.com/angular-ui/ui-select/compare/v0.12.1...v0.13.0
