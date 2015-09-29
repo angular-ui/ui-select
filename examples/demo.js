@@ -46,7 +46,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
   $scope.setInputFocus = function (){
     $scope.$broadcast('UiSelectDemo1');
-  }
+  };
 
   $scope.enable = function() {
     $scope.disabled = false;
@@ -58,11 +58,11 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
   $scope.enableSearch = function() {
     $scope.searchEnabled = true;
-  }
+  };
 
   $scope.disableSearch = function() {
     $scope.searchEnabled = false;
-  }
+  };
 
   $scope.clear = function() {
     $scope.person.selected = undefined;
@@ -130,7 +130,25 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     return item;
   };
 
+  $scope.peopleObj = {
+    '1' : { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
+    '2' : { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
+    '3' : { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+    '4' : { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
+    '5' : { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
+    '6' : { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
+    '7' : { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
+    '8' : { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
+    '9' : { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
+    '10' : { name: 'Nicolás',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
+  };
+
   $scope.person = {};
+
+  $scope.person.selectedValue = $scope.peopleObj[3];
+  $scope.person.selectedSingle = 'Samantha';
+  $scope.person.selectedSingleKey = '5';
+
   $scope.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
     { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },

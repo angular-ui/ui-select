@@ -20,7 +20,9 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
    */
   self.parse = function(expression) {
 
-    var match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?([\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
+
+    //0000000000000000000000000000000000011111111100000000000000022222222222222003333333333333333333333000044444444444444444400000000000000005555500000666666666666600000000000000000000007777777770000000
+    var match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+([\w]+)\s*(|\s*[\s\S]+?)?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
     if (!match) {
       throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
@@ -28,10 +30,20 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
     }
 
     return {
-      itemName: match[2], // (lhs) Left-hand side,
-      source: $parse(match[3]),
-      trackByExp: match[4],
-      modelMapper: $parse(match[1] || match[2])
+      itemName: match[4] || match[2], // (lhs) Left-hand side,
+      keyName: match[3], //for (key, value) syntax
+      source: $parse(!match[3] ? match[5] + (match[6] || ''): match[5]), //concat source with filters if its an array
+      sourceName: match[5],
+      filters: match[6],
+      trackByExp: match[7],
+      modelMapper: $parse(match[1] || match[4] || match[2]),
+      repeatExpression: function (grouped) {
+        var expression = this.itemName + ' in ' + (grouped ? '$group.items' : '$select.items');
+        if (this.trackByExp) {
+          expression += ' track by ' + this.trackByExp;
+        }
+        return expression;
+      } 
     };
 
   };
@@ -40,11 +52,4 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
     return '$group in $select.groups';
   };
 
-  self.getNgRepeatExpression = function(itemName, source, trackByExp, grouped) {
-    var expression = itemName + ' in ' + (grouped ? '$group.items' : source);
-    if (trackByExp) {
-      expression += ' track by ' + trackByExp;
-    }
-    return expression;
-  };
 }]);

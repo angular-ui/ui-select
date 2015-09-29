@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ui-select tests', function() {
-  var scope, $rootScope, $compile, $timeout, $injector;
+  var scope, $rootScope, $compile, $timeout, $injector, uisRepeatParser;
 
   var Key = {
     Enter: 13,
@@ -48,12 +48,13 @@ describe('ui-select tests', function() {
     });
   });
 
-  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_, _uisRepeatParser_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
     $timeout = _$timeout_;
     $injector = _$injector_;
+    uisRepeatParser = _uisRepeatParser_;
     scope.selection = {};
 
     scope.getGroupLabel = function(person) {
@@ -77,6 +78,19 @@ describe('ui-select tests', function() {
       { name: 'Nicole',    email: 'nicole@email.com',    group: 'bar', age: 43 },
       { name: 'Natasha',   email: 'natasha@email.com',   group: 'Baz', age: 54 }
     ];
+  
+    scope.peopleObj = {
+      '1' : { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
+      '2' : { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
+      '3' : { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+      '4' : { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
+      '5' : { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
+      '6' : { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
+      '7' : { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
+      '8' : { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
+      '9' : { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
+      '10' : { name: 'Nicolás',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
+    };
 
     scope.someObject = {};
     scope.someObject.people = [
@@ -190,6 +204,86 @@ describe('ui-select tests', function() {
 
 
   // Tests
+  //uisRepeatParser
+
+  it('should parse simple repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = [{name: 'Wladimir'}, {name: 'Samantha'}];
+    locals.person = locals.people[0];
+
+    var parserResult = uisRepeatParser.parse('person in people');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+    var ngExp = parserResult.repeatExpression(false);
+    expect(ngExp).toBe('person in $select.items');
+
+    var ngExpGrouped = parserResult.repeatExpression(true);
+    expect(ngExpGrouped).toBe('person in $group.items');
+
+  });
+
+  it('should parse simple repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = [{name: 'Wladimir'}, {name: 'Samantha'}];
+    locals.person = locals.people[0];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in people');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+  });
+
+  it('should parse simple property binding repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = [{name: 'Wladimir'}, {name: 'Samantha'}];
+    locals.person = locals.people[0];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in people');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+  });
+
+  it('should parse (key, value) repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
+    locals.person = locals.people[0];
+
+    var parserResult = uisRepeatParser.parse('(key,person) in people');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.keyName).toBe('key');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+    var ngExp = parserResult.repeatExpression(false);
+    expect(ngExp).toBe('person in $select.items');
+
+    var ngExpGrouped = parserResult.repeatExpression(true);
+    expect(ngExpGrouped).toBe('person in $group.items');
+
+  });
+
+  it('should parse simple property binding with (key, value) repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
+    locals.person = locals.people['WC'];
+
+    var parserResult = uisRepeatParser.parse('person.name as (key, person) in people');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.keyName).toBe('key');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+  });
 
   it('should compile child directives', function() {
     var el = createUiSelect();
@@ -467,6 +561,88 @@ describe('ui-select tests', function() {
 
     el1.remove();
     el2.remove();
+  });
+
+  it('should bind model correctly (with object as source)', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.value.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.value as (key,person) in peopleObj | filter: $select.search"> \
+          <div ng-bind-html="person.value.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.value.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    // scope.selection.selected = 'Samantha';
+
+    clickItem(el, 'Samantha');
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+    expect(scope.selection.selected).toBe(scope.peopleObj[6]);
+
+  });
+
+  it('should bind model correctly (with object as source) using a single property', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.value.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.value.name as (key,person) in peopleObj | filter: $select.search"> \
+          <div ng-bind-html="person.value.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.value.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    // scope.selection.selected = 'Samantha';
+
+    clickItem(el, 'Samantha');
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+    expect(scope.selection.selected).toBe('Samantha');
+
+  });
+
+  it('should update choices when original source changes (with object as source)', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.value.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.value.name as (key,person) in peopleObj | filter: $select.search"> \
+          <div ng-bind-html="person.value.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.value.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    scope.$digest();
+
+    openDropdown(el);
+    var choicesEls = $(el).find('.ui-select-choices-row');
+    expect(choicesEls.length).toEqual(10);
+
+    scope.peopleObj['11'] = { name: 'Camila',   email: 'camila@email.com',    age: 1, country: 'Ecuador' };
+    scope.$digest();
+
+    choicesEls = $(el).find('.ui-select-choices-row');
+    expect(choicesEls.length).toEqual(11);
+
+  });
+
+  it('should bind model correctly (with object as source) using the key of collection', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.value.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.key as (key,person) in peopleObj | filter: $select.search"> \
+          <div ng-bind-html="person.value.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.value.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    // scope.selection.selected = 'Samantha';
+
+    clickItem(el, 'Samantha');
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('Samantha');
+    expect(scope.selection.selected).toBe('6');
+
   });
 
   describe('disabled options', function() {
