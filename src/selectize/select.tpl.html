@@ -3,7 +3,7 @@
        ng-class="{'focus': $select.open, 'disabled': $select.disabled, 'selectize-focus' : $select.focus}"
        ng-click="$select.activate()">
     <div class="ui-select-match"></div>
-    <input type="text" autocomplete="off" tabindex="-1"
+    <input type="text" autocomplete="false" tabindex="-1"
            class="ui-select-search ui-select-toggle"
            ng-click="$select.toggle($event)"
            placeholder="{{$select.placeholder}}"
