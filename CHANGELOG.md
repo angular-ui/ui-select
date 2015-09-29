@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
 ### Added
+- Allow to configure default dropdown position [#1213](https://github.com/angular-ui/ui-select/pull/1213) 
 - Can use object as source with (key,value) syntax [#1208](https://github.com/angular-ui/ui-select/pull/1208) 
 - CHANGELOG.md file created
 
