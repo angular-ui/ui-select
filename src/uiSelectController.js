@@ -29,6 +29,8 @@ uis.controller('uiSelectCtrl',
   ctrl.disabled = false;
   ctrl.selected = undefined;
 
+  ctrl.dropdownPosition = 'auto';
+
   ctrl.focusser = undefined; //Reference to input element used to handle focus events
   ctrl.resetSearchInput = true;
   ctrl.multiple = undefined; // Initialized inside uiSelect directive link function
