@@ -9,6 +9,9 @@ AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [
 - [Examples](https://github.com/angular-ui/ui-select/blob/master/examples)
 - [Documentation](https://github.com/angular-ui/ui-select/wiki)
 
+## Last Changes
+
+- Check [CHANGELOG.md](/CHANGELOG.md)
 
 ## Features
 
