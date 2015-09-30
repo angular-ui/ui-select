@@ -169,7 +169,6 @@ uis.controller('uiSelectCtrl',
     }
 
     ctrl.refreshItems = function (data){
-      $scope.calculateDropdownPos();
       data = data || ctrl.parserResult.source($scope);
       var selectedItems = ctrl.selected;
       //TODO should implement for single mode removeSelected
@@ -180,6 +179,9 @@ uis.controller('uiSelectCtrl',
           var filteredItems = data.filter(function(i) {return selectedItems && selectedItems.indexOf(i) < 0;});
           ctrl.setItemsFn(filteredItems);
         }
+      }
+      if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
+        $scope.calculateDropdownPos();
       }
     };
 
