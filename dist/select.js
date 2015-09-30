@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.13.0 - 2015-09-29T17:48:20.967Z
+ * Version: 0.13.1 - 2015-09-30T05:39:26.655Z
  * License: MIT
  */
 
@@ -394,7 +394,7 @@ uis.controller('uiSelectCtrl',
       $scope.$uisSource = Object.keys(originalSource($scope)).map(function(v){
         var result = {};
         result[ctrl.parserResult.keyName] = v;
-        result.value = $scope[ctrl.parserResult.sourceName][v];
+        result.value = $scope.peopleObj[v];
         return result;
       });
     };
@@ -408,7 +408,6 @@ uis.controller('uiSelectCtrl',
     }
 
     ctrl.refreshItems = function (data){
-      $scope.calculateDropdownPos();
       data = data || ctrl.parserResult.source($scope);
       var selectedItems = ctrl.selected;
       //TODO should implement for single mode removeSelected
@@ -419,6 +418,9 @@ uis.controller('uiSelectCtrl',
           var filteredItems = data.filter(function(i) {return selectedItems && selectedItems.indexOf(i) < 0;});
           ctrl.setItemsFn(filteredItems);
         }
+      }
+      if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
+        $scope.calculateDropdownPos();
       }
     };
 
@@ -1853,21 +1855,39 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
   self.parse = function(expression) {
 
 
-    //0000000000000000000000000000000000011111111100000000000000022222222222222003333333333333333333333000044444444444444444400000000000000005555500000666666666666600000000000000000000007777777770000000
-    var match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+([\w]+)\s*(|\s*[\s\S]+?)?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
+    var match;
+    var isObjectCollection = /\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)/.test(expression);
+    // If an array is used as collection
+
+    // if (isObjectCollection){
+      //00000000000000000000000000000111111111000000000000000222222222222220033333333333333333333330000444444444444444444000000000000000556666660000077777777777755000000000000000000000088888880000000
+    match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+(([\w]+)?\s*(|\s*[\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);      
+
+    // 1 Alias
+    // 2 Item
+    // 3 Key on (key,value)
+    // 4 Value on (key,value)
+    // 5 Collection expresion (only used when using an array collection)
+    // 6 Object that will be converted to Array when using (key,value) syntax
+    // 7 Filters that will be applied to #6 when using (key,value) syntax
+    // 8 Track by
 
     if (!match) {
       throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
+              expression);
+    }
+    if (!match[6] && isObjectCollection) {
+      throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ as (_key_, _item_) in _ObjCollection_ [ track by _id_]' but got '{0}'.",
               expression);
     }
 
     return {
       itemName: match[4] || match[2], // (lhs) Left-hand side,
       keyName: match[3], //for (key, value) syntax
-      source: $parse(!match[3] ? match[5] + (match[6] || ''): match[5]), //concat source with filters if its an array
-      sourceName: match[5],
-      filters: match[6],
-      trackByExp: match[7],
+      source: $parse(!match[3] ? match[5] : match[6]),
+      sourceName: match[6],
+      filters: match[7],
+      trackByExp: match[8],
       modelMapper: $parse(match[1] || match[4] || match[2]),
       repeatExpression: function (grouped) {
         var expression = this.itemName + ' in ' + (grouped ? '$group.items' : '$select.items');
