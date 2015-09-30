@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.13.1][v0.13.1] (2015-09-29)
 ### Fixed
+- Remove hardcoded source name when using (key,value) syntax [#1217](https://github.com/angular-ui/ui-select/pull/1217)
 - Modify regex to accept a full 'collection expression' when not using (key,value) syntax [#1216](https://github.com/angular-ui/ui-select/pull/1216)
 - Avoid to recalculate position when set 'down' [#1214](https://github.com/angular-ui/ui-select/issues/1214#issuecomment-144271352)
 
