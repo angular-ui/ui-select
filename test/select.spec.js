@@ -285,6 +285,33 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should should accept a "collection expresion" only if its not (key, value) repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
+    locals.person = locals.people['WC'];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in (peopleNothing || people)');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    // expect(parserResult.source(locals)).toBe(locals.people);
+
+  });
+
+  it('should should throw if "collection expresion" used and (key, value) repeat syntax', function() {
+    
+    var locals = {};
+    locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
+    locals.person = locals.people['WC'];
+
+    function errorFunctionWrapper(){
+      uisRepeatParser.parse('person.name as (key,person) in (people | someFilter)');
+    }
+
+    expect(errorFunctionWrapper).toThrow();
+
+  });
+
   it('should compile child directives', function() {
     var el = createUiSelect();
 
