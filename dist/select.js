@@ -394,7 +394,7 @@ uis.controller('uiSelectCtrl',
       $scope.$uisSource = Object.keys(originalSource($scope)).map(function(v){
         var result = {};
         result[ctrl.parserResult.keyName] = v;
-        result.value = $scope.peopleObj[v];
+        result.value = $scope[ctrl.parserResult.sourceName][v];
         return result;
       });
     };
