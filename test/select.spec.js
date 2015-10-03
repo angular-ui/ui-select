@@ -78,7 +78,7 @@ describe('ui-select tests', function() {
       { name: 'Nicole',    email: 'nicole@email.com',    group: 'bar', age: 43 },
       { name: 'Natasha',   email: 'natasha@email.com',   group: 'Baz', age: 54 }
     ];
-  
+
     scope.peopleObj = {
       '1' : { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
       '2' : { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
@@ -127,6 +127,7 @@ describe('ui-select tests', function() {
       if (attrs.title !== undefined) { attrsHtml += ' title="' + attrs.title + '"'; }
       if (attrs.appendToBody !== undefined) { attrsHtml += ' append-to-body="' + attrs.appendToBody + '"'; }
       if (attrs.allowClear !== undefined) { matchAttrsHtml += ' allow-clear="' + attrs.allowClear + '"';}
+      if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
     }
 
     return compileTemplate(
@@ -207,7 +208,7 @@ describe('ui-select tests', function() {
   //uisRepeatParser
 
   it('should parse simple repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = [{name: 'Wladimir'}, {name: 'Samantha'}];
     locals.person = locals.people[0];
@@ -226,7 +227,7 @@ describe('ui-select tests', function() {
   });
 
   it('should parse simple repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = [{name: 'Wladimir'}, {name: 'Samantha'}];
     locals.person = locals.people[0];
@@ -239,7 +240,7 @@ describe('ui-select tests', function() {
   });
 
   it('should parse simple property binding repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = [{name: 'Wladimir'}, {name: 'Samantha'}];
     locals.person = locals.people[0];
@@ -252,7 +253,7 @@ describe('ui-select tests', function() {
   });
 
   it('should parse (key, value) repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
     locals.person = locals.people[0];
@@ -272,7 +273,7 @@ describe('ui-select tests', function() {
   });
 
   it('should parse simple property binding with (key, value) repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
     locals.person = locals.people['WC'];
@@ -286,7 +287,7 @@ describe('ui-select tests', function() {
   });
 
   it('should should accept a "collection expresion" only if its not (key, value) repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
     locals.person = locals.people['WC'];
@@ -299,7 +300,7 @@ describe('ui-select tests', function() {
   });
 
   it('should should throw if "collection expresion" used and (key, value) repeat syntax', function() {
-    
+
     var locals = {};
     locals.people = { 'WC' : {name: 'Wladimir'}, 'SH' : {name: 'Samantha'}};
     locals.person = locals.people['WC'];
@@ -339,7 +340,7 @@ describe('ui-select tests', function() {
 
     expect(getMatchLabel(el)).toEqual('Adam');
   });
-  
+
   it('should correctly render initial state with track by feature', function() {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -447,13 +448,13 @@ describe('ui-select tests', function() {
   it('should toggle allow-clear directive', function() {
     scope.selection.selected = scope.people[0];
     scope.isClearAllowed = false;
-    
+
     var el = createUiSelect({theme : 'select2', allowClear: '{{isClearAllowed}}'});
     var $select = el.scope().$select;
 
     expect($select.allowClear).toEqual(false);
     expect(el.find('.select2-search-choice-close').length).toEqual(0);
-    
+
     // Turn clear on
     scope.isClearAllowed = true;
     scope.$digest();
@@ -1506,6 +1507,7 @@ describe('ui-select tests', function() {
             if (attrs.closeOnSelect !== undefined) { attrsHtml += ' close-on-select="' + attrs.closeOnSelect + '"'; }
             if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
             if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
+            if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
         }
 
         return compileTemplate(
@@ -2093,6 +2095,20 @@ describe('ui-select tests', function() {
 
       expect($(el).scope().$select.selected.length).toBe(5);
     });
+
+    it('should add an id to the search input field', function () {
+      var el = createUiSelectMultiple({inputId: 'inid'});
+      var searchEl = $(el).find('input.ui-select-search');
+      expect(searchEl.length).toEqual(1);
+      expect(searchEl[0].id).toEqual('inid');
+    });
+  });
+
+  it('should add an id to the search input field', function () {
+    var el = createUiSelect({inputId: 'inid'});
+    var searchEl = $(el).find('input.ui-select-search');
+    expect(searchEl.length).toEqual(1);
+    expect(searchEl[0].id).toEqual('inid');
   });
 
   describe('default configuration via uiSelectConfig', function() {
