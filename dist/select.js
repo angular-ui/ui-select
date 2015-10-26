@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.14.7 - 2016-02-18T21:37:49.321Z
+ * Version: 0.14.8 - 2016-02-18T21:50:31.512Z
  * License: MIT
  */
 
@@ -1139,6 +1139,9 @@ uis.directive('uiSelect',
           element[0].style.left = '';
           element[0].style.top = '';
           element[0].style.width = originalWidth;
+
+          // Set focus back on to the moved element
+          $select.setFocus();
         }
 
         // Hold on to a reference to the .ui-select-dropdown element for direction support.
