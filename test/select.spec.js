@@ -2254,4 +2254,33 @@ describe('ui-select tests', function() {
     });
   });
 
+  describe('highlight filter', function() {
+    var highlight;
+
+    beforeEach(function() {
+      highlight = $injector.get('highlightFilter');
+    });
+
+    it('returns the item if there is no match', function() {
+      var query = 'January';
+      var item = 'December';
+
+      expect(highlight(item, query)).toBe('December');
+    });
+
+    it('wraps search strings matches in ui-select-highlight class', function() {
+      var query = 'er';
+      var item = 'December';
+
+      expect(highlight(item, query)).toBe('Decemb<span class="ui-select-highlight">er</span>');
+    });
+
+    it('properly highlights numeric items', function() {
+      var query = '15';
+      var item = 2015;
+
+      expect(highlight(item, query)).toBe('20<span class="ui-select-highlight">15</span>');
+    });
+  });
+
 });

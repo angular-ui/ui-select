@@ -133,7 +133,7 @@ var uis = angular.module('ui.select', [])
   }
 
   return function(matchItem, query) {
-    return query && matchItem ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
+    return query && matchItem ? ('' + matchItem).replace(new RegExp(escapeRegexp(query), 'gi'), '<span class="ui-select-highlight">$&</span>') : matchItem;
   };
 })
 
