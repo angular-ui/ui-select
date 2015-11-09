@@ -107,7 +107,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
   },3000);
 
   $scope.counter = 0;
-  $scope.someFunction = function (item, model){
+  $scope.onSelectCallback = function (item, model){
     $scope.counter++;
     $scope.eventResult = {item: item, model: model};
   };
