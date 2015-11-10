@@ -1,10 +1,10 @@
 // Make multiple matches sortable
 uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', function($timeout, uiSelectConfig, uiSelectMinErr) {
   return {
-    require: '^uiSelect',
+    require: '^^uiSelect',
     link: function(scope, element, attrs, $select) {
       if (scope[attrs.uiSelectSort] === null) {
-        throw uiSelectMinErr('sort', "Expected a list to sort");
+        throw uiSelectMinErr('sort', 'Expected a list to sort');
       }
 
       var options = angular.extend({
@@ -12,26 +12,26 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         },
         scope.$eval(attrs.uiSelectSortOptions));
 
-      var axis = options.axis,
-        draggingClassName = 'dragging',
-        droppingClassName = 'dropping',
-        droppingBeforeClassName = 'dropping-before',
-        droppingAfterClassName = 'dropping-after';
+      var axis = options.axis;
+      var draggingClassName = 'dragging';
+      var droppingClassName = 'dropping';
+      var droppingBeforeClassName = 'dropping-before';
+      var droppingAfterClassName = 'dropping-after';
 
       scope.$watch(function(){
         return $select.sortable;
-      }, function(n){
-        if (n) {
+      }, function(newValue){
+        if (newValue) {
           element.attr('draggable', true);
         } else {
           element.removeAttr('draggable');
         }
       });
 
-      element.on('dragstart', function(e) {
+      element.on('dragstart', function(event) {
         element.addClass(draggingClassName);
 
-        (e.dataTransfer || e.originalEvent.dataTransfer).setData('text/plain', scope.$index);
+        (event.dataTransfer || event.originalEvent.dataTransfer).setData('text/plain', scope.$index);
       });
 
       element.on('dragend', function() {
@@ -43,10 +43,10 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         this.splice(to, 0, this.splice(from, 1)[0]);
       };
 
-      var dragOverHandler = function(e) {
-        e.preventDefault();
+      var dragOverHandler = function(event) {
+        event.preventDefault();
 
-        var offset = axis === 'vertical' ? e.offsetY || e.layerY || (e.originalEvent ? e.originalEvent.offsetY : 0) : e.offsetX || e.layerX || (e.originalEvent ? e.originalEvent.offsetX : 0);
+        var offset = axis === 'vertical' ? event.offsetY || event.layerY || (event.originalEvent ? event.originalEvent.offsetY : 0) : event.offsetX || event.layerX || (event.originalEvent ? event.originalEvent.offsetX : 0);
 
         if (offset < (this[axis === 'vertical' ? 'offsetHeight' : 'offsetWidth'] / 2)) {
           element.removeClass(droppingAfterClassName);
@@ -60,10 +60,10 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
 
       var dropTimeout;
 
-      var dropHandler = function(e) {
-        e.preventDefault();
+      var dropHandler = function(event) {
+        event.preventDefault();
 
-        var droppedItemIndex = parseInt((e.dataTransfer || e.originalEvent.dataTransfer).getData('text/plain'), 10);
+        var droppedItemIndex = parseInt((event.dataTransfer || event.originalEvent.dataTransfer).getData('text/plain'), 10);
 
         // prevent event firing multiple times in firefox
         $timeout.cancel(dropTimeout);
@@ -73,9 +73,9 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
       };
 
       var _dropHandler = function(droppedItemIndex) {
-        var theList = scope.$eval(attrs.uiSelectSort),
-          itemToMove = theList[droppedItemIndex],
-          newIndex = null;
+        var theList = scope.$eval(attrs.uiSelectSort);
+        var itemToMove = theList[droppedItemIndex];
+        var newIndex = null;
 
         if (element.hasClass(droppingBeforeClassName)) {
           if (droppedItemIndex < scope.$index) {
@@ -120,8 +120,8 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         element.on('drop', dropHandler);
       });
 
-      element.on('dragleave', function(e) {
-        if (e.target != element) {
+      element.on('dragleave', function(event) {
+        if (event.target != element) {
           return;
         }
         element.removeClass(droppingClassName);
