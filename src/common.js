@@ -44,6 +44,13 @@ var KEY = {
     },
     isHorizontalMovement: function (k){
       return ~[KEY.LEFT,KEY.RIGHT,KEY.BACKSPACE,KEY.DELETE].indexOf(k);
+    },
+    toSeparator: function (k) {
+      var sep = {ENTER:"\n",TAB:"\t",SPACE:" "}[k];
+      if (sep) return sep;
+      // return undefined for special keys other than enter, tab or space.
+      // no way to use them to cut strings.
+      return KEY[k] ? undefined : k;
     }
   };
 

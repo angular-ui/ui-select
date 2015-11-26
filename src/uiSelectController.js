@@ -269,7 +269,7 @@ uis.controller('uiSelectCtrl',
   ctrl.select = function(item, skipFocusser, $event) {
     if (item === undefined || !item._uiSelectChoiceDisabled) {
 
-      if ( ! ctrl.items && ! ctrl.search ) return;
+      if ( ! ctrl.items && ! ctrl.search && ! ctrl.tagging.isActivated) return;
 
       if (!item || !item._uiSelectChoiceDisabled) {
         if(ctrl.tagging.isActivated) {
@@ -494,15 +494,20 @@ uis.controller('uiSelectCtrl',
   // If tagging try to split by tokens and add items
   ctrl.searchInput.on('paste', function (e) {
     var data = e.originalEvent.clipboardData.getData('text/plain');
-    if (data && data.length > 0 && ctrl.taggingTokens.isActivated && ctrl.tagging.fct) {
-      var items = data.split(ctrl.taggingTokens.tokens[0]); // split by first token only
+    if (data && data.length > 0 && ctrl.taggingTokens.isActivated) {
+      // split by first token only
+      var separator = KEY.toSeparator(ctrl.taggingTokens.tokens[0]);
+      var items = data.split(separator); 
       if (items && items.length > 0) {
+        var oldsearch = ctrl.search;
         angular.forEach(items, function (item) {
-          var newItem = ctrl.tagging.fct(item);
-          if (newItem) {
-            ctrl.select(newItem, true);
+          item = item.trim();
+          if (item) {
+            ctrl.search = item;
+            ctrl.select(item, true);
           }
         });
+        ctrl.search = oldsearch;
         e.preventDefault();
         e.stopPropagation();
       }
