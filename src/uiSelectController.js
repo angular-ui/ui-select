@@ -501,11 +501,8 @@ uis.controller('uiSelectCtrl',
       if (items && items.length > 0) {
         var oldsearch = ctrl.search;
         angular.forEach(items, function (item) {
-          item = item.trim();
-          if (item) {
-            ctrl.search = item;
-            ctrl.select(item, true);
-          }
+          ctrl.search = item;
+          ctrl.select(item, true);
         });
         ctrl.search = oldsearch;
         e.preventDefault();
