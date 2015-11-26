@@ -2096,6 +2096,22 @@ describe('ui-select tests', function() {
       expect($(el).scope().$select.selected.length).toBe(5);
     });
 
+    it('should split pastes on ENTER (and with undefined tagging function)', function() {
+      var el = createUiSelectMultiple({tagging: true, taggingTokens: "ENTER|,"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), "tag1\ntag2\ntag3");
+
+      expect($(el).scope().$select.selected.length).toBe(3);
+    });
+
+    it('should split pastes on TAB', function() {
+      var el = createUiSelectMultiple({tagging: true, taggingTokens: "TAB|,"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), "tag1\ttag2\ttag3");
+
+      expect($(el).scope().$select.selected.length).toBe(3);
+    });
+
     it('should add an id to the search input field', function () {
       var el = createUiSelectMultiple({inputId: 'inid'});
       var searchEl = $(el).find('input.ui-select-search');
