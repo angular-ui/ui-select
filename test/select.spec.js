@@ -36,7 +36,37 @@ describe('ui-select tests', function() {
 
   });
 
-  beforeEach(module('ngSanitize', 'ui.select', 'wrapperDirective'));
+  /* Create a directive that can be applied to the ui-select instance to test
+   * the effects of Angular's validation process on the control.
+   *
+   * Does not currently work with single property binding. Looks at the
+   * selected object or objects for a "valid" property. If all selected objects
+   * have a "valid" property that is truthy, the validator passes.
+   */
+  angular.module('testValidator', []);
+  angular.module('testValidator').directive('testValidator', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$validators.testValidator = function(modelValue, viewValue) {
+          if(angular.isUndefined(modelValue) || modelValue === null) {
+            return true;
+          } else if(angular.isArray(modelValue)) {
+            var allValid = true, idx = modelValue.length;
+            while(idx-- > 0 && allValid) {
+              allValid = allValid && modelValue[idx].valid;
+            }
+            return allValid;
+          } else {
+            return !!modelValue.valid;
+          }
+        };
+      }
+    }
+  });
+
+  beforeEach(module('ngSanitize', 'ui.select', 'wrapperDirective', 'testValidator'));
 
   beforeEach(function() {
     module(function($provide) {
@@ -1510,6 +1540,45 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should retain an invalid view value after refreshing items', function() {
+    scope.taggingFunc = function (name) {
+      return {
+        name: name,
+        email: name + '@email.com',
+        valid: name === "iamvalid"
+      };
+    };
+
+    var el = compileTemplate(
+        '<ui-select ng-model="selection.selected" tagging="taggingFunc" tagging-label="false" test-validator> \
+          <ui-select-match placeholder="Pick one...">{{$select.selected.email}}</ui-select-match> \
+          <ui-select-choices repeat="person in people | filter: $select.search"> \
+            <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+            <div ng-bind-html="person.email | highlight: $select.search"></div> \
+          </ui-select-choices> \
+        </ui-select>'
+    );
+
+    clickMatch(el);
+    var searchInput = el.find('.ui-select-search');
+
+    setSearchText(el, 'iamvalid');
+    triggerKeydown(searchInput, Key.Tab);
+
+    //model value defined because it's valid, view value defined as expected
+    var validTag = scope.taggingFunc("iamvalid");
+    expect(scope.selection.selected).toEqual(validTag);
+    expect($(el).scope().$select.selected).toEqual(validTag);
+
+    clickMatch(el);
+    setSearchText(el, 'notvalid');
+    triggerKeydown(searchInput, Key.Tab);
+
+    //model value undefined because it's invalid, view value STILL defined as expected
+    expect(scope.selection.selected).toEqual(undefined);
+    expect($(el).scope().$select.selected).toEqual(scope.taggingFunc("notvalid"));
+  });
+
   describe('search-enabled option', function() {
 
     var el;
@@ -2159,6 +2228,45 @@ describe('ui-select tests', function() {
 
     });
 
+    it('should retain an invalid view value after refreshing items', function() {
+      scope.taggingFunc = function (name) {
+        return {
+          name: name,
+          email: name + '@email.com',
+          valid: name === "iamvalid"
+        };
+      };
+
+      var el = compileTemplate(
+          '<ui-select multiple ng-model="selection.selectedMultiple" tagging="taggingFunc" tagging-label="false" test-validator> \
+            <ui-select-match placeholder="Pick one...">{{$select.selected.email}}</ui-select-match> \
+            <ui-select-choices repeat="person in people | filter: $select.search"> \
+              <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+              <div ng-bind-html="person.email | highlight: $select.search"></div> \
+            </ui-select-choices> \
+          </ui-select>'
+      );
+
+      clickMatch(el);
+      var searchInput = el.find('.ui-select-search');
+
+      setSearchText(el, 'iamvalid');
+      triggerKeydown(searchInput, Key.Tab);
+
+      //model value defined because it's valid, view value defined as expected
+      var validTag = scope.taggingFunc("iamvalid");
+      expect(scope.selection.selectedMultiple).toEqual([jasmine.objectContaining(validTag)]);
+      expect($(el).scope().$select.selected).toEqual([jasmine.objectContaining(validTag)]);
+
+      clickMatch(el);
+      setSearchText(el, 'notvalid');
+      triggerKeydown(searchInput, Key.Tab);
+
+      //model value undefined because it's invalid, view value STILL defined as expected
+      var invalidTag = scope.taggingFunc("notvalid");
+      expect(scope.selection.selected).toEqual(undefined);
+      expect($(el).scope().$select.selected).toEqual([jasmine.objectContaining(validTag), jasmine.objectContaining(invalidTag)]);
+    });
 
     it('should run $formatters when changing model directly', function () {
 

@@ -265,7 +265,11 @@ uis.controller('uiSelectCtrl',
           //Remove already selected items (ex: while searching)
           //TODO Should add a test
           ctrl.refreshItems(items);
-          ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+
+          //update the view value with fresh data from items, if there is a valid model value
+          if(angular.isDefined(ctrl.ngModel.$modelValue)) {
+            ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          }
         }
       }
     });
