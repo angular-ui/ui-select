@@ -307,7 +307,7 @@ uis.directive('uiSelect',
 
               if ($select.dropdownPosition === 'up'){
                   //Go UP
-                  setDropdownPosUp(offset, offsetDropdown);
+                  setDropdownPosUp();
 
               }else{ //AUTO
 
