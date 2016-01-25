@@ -40,6 +40,7 @@ For the roadmap, check [issue #3](https://github.com/angular-ui/ui-select/issues
 
 ## Contributing
 
+- Check [CONTRIBUTING.md](/CONTRIBUTING.md)
 - Run the tests
 - Try the [examples](https://github.com/angular-ui/ui-select/blob/master/examples)
 
