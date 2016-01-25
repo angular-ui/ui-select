@@ -1,8 +1,3 @@
-/* commonjs package manager support (eg componentjs) */
-if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
-  module.exports = 'ui.select';
-}
-
 var KEY = {
     TAB: 9,
     ENTER: 13,

@@ -1,14 +1,13 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.13.2 - 2016-01-25T20:04:10.175Z
+ * Version: 0.13.3 - 2016-01-25T21:42:48.011Z
  * License: MIT
  */
 
 
 (function () { 
 "use strict";
-
 var KEY = {
     TAB: 9,
     ENTER: 13,
@@ -55,6 +54,13 @@ var KEY = {
     },
     isHorizontalMovement: function (k){
       return ~[KEY.LEFT,KEY.RIGHT,KEY.BACKSPACE,KEY.DELETE].indexOf(k);
+    },
+    toSeparator: function (k) {
+      var sep = {ENTER:"\n",TAB:"\t",SPACE:" "}[k];
+      if (sep) return sep;
+      // return undefined for special keys other than enter, tab or space.
+      // no way to use them to cut strings.
+      return KEY[k] ? undefined : k;
     }
   };
 
@@ -508,7 +514,7 @@ uis.controller('uiSelectCtrl',
   ctrl.select = function(item, skipFocusser, $event) {
     if (item === undefined || !item._uiSelectChoiceDisabled) {
 
-      if ( ! ctrl.items && ! ctrl.search ) return;
+      if ( ! ctrl.items && ! ctrl.search && ! ctrl.tagging.isActivated) return;
 
       if (!item || !item._uiSelectChoiceDisabled) {
         if(ctrl.tagging.isActivated) {
@@ -733,15 +739,17 @@ uis.controller('uiSelectCtrl',
   // If tagging try to split by tokens and add items
   ctrl.searchInput.on('paste', function (e) {
     var data = e.originalEvent.clipboardData.getData('text/plain');
-    if (data && data.length > 0 && ctrl.taggingTokens.isActivated && ctrl.tagging.fct) {
-      var items = data.split(ctrl.taggingTokens.tokens[0]); // split by first token only
+    if (data && data.length > 0 && ctrl.taggingTokens.isActivated) {
+      // split by first token only
+      var separator = KEY.toSeparator(ctrl.taggingTokens.tokens[0]);
+      var items = data.split(separator); 
       if (items && items.length > 0) {
+        var oldsearch = ctrl.search;
         angular.forEach(items, function (item) {
-          var newItem = ctrl.tagging.fct(item);
-          if (newItem) {
-            ctrl.select(newItem, true);
-          }
+          ctrl.search = item;
+          ctrl.select(item, true);
         });
+        ctrl.search = oldsearch;
         e.preventDefault();
         e.stopPropagation();
       }
