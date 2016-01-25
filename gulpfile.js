@@ -98,7 +98,7 @@ gulp.task('pull', function(done) {
 });
 
 gulp.task('add', function() {
-  return gulp.src(['.gulp', './*', '!./node_modules'])
+  return gulp.src(['./*', '!./node_modules', '!./bower_components'])
     .pipe($.git.add());
 });
 

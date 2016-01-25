@@ -1,3 +1,13 @@
+<a name="0.13.2"></a>
+## [0.13.2](https://github.com/angular-ui/ui-select/compare/v0.13.2...v0.13.2) (2016-01-25)
+
+
+### Bug Fixes
+
+* **CSP:** avoid inline execution of javascript in choices template. ([fb88ec8](https://github.com/angular-ui/ui-select/commit/fb88ec8))
+
+
+
 # Change Log
 All notable changes to this project will be documented in this file.
 
