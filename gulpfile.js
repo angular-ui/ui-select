@@ -115,7 +115,7 @@ gulp.task('recommendedBump', function(done) {
     // Get all the files to bump version in
     gulp.src(['./package.json'])
       .pipe($.bump({type: importance}))
-      .pipe(gulp.dest(paths.dest));
+      .pipe(gulp.dest('./'));
 
     done();
   });
@@ -125,7 +125,7 @@ gulp.task('changelog', function() {
 
   return gulp.src('CHANGELOG.md', {buffer: false})
     .pipe($.conventionalChangelog({preset: 'angular'}))
-    .pipe(gulp.dest(paths.dest));
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('push', function(done) {
@@ -134,7 +134,7 @@ gulp.task('push', function(done) {
 });
 
 gulp.task('commit', function() {
-  return gulp.src(paths.src)
+  return gulp.src('./')
     .pipe($.git.commit('chore(release): bump package version and update changelog', {emitData: true}))
     .on('data', function(data) {
       console.log(data);
