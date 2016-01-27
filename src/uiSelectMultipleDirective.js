@@ -383,7 +383,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             // handle the object tagging implementation
             } else {
               var mockObj = tempArr[i];
-              if (angular.isObject(mockObj) {
+              if (angular.isObject(mockObj)) {
                 mockObj.isTag = true;
               }
               if ( angular.equals(mockObj, needle) ) {
