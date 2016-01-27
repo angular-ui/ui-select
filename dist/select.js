@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.13.3 - 2016-01-25T23:01:33.462Z
+ * Version: 0.14.0 - 2016-01-27T20:50:38.779Z
  * License: MIT
  */
 
@@ -306,7 +306,7 @@ uis.controller('uiSelectCtrl',
   }
 
   ctrl.isEmpty = function() {
-    return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '';
+    return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '' || (ctrl.multiple && ctrl.selected.length === 0);
   };
 
   // Most of the time the user does not want to empty the search input when in typeahead mode
@@ -1592,9 +1592,11 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             // handle the object tagging implementation
             } else {
               var mockObj = tempArr[i];
-              mockObj.isTag = true;
+              if (angular.isObject(mockObj)) {
+                mockObj.isTag = true;
+              }
               if ( angular.equals(mockObj, needle) ) {
-              dupeIndex = i;
+                dupeIndex = i;
               }
             }
           }
