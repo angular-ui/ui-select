@@ -135,7 +135,7 @@ var uis = angular.module('ui.select', [])
  */
 .filter('highlight', function() {
   function escapeRegexp(queryToEscape) {
-    return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+    return ('' + queryToEscape).replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
   }
 
   return function(matchItem, query) {
