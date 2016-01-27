@@ -1,7 +1,7 @@
 <div class="ui-select-container selectize-control single" ng-class="{'open': $select.open}">
   <div class="selectize-input"
        ng-class="{'focus': $select.open, 'disabled': $select.disabled, 'selectize-focus' : $select.focus}"
-       ng-click="$select.activate()">
+       ng-click="$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()">
     <div class="ui-select-match"></div>
     <input type="text" autocomplete="false" tabindex="-1"
            class="ui-select-search ui-select-toggle"
