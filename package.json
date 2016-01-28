@@ -6,7 +6,7 @@
   "repository": {
     "url": "git://github.com/angular-ui/ui-select.git"
   },
-  "version": "0.14.1",
+  "version": "0.14.2",
   "devDependencies": {
     "bower": "~1.3",
     "conventional-changelog": "^0.5.3",
@@ -45,7 +45,9 @@
   },
   "spm": {
     "main": "dist/select.js",
-    "output": ["dist/select.css"]
+    "output": [
+      "dist/select.css"
+    ]
   },
   "license": "MIT"
 }
