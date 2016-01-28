@@ -129,7 +129,7 @@ gulp.task('changelog', function() {
 });
 
 gulp.task('push', function(done) {
-  $.git.push();
+  $.git.push('origin', 'master', {args: '--tags'});
   done();
 });
 
@@ -147,7 +147,7 @@ gulp.task('tag', function() {
 });
 
 gulp.task('bump', function(done) {
-  runSequence('changelog', 'recommendedBump', 'add', 'commit', 'tag', 'push', done);
+  runSequence('recommendedBump', 'changelog', 'add', 'commit', 'tag', 'push', done);
 });
 
 var handleError = function (err) {
