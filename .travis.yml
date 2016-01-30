@@ -9,3 +9,6 @@ before_script:
   - bower install
 
 script: "gulp test"
+
+git:
+  depth: 10
