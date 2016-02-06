@@ -1,4 +1,4 @@
-We are excited to have you working on the project and coordially request that you follow the Guidelines:
+We are excited to have you working on the project and cordially request that you follow the Guidelines:
 
  - [Code Style Guidelines](#rules)
  - [Commit Message Guidelines](#commit)
