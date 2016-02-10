@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.14.3 - 2016-02-18T15:32:28.698Z
+ * Version: 0.14.3 - 2016-02-18T19:58:15.912Z
  * License: MIT
  */
 
@@ -312,13 +312,31 @@ uis.controller('uiSelectCtrl',
     return angular.isUndefined(ctrl.selected) || ctrl.selected === null || ctrl.selected === '' || (ctrl.multiple && ctrl.selected.length === 0);
   };
 
+  function _findIndex(collection, predicate, thisArg){
+    if (collection.findIndex){
+      return collection.findIndex(predicate, thisArg);
+    } else {
+      var list = Object(collection);
+      var length = list.length >>> 0;
+      var value;
+
+      for (var i = 0; i < length; i++) {
+        value = list[i];
+        if (predicate.call(thisArg, value, i, list)) {
+          return i;
+        }
+      }
+      return -1;
+    }
+  }
+
   // Most of the time the user does not want to empty the search input when in typeahead mode
   function _resetSearchInput() {
     if (ctrl.resetSearchInput || (ctrl.resetSearchInput === undefined && uiSelectConfig.resetSearchInput)) {
       ctrl.search = EMPTY_SEARCH;
       //reset activeIndex
       if (ctrl.selected && ctrl.items.length && !ctrl.multiple) {
-        ctrl.activeIndex = ctrl.items.findIndex(function(item){
+        ctrl.activeIndex = _findIndex(ctrl.items, function(item){
           return angular.equals(this, item);
         }, ctrl.selected);
       }
@@ -827,30 +845,6 @@ uis.controller('uiSelectCtrl',
   });
 
 }]);
-
-// Array findIndex polyfill (source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex#Polyfill)
-if (!Array.prototype.findIndex) {
-  Array.prototype.findIndex = function(predicate) {
-    if (this === null) {
-      throw new TypeError('Array.prototype.findIndex called on null or undefined');
-    }
-    if (typeof predicate !== 'function') {
-      throw new TypeError('predicate must be a function');
-    }
-    var list = Object(this);
-    var length = list.length >>> 0;
-    var thisArg = arguments[1];
-    var value;
-
-    for (var i = 0; i < length; i++) {
-      value = list[i];
-      if (predicate.call(thisArg, value, i, list)) {
-        return i;
-      }
-    }
-    return -1;
-  };
-}
 
 uis.directive('uiSelect',
   ['$document', 'uiSelectConfig', 'uiSelectMinErr', 'uisOffset', '$compile', '$parse', '$timeout',
