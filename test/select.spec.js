@@ -967,6 +967,7 @@ describe('ui-select tests', function() {
     expect(function() {
       compileTemplate(
         '<ui-select ng-model="selection.selected"> \
+          <ui-select-match></ui-select-match> \
           <ui-select-choices></ui-select-choices> \
         </ui-select>'
       );

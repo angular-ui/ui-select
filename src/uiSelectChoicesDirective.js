@@ -8,6 +8,9 @@ uis.directive('uiSelectChoices',
     replace: true,
     transclude: true,
     templateUrl: function(tElement) {
+      // Needed so the uiSelect can detect the transcluded content
+      tElement.addClass('ui-select-choices');
+
       // Gets theme attribute from parent (ui-select)
       var theme = tElement.parent().attr('theme') || uiSelectConfig.theme;
       return theme + '/choices.tpl.html';
