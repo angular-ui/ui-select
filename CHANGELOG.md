@@ -1,4 +1,16 @@
 <a name="0.14.2"></a>
+## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.2...v0.14.2) (2016-02-18)
+
+
+### Bug Fixes
+
+* make compatible with Angular 1.5 and non-cached templates ([0e85670](https://github.com/angular-ui/ui-select/commit/0e85670)), closes [#1422](https://github.com/angular-ui/ui-select/issues/1422) [#1356](https://github.com/angular-ui/ui-select/issues/1356) [#1325](https://github.com/angular-ui/ui-select/issues/1325) [#1239](https://github.com/angular-ui/ui-select/issues/1239)
+* **commonjs:** remove CSS require ([81b0f03](https://github.com/angular-ui/ui-select/commit/81b0f03))
+* **track by:** fix "track by" ([6c52e41](https://github.com/angular-ui/ui-select/commit/6c52e41)), closes [#806](https://github.com/angular-ui/ui-select/issues/806) [#665](https://github.com/angular-ui/ui-select/issues/665)
+
+
+
+<a name="0.14.2"></a>
 ## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.1...v0.14.2) (2016-01-28)
 
 
