@@ -1,3 +1,9 @@
+<a name="0.14.3"></a>
+## [0.14.3](https://github.com/angular-ui/ui-select/compare/v0.14.3...v0.14.3) (2016-02-18)
+
+
+
+
 <a name="0.14.2"></a>
 ## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.2...v0.14.2) (2016-02-18)
 
