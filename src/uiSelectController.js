@@ -16,6 +16,7 @@ uis.controller('uiSelectCtrl',
   ctrl.searchEnabled = uiSelectConfig.searchEnabled;
   ctrl.sortable = uiSelectConfig.sortable;
   ctrl.refreshDelay = uiSelectConfig.refreshDelay;
+  ctrl.paste = uiSelectConfig.paste;
 
   ctrl.removeSelected = false; //If selected item(s) should be removed from dropdown list
   ctrl.closeOnSelect = true; //Initialized inside uiSelect directive link function
@@ -340,7 +341,7 @@ uis.controller('uiSelectCtrl',
               // create new item on the fly if we don't already have one;
               // use tagging function if we have one
               if ( ctrl.tagging.fct !== undefined && typeof item === 'string' ) {
-                item = ctrl.tagging.fct(ctrl.search);
+                item = ctrl.tagging.fct(item);
                 if (!item) return;
               // if item type is 'string', apply the tagging label
               } else if ( typeof item === 'string' ) {
@@ -536,20 +537,37 @@ uis.controller('uiSelectCtrl',
 
   });
 
-  // If tagging try to split by tokens and add items
   ctrl.searchInput.on('paste', function (e) {
-    var data = e.originalEvent.clipboardData.getData('text/plain');
-    if (data && data.length > 0 && ctrl.taggingTokens.isActivated) {
-      // split by first token only
-      var separator = KEY.toSeparator(ctrl.taggingTokens.tokens[0]);
-      var items = data.split(separator); 
-      if (items && items.length > 0) {
+    var data;
+
+    if (window.clipboardData && window.clipboardData.getData) { // IE
+      data = window.clipboardData.getData('Text');
+    } else {
+      data = (e.originalEvent || e).clipboardData.getData('text/plain');
+    }
+
+    // Prepend the current input field text to the paste buffer.
+    data = ctrl.search + data;
+
+    if (data && data.length > 0) {
+      // If tagging try to split by tokens and add items
+      if (ctrl.taggingTokens.isActivated) {
+        var items = data.split(ctrl.taggingTokens.tokens[0]); // split by first token only
+        if (items && items.length > 0) {
         var oldsearch = ctrl.search;
-        angular.forEach(items, function (item) {
-          ctrl.search = item;
-          ctrl.select(item, true);
-        });
-        ctrl.search = oldsearch;
+          angular.forEach(items, function (item) {
+            var newItem = ctrl.tagging.fct ? ctrl.tagging.fct(item) : item;
+            if (newItem) {
+              ctrl.select(newItem, true);
+            }
+          });
+          ctrl.search = EMPTY_SEARCH;
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      } else if (ctrl.paste) {
+        ctrl.paste(data);
+        ctrl.search = EMPTY_SEARCH;
         e.preventDefault();
         e.stopPropagation();
       }
