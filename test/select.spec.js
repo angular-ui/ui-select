@@ -173,15 +173,23 @@ describe('ui-select tests', function() {
     e.keyCode = keyCode;
     element.trigger(e);
   }
-  function triggerPaste(element, text) {
+  function triggerPaste(element, text, isClipboardEvent) {
     var e = jQuery.Event("paste");
-    e.originalEvent = {
+    if (isClipboardEvent) {
+      e.clipboardData = {
+        getData : function() {
+            return text;
+        }
+      };
+    } else {
+      e.originalEvent = {
         clipboardData : {
             getData : function() {
                 return text;
             }
         }
-    };
+      };
+    }
     element.trigger(e);
   }
 
@@ -2095,20 +2103,39 @@ describe('ui-select tests', function() {
     });
 
     it('should allow paste tag from clipboard', function() {
-       scope.taggingFunc = function (name) {
-         return {
-           name: name,
-           email: name + '@email.com',
-           group: 'Foo',
-           age: 12
-         };
-       };
+      scope.taggingFunc = function (name) {
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
 
-       var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
-       clickMatch(el);
-       triggerPaste(el.find('input'), 'tag1');
+      var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), 'tag1');
 
-       expect($(el).scope().$select.selected.length).toBe(1);
+      expect($(el).scope().$select.selected.length).toBe(1);
+      expect($(el).scope().$select.selected[0].name).toBe('tag1');
+    });
+
+    it('should allow paste tag from clipboard for generic ClipboardEvent', function() {
+      scope.taggingFunc = function (name) {
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
+
+      var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), 'tag1', true);
+
+      expect($(el).scope().$select.selected.length).toBe(1);
+      expect($(el).scope().$select.selected[0].name).toBe('tag1');
     });
 
     it('should allow paste multiple tags', function() {
@@ -2124,6 +2151,23 @@ describe('ui-select tests', function() {
       var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
       clickMatch(el);
       triggerPaste(el.find('input'), ',tag1,tag2,tag3,,tag5,');
+
+      expect($(el).scope().$select.selected.length).toBe(5);
+    });
+
+    it('should allow paste multiple tags with generic ClipboardEvent', function() {
+      scope.taggingFunc = function (name) {
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
+
+      var el = createUiSelectMultiple({tagging: 'taggingFunc', taggingTokens: ",|ENTER"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), ',tag1,tag2,tag3,,tag5,', true);
 
       expect($(el).scope().$select.selected.length).toBe(5);
     });

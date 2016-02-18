@@ -93,6 +93,10 @@ uis.directive('uiSelect',
           $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
         });
 
+        attrs.$observe('paste', function() {
+          $select.paste = scope.$eval(attrs.paste);
+        });
+
         attrs.$observe('tagging', function() {
           if(attrs.tagging !== undefined)
           {
