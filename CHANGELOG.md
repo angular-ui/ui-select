@@ -1,3 +1,13 @@
+<a name="0.14.7"></a>
+## [0.14.7](https://github.com/angular-ui/ui-select/compare/v0.14.7...v0.14.7) (2016-02-18)
+
+
+### Bug Fixes
+
+* **IE:** selects not working on IE8 ([ee65677](https://github.com/angular-ui/ui-select/commit/ee65677)), closes [#158](https://github.com/angular-ui/ui-select/issues/158)
+
+
+
 <a name="0.14.6"></a>
 ## [0.14.6](https://github.com/angular-ui/ui-select/compare/v0.14.6...v0.14.6) (2016-02-18)
 
