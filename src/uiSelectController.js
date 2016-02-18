@@ -491,6 +491,11 @@ uis.controller('uiSelectCtrl',
 
     var key = e.which;
 
+    if (~[KEY.ENTER,KEY.ESC].indexOf(key)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     // if(~[KEY.ESC,KEY.TAB].indexOf(key)){
     //   //TODO: SEGURO?
     //   ctrl.close();
