@@ -552,7 +552,8 @@ uis.controller('uiSelectCtrl',
     if (data && data.length > 0) {
       // If tagging try to split by tokens and add items
       if (ctrl.taggingTokens.isActivated) {
-        var items = data.split(ctrl.taggingTokens.tokens[0]); // split by first token only
+        var separator = KEY.toSeparator(ctrl.taggingTokens.tokens[0]);
+        var items = data.split(separator || ctrl.taggingTokens.tokens[0]); // split by first token only
         if (items && items.length > 0) {
         var oldsearch = ctrl.search;
           angular.forEach(items, function (item) {
@@ -561,7 +562,7 @@ uis.controller('uiSelectCtrl',
               ctrl.select(newItem, true);
             }
           });
-          ctrl.search = EMPTY_SEARCH;
+          ctrl.search = oldsearch || EMPTY_SEARCH;
           e.preventDefault();
           e.stopPropagation();
         }

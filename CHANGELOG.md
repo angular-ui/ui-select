@@ -1,3 +1,14 @@
+<a name="0.14.6"></a>
+## [0.14.6](https://github.com/angular-ui/ui-select/compare/v0.14.6...v0.14.6) (2016-02-18)
+
+
+### Bug Fixes
+
+* **paste:** add paste support ([1ad6f60](https://github.com/angular-ui/ui-select/commit/1ad6f60)), closes [#910](https://github.com/angular-ui/ui-select/issues/910) [#704](https://github.com/angular-ui/ui-select/issues/704) [#789](https://github.com/angular-ui/ui-select/issues/789) [#848](https://github.com/angular-ui/ui-select/issues/848) [#429](https://github.com/angular-ui/ui-select/issues/429)
+* **uiSelectSort:** fix dependency not found error ([a5a6554](https://github.com/angular-ui/ui-select/commit/a5a6554))
+
+
+
 <a name="0.14.5"></a>
 ## [0.14.5](https://github.com/angular-ui/ui-select/compare/v0.14.5...v0.14.5) (2016-02-18)
 
