@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.14.4 - 2016-02-18T20:29:05.181Z
+ * Version: 0.14.5 - 2016-02-18T20:39:22.471Z
  * License: MIT
  */
 
@@ -1350,8 +1350,8 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             if($select.parserResult.trackByExp){
                 var propsItemNameMatches = /(\w*)\./.exec($select.parserResult.trackByExp);
                 var matches = /\.([^\s]+)/.exec($select.parserResult.trackByExp);
-                if(propsItemNameMatches.length > 0 && propsItemNameMatches[1] == $select.parserResult.itemName){
-                  if(matches.length>0 && result[matches[1]] == value[matches[1]]){
+                if(propsItemNameMatches && propsItemNameMatches.length > 0 && propsItemNameMatches[1] == $select.parserResult.itemName){
+                  if(matches && matches.length>0 && result[matches[1]] == value[matches[1]]){
                       resultMultiple.unshift(list[p]);
                       return true;
                   }

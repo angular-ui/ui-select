@@ -1,3 +1,13 @@
+<a name="0.14.5"></a>
+## [0.14.5](https://github.com/angular-ui/ui-select/compare/v0.14.5...v0.14.5) (2016-02-18)
+
+
+### Bug Fixes
+
+* **uiSelectMultipleDirective:** fix track by error ([ced1cc0](https://github.com/angular-ui/ui-select/commit/ced1cc0)), closes [#1343](https://github.com/angular-ui/ui-select/issues/1343)
+
+
+
 <a name="0.14.4"></a>
 ## [0.14.4](https://github.com/angular-ui/ui-select/compare/v0.14.4...v0.14.4) (2016-02-18)
 
