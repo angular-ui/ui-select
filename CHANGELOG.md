@@ -1,3 +1,13 @@
+<a name="0.14.4"></a>
+## [0.14.4](https://github.com/angular-ui/ui-select/compare/v0.14.4...v0.14.4) (2016-02-18)
+
+
+### Bug Fixes
+
+* Allow setting a ngClass on <ui-select> element ([6a99b08](https://github.com/angular-ui/ui-select/commit/6a99b08)), closes [#277](https://github.com/angular-ui/ui-select/issues/277)
+
+
+
 <a name="0.14.3"></a>
 ## [0.14.3](https://github.com/angular-ui/ui-select/compare/v0.14.3...v0.14.3) (2016-02-18)
 
