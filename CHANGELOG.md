@@ -1,12 +1,13 @@
-<a name="0.14.8"></a>
-## [0.14.8](https://github.com/angular-ui/ui-select/compare/v0.14.8...v0.14.8) (2016-02-18)
+# Change Log
+All notable changes to this project will be documented in this file.
 
+<a name="0.14.8"></a>
+## [0.14.8](https://github.com/angular-ui/ui-select/compare/v0.14.7...v0.14.8) (2016-02-18)
 
 
 
 <a name="0.14.7"></a>
-## [0.14.7](https://github.com/angular-ui/ui-select/compare/v0.14.7...v0.14.7) (2016-02-18)
-
+## [0.14.7](https://github.com/angular-ui/ui-select/compare/v0.14.6...v0.14.7) (2016-02-18)
 
 ### Bug Fixes
 
@@ -15,8 +16,7 @@
 
 
 <a name="0.14.6"></a>
-## [0.14.6](https://github.com/angular-ui/ui-select/compare/v0.14.6...v0.14.6) (2016-02-18)
-
+## [0.14.6](https://github.com/angular-ui/ui-select/compare/v0.14.5...v0.14.6) (2016-02-18)
 
 ### Bug Fixes
 
@@ -26,8 +26,7 @@
 
 
 <a name="0.14.5"></a>
-## [0.14.5](https://github.com/angular-ui/ui-select/compare/v0.14.5...v0.14.5) (2016-02-18)
-
+## [0.14.5](https://github.com/angular-ui/ui-select/compare/v0.14.4...v0.14.5) (2016-02-18)
 
 ### Bug Fixes
 
@@ -36,8 +35,7 @@
 
 
 <a name="0.14.4"></a>
-## [0.14.4](https://github.com/angular-ui/ui-select/compare/v0.14.4...v0.14.4) (2016-02-18)
-
+## [0.14.4](https://github.com/angular-ui/ui-select/compare/v0.14.3...v0.14.4) (2016-02-18)
 
 ### Bug Fixes
 
@@ -46,14 +44,12 @@
 
 
 <a name="0.14.3"></a>
-## [0.14.3](https://github.com/angular-ui/ui-select/compare/v0.14.3...v0.14.3) (2016-02-18)
-
+## [0.14.3](https://github.com/angular-ui/ui-select/compare/v0.14.2...v0.14.3) (2016-02-18)
 
 
 
 <a name="0.14.2"></a>
-## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.2...v0.14.2) (2016-02-18)
-
+## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.1...v0.14.2) (2016-02-18)
 
 ### Bug Fixes
 
@@ -63,21 +59,13 @@
 
 
 
-<a name="0.14.2"></a>
-## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.1...v0.14.2) (2016-01-28)
-
-
-
-
 <a name="0.14.1"></a>
-## [0.14.1](https://github.com/angular-ui/ui-select/compare/v0.14.1...v0.14.1) (2016-01-27)
-
+## [0.14.1](https://github.com/angular-ui/ui-select/compare/v0.14.0...v0.14.1) (2016-01-27)
 
 
 
 <a name="0.14.0"></a>
-# [0.14.0](https://github.com/angular-ui/ui-select/compare/v0.13.3...v0.14.0) (2016-01-25)
-
+# [0.14.0](https://github.com/angular-ui/ui-select/compare/v0.13.2...v0.14.0) (2016-01-25)
 
 ### Features
 
@@ -86,14 +74,16 @@
 
 
 <a name="0.13.3"></a>
-## [0.13.3](https://github.com/angular-ui/ui-select/compare/v0.13.3...v0.13.2) (2016-01-25)
+## 0.13.3 (2016-01-25)
 
 ### Added
+
 - Add support for commonjs and npm
 
-<a name="0.13.2"></a>
-## [0.13.2](https://github.com/angular-ui/ui-select/compare/v0.13.2...v0.13.2) (2016-01-25)
 
+
+<a name="0.13.2"></a>
+## [0.13.2](https://github.com/angular-ui/ui-select/compare/v0.13.1...v0.13.2) (2016-01-25)
 
 ### Bug Fixes
 
@@ -101,31 +91,35 @@
 
 
 
-# Change Log
-All notable changes to this project will be documented in this file.
+<a name="0.13.1"></a>
+## [v0.13.1](https://github.com/angular-ui/ui-select/compare/v0.13.0...v0.13.1) (2015-09-29)
 
-## [v0.13.1][v0.13.1] (2015-09-29)
 ### Fixed
+
 - Remove hardcoded source name when using (key,value) syntax [#1217](https://github.com/angular-ui/ui-select/pull/1217)
 - Modify regex to accept a full 'collection expression' when not using (key,value) syntax [#1216](https://github.com/angular-ui/ui-select/pull/1216)
 - Avoid to recalculate position when set 'down' [#1214](https://github.com/angular-ui/ui-select/issues/1214#issuecomment-144271352)
 
-## [v0.13.0][v0.13.0] (2015-09-29)
+
+
+<a name="0.13.0"></a>
+## [v0.13.0](https://github.com/angular-ui/ui-select/compare/v0.12.1...v0.13.0) (2015-09-29)
+
 ### Added
-- Allow to configure default dropdown position [#1213](https://github.com/angular-ui/ui-select/pull/1213) 
-- Can use object as source with (key,value) syntax [#1208](https://github.com/angular-ui/ui-select/pull/1208) 
+
+- Allow to configure default dropdown position [#1213](https://github.com/angular-ui/ui-select/pull/1213)
+- Can use object as source with (key,value) syntax [#1208](https://github.com/angular-ui/ui-select/pull/1208)
 - CHANGELOG.md file created
 
 ### Changed
+
 - Do not run bower after install automatically [#982](https://github.com/angular-ui/ui-select/pull/982)
 - Avoid setting activeItem on mouseenter to improve performance [#1211](https://github.com/angular-ui/ui-select/pull/1211)
 
 ### Fixed
+
 - Position dropdown UP or DOWN correctly depending on the available space [#1212](https://github.com/angular-ui/ui-select/pull/1212)
 - Scroll to selected item [#976](https://github.com/angular-ui/ui-select/issues/976)
 - Change `autocomplete='off'` to `autocomplete='false'` [#1210](https://github.com/angular-ui/ui-select/pull/1210)
 - Fix to work correctly with debugInfoEnabled(false) [#1131](https://github.com/angular-ui/ui-select/pull/1131)
 - Limit the maximum number of selections allowed in multiple mode [#1110](https://github.com/angular-ui/ui-select/pull/1110)
-
-[v0.13.1]: https://github.com/angular-ui/ui-select/compare/v0.13.0...v0.13.1
-[v0.13.0]: https://github.com/angular-ui/ui-select/compare/v0.12.1...v0.13.0
