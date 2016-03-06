@@ -22,38 +22,48 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
 
 
     var match;
-    var isObjectCollection = /\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)/.test(expression);
+    //var isObjectCollection = /\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)/.test(expression);
     // If an array is used as collection
 
     // if (isObjectCollection){
-      //00000000000000000000000000000111111111000000000000000222222222222220033333333333333333333330000444444444444444444000000000000000556666660000077777777777755000000000000000000000088888880000000
-    match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+(([\w\.]+)?\s*(|\s*[\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);      
+    // 000000000000000000000000000000111111111000000000000000222222222222220033333333333333333333330000444444444444444444000000000000000055555555555000000000000000000000066666666600000000
+    match = expression.match(/^\s*(?:([\s\S]+?)\s+as\s+)?(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+(\s*[\s\S]+?)?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
     // 1 Alias
     // 2 Item
     // 3 Key on (key,value)
     // 4 Value on (key,value)
-    // 5 Collection expresion (only used when using an array collection)
-    // 6 Object that will be converted to Array when using (key,value) syntax
-    // 7 Filters that will be applied to #6 when using (key,value) syntax
-    // 8 Track by
+    // 5 Source expression (including filters)
+    // 6 Track by
 
     if (!match) {
       throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
               expression);
     }
-    if (!match[6] && isObjectCollection) {
-      throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ as (_key_, _item_) in _ObjCollection_ [ track by _id_]' but got '{0}'.",
-              expression);
+    
+    var source = match[5], 
+        filters = '';
+
+    // When using (key,value) ui-select requires filters to be extracted, since the object
+    // is converted to an array for $select.items 
+    // (in which case the filters need to be reapplied)
+    if (match[3]) {
+      // Remove any enclosing parenthesis
+      source = match[5].replace(/(^\()|(\)$)/g, '');
+      // match all after | but not after ||
+      var filterMatch = match[5].match(/^\s*(?:[\s\S]+?)(?:[^\|]|\|\|)+([\s\S]*)\s*$/);
+      if(filterMatch && filterMatch[1].trim()) {
+        filters = filterMatch[1];
+        source = source.replace(filters, '');
+      }      
     }
 
     return {
       itemName: match[4] || match[2], // (lhs) Left-hand side,
       keyName: match[3], //for (key, value) syntax
-      source: $parse(!match[3] ? match[5] : match[6]),
-      sourceName: match[6],
-      filters: match[7],
-      trackByExp: match[8],
+      source: $parse(source),
+      filters: filters,
+      trackByExp: match[6],
       modelMapper: $parse(match[1] || match[4] || match[2]),
       repeatExpression: function (grouped) {
         var expression = this.itemName + ' in ' + (grouped ? '$group.items' : '$select.items');
