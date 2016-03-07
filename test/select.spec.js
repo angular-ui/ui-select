@@ -260,6 +260,32 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should parse simple property binding repeat syntax with a basic filter', function () {
+
+    var locals = {};
+    locals.people = [{ name: 'Wladimir' }, { name: 'Samantha' }];
+    locals.person = locals.people[1];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in people | filter: { name: \'Samantha\' }');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toEqual([locals.person]);
+
+  });
+
+  it('should parse simple property binding repeat syntax with track by', function () {
+
+    var locals = {};
+    locals.people = [{ name: 'Wladimir' }, { name: 'Samantha' }];
+    locals.person = locals.people[0];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in people track by person.name');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+  });
+
   it('should parse (key, value) repeat syntax', function() {
 
     var locals = {};
