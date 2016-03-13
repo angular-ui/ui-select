@@ -52,6 +52,11 @@ uis.directive('uiSelect',
           }
         }();
 
+        scope.$watch('skipFocusser', function() {
+            var skipFocusser = scope.$eval(attrs.skipFocusser);
+            $select.skipFocusser = skipFocusser !== undefined ? skipFocusser : uiSelectConfig.skipFocusser;
+        });
+
         $select.onSelectCallback = $parse(attrs.onSelect);
         $select.onRemoveCallback = $parse(attrs.onRemove);
 
@@ -162,11 +167,15 @@ uis.directive('uiSelect',
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
-            //Will lose focus only with certain targets
-            var focusableControls = ['input','button','textarea','select'];
-            var targetController = angular.element(e.target).controller('uiSelect'); //To check if target is other ui-select
-            var skipFocusser = targetController && targetController !== $select; //To check if target is other ui-select
-            if (!skipFocusser) skipFocusser =  ~focusableControls.indexOf(e.target.tagName.toLowerCase()); //Check if target is input, button or textarea
+            if (!$select.skipFocusser) {
+              //Will lose focus only with certain targets
+              var focusableControls = ['input','button','textarea','select'];
+              var targetController = angular.element(e.target).controller('uiSelect'); //To check if target is other ui-select
+              var skipFocusser = targetController && targetController !== $select; //To check if target is other ui-select
+              if (!skipFocusser) skipFocusser =  ~focusableControls.indexOf(e.target.tagName.toLowerCase()); //Check if target is input, button or textarea
+            } else {
+              skipFocusser = true;
+            }
             $select.close(skipFocusser);
             scope.$digest();
           }
