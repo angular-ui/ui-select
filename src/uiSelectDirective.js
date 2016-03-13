@@ -167,11 +167,12 @@ uis.directive('uiSelect',
           }
 
           if (!contains && !$select.clickTriggeredSelect) {
+            var skipFocusser;
             if (!$select.skipFocusser) {
               //Will lose focus only with certain targets
               var focusableControls = ['input','button','textarea','select'];
               var targetController = angular.element(e.target).controller('uiSelect'); //To check if target is other ui-select
-              var skipFocusser = targetController && targetController !== $select; //To check if target is other ui-select
+              skipFocusser = targetController && targetController !== $select; //To check if target is other ui-select
               if (!skipFocusser) skipFocusser =  ~focusableControls.indexOf(e.target.tagName.toLowerCase()); //Check if target is input, button or textarea
             } else {
               skipFocusser = true;
