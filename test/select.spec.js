@@ -128,6 +128,7 @@ describe('ui-select tests', function() {
       if (attrs.appendToBody !== undefined) { attrsHtml += ' append-to-body="' + attrs.appendToBody + '"'; }
       if (attrs.allowClear !== undefined) { matchAttrsHtml += ' allow-clear="' + attrs.allowClear + '"';}
       if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
+      if (attrs.ngClass !== undefined) { attrsHtml += ' ng-class="' + attrs.ngClass + '"'; }
     }
 
     return compileTemplate(
@@ -373,6 +374,14 @@ describe('ui-select tests', function() {
     var el = createUiSelect();
 
     expect(getMatchLabel(el)).toEqual('Adam');
+  });
+
+  it('should merge both ng-class attributes defined on ui-select and its templates', function() {
+    var el = createUiSelect({
+      ngClass: "{class: expression}"
+    });
+
+    expect($(el).attr('ng-class')).toEqual("{class: expression, open: $select.open}");
   });
 
   it('should correctly render initial state with track by feature', function() {
