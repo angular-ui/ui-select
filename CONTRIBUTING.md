@@ -17,6 +17,19 @@ We have very precise rules over how our git commit messages can be formatted for
 readable messages** that are easy to follow when looking through the **project history**.  But also,
 we use the git commit messages to **generate the change log**.
 
+## Development
+
+### Prepare your environment
+* Install [Node.js](http://nodejs.org/) and NPM (should come with)
+* Install global dev dependencies: `npm install -g bower gulp`
+* Install local dev dependencies: `npm install && bower install` in repository directory
+
+### Development Commands
+
+* `gulp` to jshint, build and test
+* `gulp build` to jshint and build
+* `gulp test` for one-time test with karma (also build and jshint)
+* `gulp watch` to watch src files to jshint, build and test when changed
 
 ## Recommended workflow
 

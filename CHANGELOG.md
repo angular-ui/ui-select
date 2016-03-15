@@ -1,6 +1,9 @@
-<a name="0.15.0"></a>
-# [0.15.0](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.15.0) (2016-03-15)
+# Changelog
 
+All notable changes to this project will be documented in this file.
+
+<a name="0.15.0"></a>
+## [0.15.0](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.15.0) (2016-03-15)
 
 ### Bug Fixes
 
@@ -10,28 +13,18 @@
 
 * provide a way to skip the focusser ([302e80f](https://github.com/angular-ui/ui-select/commit/302e80f)), closes [#869](https://github.com/angular-ui/ui-select/issues/869) [#401](https://github.com/angular-ui/ui-select/issues/401) [#818](https://github.com/angular-ui/ui-select/issues/818) [#603](https://github.com/angular-ui/ui-select/issues/603) [#432](https://github.com/angular-ui/ui-select/issues/432)
 
-
-
 <a name="0.14.10"></a>
 ## [0.14.10](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.14.10) (2016-03-13)
-
 
 ### Features
 
 * provide a way to skip the focusser ([302e80f](https://github.com/angular-ui/ui-select/commit/302e80f)), closes [#869](https://github.com/angular-ui/ui-select/issues/869) [#401](https://github.com/angular-ui/ui-select/issues/401) [#818](https://github.com/angular-ui/ui-select/issues/818) [#603](https://github.com/angular-ui/ui-select/issues/603) [#432](https://github.com/angular-ui/ui-select/issues/432)
 
-
-
 <a name="0.14.9"></a>
 ## [0.14.9](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.14.9) (2016-03-06)
 
-
-
-
 <a name="0.14.8"></a>
 ## [0.14.8](https://github.com/angular-ui/ui-select/compare/v0.14.7...v0.14.8) (2016-02-18)
-
-
 
 <a name="0.14.7"></a>
 ## [0.14.7](https://github.com/angular-ui/ui-select/compare/v0.14.6...v0.14.7) (2016-02-18)
@@ -39,8 +32,6 @@
 ### Bug Fixes
 
 * **IE:** selects not working on IE8 ([ee65677](https://github.com/angular-ui/ui-select/commit/ee65677)), closes [#158](https://github.com/angular-ui/ui-select/issues/158)
-
-
 
 <a name="0.14.6"></a>
 ## [0.14.6](https://github.com/angular-ui/ui-select/compare/v0.14.5...v0.14.6) (2016-02-18)
@@ -50,16 +41,12 @@
 * **paste:** add paste support ([1ad6f60](https://github.com/angular-ui/ui-select/commit/1ad6f60)), closes [#910](https://github.com/angular-ui/ui-select/issues/910) [#704](https://github.com/angular-ui/ui-select/issues/704) [#789](https://github.com/angular-ui/ui-select/issues/789) [#848](https://github.com/angular-ui/ui-select/issues/848) [#429](https://github.com/angular-ui/ui-select/issues/429)
 * **uiSelectSort:** fix dependency not found error ([a5a6554](https://github.com/angular-ui/ui-select/commit/a5a6554))
 
-
-
 <a name="0.14.5"></a>
 ## [0.14.5](https://github.com/angular-ui/ui-select/compare/v0.14.4...v0.14.5) (2016-02-18)
 
 ### Bug Fixes
 
 * **uiSelectMultipleDirective:** fix track by error ([ced1cc0](https://github.com/angular-ui/ui-select/commit/ced1cc0)), closes [#1343](https://github.com/angular-ui/ui-select/issues/1343)
-
-
 
 <a name="0.14.4"></a>
 ## [0.14.4](https://github.com/angular-ui/ui-select/compare/v0.14.3...v0.14.4) (2016-02-18)
@@ -68,12 +55,8 @@
 
 * Allow setting a ngClass on <ui-select> element ([6a99b08](https://github.com/angular-ui/ui-select/commit/6a99b08)), closes [#277](https://github.com/angular-ui/ui-select/issues/277)
 
-
-
 <a name="0.14.3"></a>
 ## [0.14.3](https://github.com/angular-ui/ui-select/compare/v0.14.2...v0.14.3) (2016-02-18)
-
-
 
 <a name="0.14.2"></a>
 ## [0.14.2](https://github.com/angular-ui/ui-select/compare/v0.14.1...v0.14.2) (2016-02-18)
@@ -84,12 +67,8 @@
 * **commonjs:** remove CSS require ([81b0f03](https://github.com/angular-ui/ui-select/commit/81b0f03))
 * **track by:** fix "track by" ([6c52e41](https://github.com/angular-ui/ui-select/commit/6c52e41)), closes [#806](https://github.com/angular-ui/ui-select/issues/806) [#665](https://github.com/angular-ui/ui-select/issues/665)
 
-
-
 <a name="0.14.1"></a>
 ## [0.14.1](https://github.com/angular-ui/ui-select/compare/v0.14.0...v0.14.1) (2016-01-27)
-
-
 
 <a name="0.14.0"></a>
 # [0.14.0](https://github.com/angular-ui/ui-select/compare/v0.13.2...v0.14.0) (2016-01-25)
@@ -98,8 +77,6 @@
 
 * **ngAnimate:** add support for ngAnimate ([8da8a6d](https://github.com/angular-ui/ui-select/commit/8da8a6d))
 
-
-
 <a name="0.13.3"></a>
 ## 0.13.3 (2016-01-25)
 
@@ -107,16 +84,12 @@
 
 - Add support for commonjs and npm
 
-
-
 <a name="0.13.2"></a>
 ## [0.13.2](https://github.com/angular-ui/ui-select/compare/v0.13.1...v0.13.2) (2016-01-25)
 
 ### Bug Fixes
 
 * **CSP:** avoid inline execution of javascript in choices template. ([fb88ec8](https://github.com/angular-ui/ui-select/commit/fb88ec8))
-
-
 
 <a name="0.13.1"></a>
 ## [v0.13.1](https://github.com/angular-ui/ui-select/compare/v0.13.0...v0.13.1) (2015-09-29)
@@ -126,7 +99,6 @@
 - Remove hardcoded source name when using (key,value) syntax [#1217](https://github.com/angular-ui/ui-select/pull/1217)
 - Modify regex to accept a full 'collection expression' when not using (key,value) syntax [#1216](https://github.com/angular-ui/ui-select/pull/1216)
 - Avoid to recalculate position when set 'down' [#1214](https://github.com/angular-ui/ui-select/issues/1214#issuecomment-144271352)
-
 
 <a name="0.13.0"></a>
 
