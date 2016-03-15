@@ -1,3 +1,17 @@
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.15.0) (2016-03-15)
+
+
+### Bug Fixes
+
+* corrects out of scope variable ([d5e30fb](https://github.com/angular-ui/ui-select/commit/d5e30fb))
+
+### Features
+
+* provide a way to skip the focusser ([302e80f](https://github.com/angular-ui/ui-select/commit/302e80f)), closes [#869](https://github.com/angular-ui/ui-select/issues/869) [#401](https://github.com/angular-ui/ui-select/issues/401) [#818](https://github.com/angular-ui/ui-select/issues/818) [#603](https://github.com/angular-ui/ui-select/issues/603) [#432](https://github.com/angular-ui/ui-select/issues/432)
+
+
+
 <a name="0.14.10"></a>
 ## [0.14.10](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.14.10) (2016-03-13)
 
