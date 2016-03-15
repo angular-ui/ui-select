@@ -122,7 +122,7 @@ uis.controller('uiSelectCtrl',
       }
 
       var container = $element.querySelectorAll('.ui-select-choices-content');
-      if (ctrl.$animate && ctrl.$animate.enabled(container[0])) {
+      if (ctrl.$animate && ctrl.$animate.on && ctrl.$animate.enabled(container[0])) {
         ctrl.$animate.on('enter', container[0], function (elem, phase) {
           if (phase === 'close') {
             // Only focus input after the animation has finished
