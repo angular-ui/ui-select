@@ -81,6 +81,11 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       //Input that will handle focus
       $select.focusInput = $select.searchInput;
 
+      //Properly check for empty if set to multiple
+      ngModel.$isEmpty = function(value) {
+        return !value || value.length === 0;
+      };
+
       //From view --> model
       ngModel.$parsers.unshift(function () {
         var locals = {},
