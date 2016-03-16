@@ -2229,6 +2229,18 @@ describe('ui-select tests', function() {
       expect(searchEl.length).toEqual(1);
       expect(searchEl[0].id).toEqual('inid');
     });
+
+    it('should properly identify as empty if required', function () {
+      var el = createUiSelectMultiple({required: true});
+      expect(el.hasClass('ng-empty')).toBeTruthy();
+    });
+
+    it('should properly identify as not empty if required', function () {
+      var el = createUiSelectMultiple({required: true});
+      clickItem(el, 'Nicole');
+      clickItem(el, 'Samantha');
+      expect(el.hasClass('ng-not-empty')).toBeTruthy();
+    });
   });
 
   it('should add an id to the search input field', function () {
