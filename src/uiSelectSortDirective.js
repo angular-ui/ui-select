@@ -31,7 +31,7 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
       element.on('dragstart', function(event) {
         element.addClass(draggingClassName);
 
-        (event.dataTransfer || event.originalEvent.dataTransfer).setData('text/plain', scope.$index);
+        (event.dataTransfer || event.originalEvent.dataTransfer).setData('text', scope.$index.toString());
       });
 
       element.on('dragend', function() {
@@ -63,7 +63,7 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
       var dropHandler = function(event) {
         event.preventDefault();
 
-        var droppedItemIndex = parseInt((event.dataTransfer || event.originalEvent.dataTransfer).getData('text/plain'), 10);
+        var droppedItemIndex = parseInt((event.dataTransfer || event.originalEvent.dataTransfer).getData('text'), 10);
 
         // prevent event firing multiple times in firefox
         $timeout.cancel(dropTimeout);
