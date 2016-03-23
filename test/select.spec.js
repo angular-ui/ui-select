@@ -1603,6 +1603,44 @@ describe('ui-select tests', function() {
         expect(el.find('.ui-select-match-item').length).toBe(0);
     });
 
+    it('should render intial state with data-multiple attribute', function () {
+      // ensure match template has been loaded by having more than one selection
+      scope.selection.selectedMultiple = [scope.people[0], scope.people[1]];
+
+      var el = compileTemplate(
+        '<ui-select data-multiple ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+            <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+            <ui-select-choices repeat="person in people | filter: $select.search"> \
+              <div ng-bind-html="person.name | highlight: $select.search"></div> \
+              <div ng-bind-html="person.email | highlight: $select.search"></div> \
+            </ui-select-choices> \
+        </ui-select>'
+            );
+
+      expect(el).toHaveClass('ui-select-multiple');
+      expect(el.scope().$select.selected.length).toBe(2);
+      expect(el.find('.ui-select-match-item').length).toBe(2);
+    });
+
+    it('should render intial state with x-multiple attribute', function () {
+      // ensure match template has been loaded by having more than one selection
+      scope.selection.selectedMultiple = [scope.people[0], scope.people[1]];
+
+      var el = compileTemplate(
+        '<ui-select x-multiple ng-model="selection.selectedMultiple" theme="bootstrap" style="width: 800px;"> \
+            <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+            <ui-select-choices repeat="person in people | filter: $select.search"> \
+              <div ng-bind-html="person.name | highlight: $select.search"></div> \
+              <div ng-bind-html="person.email | highlight: $select.search"></div> \
+            </ui-select-choices> \
+        </ui-select>'
+            );
+
+      expect(el).toHaveClass('ui-select-multiple');
+      expect(el.scope().$select.selected.length).toBe(2);
+      expect(el.find('.ui-select-match-item').length).toBe(2);
+    });
+
     it('should set model as an empty array if ngModel isnt defined after an item is selected', function () {
 
       // scope.selection.selectedMultiple = [];
