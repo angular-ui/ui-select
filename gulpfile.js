@@ -129,7 +129,7 @@ gulp.task('changelog', function() {
 });
 
 gulp.task('push', function(done) {
-  $.git.push('origin', 'master', {args: '--tags'});
+  $.git.push('origin', 'master', {args: '--follow-tags'});
   done();
 });
 
