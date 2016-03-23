@@ -128,14 +128,14 @@ uis.controller('uiSelectCtrl',
         var animateHandler = function(elem, phase) {
           if (phase === 'start' && ctrl.items.length === 0) {
             // Only focus input after the animation has finished
+            ctrl.$animate.off('removeClass', searchInput[0], animateHandler);
             $timeout(function () {
-              ctrl.$animate.off('removeClass', searchInput[0], animateHandler);
               ctrl.focusSearchInput(initSearchValue);
             });
           } else if (phase === 'close') {
             // Only focus input after the animation has finished
+            ctrl.$animate.off('enter', container[0], animateHandler);
             $timeout(function () {
-              ctrl.$animate.off('enter', container[0], animateHandler);
               ctrl.focusSearchInput(initSearchValue);
             });
           }
