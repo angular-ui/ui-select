@@ -1,13 +1,3 @@
-<a name="0.14.9"></a>
-## [0.14.9](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.14.9) (2016-02-23)
-
-
-### Bug Fixes
-
-* **$window:** change input size on window resize ([ce24981](https://github.com/angular-ui/ui-select/commit/ce24981)), closes [#522](https://github.com/angular-ui/ui-select/issues/522)
-
-
-
 <a name="0.14.8"></a>
 ## [0.14.8](https://github.com/angular-ui/ui-select/compare/v0.14.8...v0.14.8) (2016-02-18)
 
