@@ -567,7 +567,7 @@ describe('ui-select tests', function() {
     var el = createUiSelect({tagging: 'taggingFunc'});
     clickMatch(el);
 
-    $(el).scope().$select.search = 'idontexist';
+    showChoicesForSearch(el, 'idontexist');
     $(el).scope().$select.activeIndex = 0;
     $(el).scope().$select.select('idontexist');
 
@@ -2229,6 +2229,32 @@ describe('ui-select tests', function() {
 
       expect(scope.slowTaggingFunc.calls.count()).toBe(2);
       expect(scope.slowTaggingFunc.calls.count()).not.toBe(15);
+    });
+
+    it('should allow decline tags when tagging function returns null in multiple select mode', function() {
+      scope.taggingFunc = function (name) {
+        if (name == 'idontexist') return null;
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
+
+      var el = createUiSelectMultiple({tagging: 'taggingFunc'});
+
+      showChoicesForSearch(el, 'amalie');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(2);
+      expect(el.scope().$select.items[0]).toEqual(jasmine.objectContaining({name: 'amalie', isTag: true}));
+      expect(el.scope().$select.items[1]).toEqual(jasmine.objectContaining({name: 'Amalie'}));
+
+      showChoicesForSearch(el, 'idoexist');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(1);
+      expect(el.find('.ui-select-choices-row-inner').is(':contains(idoexist@email.com)')).toBeTruthy();
+
+      showChoicesForSearch(el, 'idontexist');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(0);
     });
 
     it('should allow paste tag from clipboard', function() {
