@@ -35,12 +35,18 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
       });
 
       element.on('dragend', function() {
-        element.removeClass(draggingClassName);
+        removeClass(draggingClassName);
       });
 
       var move = function(from, to) {
         /*jshint validthis: true */
         this.splice(to, 0, this.splice(from, 1)[0]);
+      };
+
+      var removeClass = function(className) {
+        angular.forEach($select.$element.querySelectorAll('.' + className), function(el){
+          angular.element(el).removeClass(className);
+        });
       };
 
       var dragOverHandler = function(event) {
@@ -49,11 +55,11 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         var offset = axis === 'vertical' ? event.offsetY || event.layerY || (event.originalEvent ? event.originalEvent.offsetY : 0) : event.offsetX || event.layerX || (event.originalEvent ? event.originalEvent.offsetX : 0);
 
         if (offset < (this[axis === 'vertical' ? 'offsetHeight' : 'offsetWidth'] / 2)) {
-          element.removeClass(droppingAfterClassName);
+          removeClass(droppingAfterClassName);
           element.addClass(droppingBeforeClassName);
 
         } else {
-          element.removeClass(droppingBeforeClassName);
+          removeClass(droppingBeforeClassName);
           element.addClass(droppingAfterClassName);
         }
       };
@@ -102,9 +108,9 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
           });
         });
 
-        element.removeClass(droppingClassName);
-        element.removeClass(droppingBeforeClassName);
-        element.removeClass(droppingAfterClassName);
+        removeClass(droppingClassName);
+        removeClass(droppingBeforeClassName);
+        removeClass(droppingAfterClassName);
 
         element.off('drop', dropHandler);
       };
@@ -124,9 +130,10 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         if (event.target != element) {
           return;
         }
-        element.removeClass(droppingClassName);
-        element.removeClass(droppingBeforeClassName);
-        element.removeClass(droppingAfterClassName);
+
+        removeClass(droppingClassName);
+        removeClass(droppingBeforeClassName);
+        removeClass(droppingAfterClassName);
 
         element.off('dragover', dragOverHandler);
         element.off('drop', dropHandler);

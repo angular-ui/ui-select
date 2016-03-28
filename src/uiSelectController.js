@@ -42,6 +42,7 @@ uis.controller('uiSelectCtrl',
   ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelectMatch directive link function
   ctrl.clickTriggeredSelect = false;
   ctrl.$filter = $filter;
+  ctrl.$element = $element;
 
   // Use $injector to check for $animate and store a reference to it
   ctrl.$animate = (function () {
