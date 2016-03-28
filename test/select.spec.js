@@ -348,6 +348,13 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should not leak memory', function() {
+    var cacheLenght = Object.keys(angular.element.cache).length;
+    createUiSelect().remove();
+    scope.$destroy();
+    expect(Object.keys(angular.element.cache).length).toBe(cacheLenght);
+  });
+
   it('should compile child directives', function() {
     var el = createUiSelect();
 
