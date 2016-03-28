@@ -64,8 +64,10 @@ gulp.task('scripts', ['clean'], function() {
       timestamp: (new Date()).toISOString(), pkg: config.pkg
     }))
     .pipe(gulp.dest('dist'))
+    .pipe($.sourcemaps.init())
     .pipe($.uglify({preserveComments: 'some'}))
-    .pipe($.rename({ext:'.min.js'}))
+    .pipe($.concat('select.min.js'))
+    .pipe($.sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));
 
 });
@@ -76,10 +78,12 @@ gulp.task('styles', ['clean'], function() {
     .pipe($.header(config.banner, {
       timestamp: (new Date()).toISOString(), pkg: config.pkg
     }))
-    .pipe($.rename('select.css'))
+    .pipe($.concat('select.css'))
     .pipe(gulp.dest('dist'))
+    .pipe($.sourcemaps.init())
     .pipe($.minifyCss())
-    .pipe($.rename({ext:'.min.css'}))
+    .pipe($.concat('select.min.css'))
+    .pipe($.sourcemaps.write('./', {debug: true}))
     .pipe(gulp.dest('dist'));
 
 });
