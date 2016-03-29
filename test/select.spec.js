@@ -412,6 +412,23 @@ describe('ui-select tests', function() {
     expect(getMatchLabel(el)).toEqual('Samantha');
   });
 
+  it('should correctly render initial state with track by $index', function () {
+    
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people track by $index"> \
+          {{person.email}} \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    openDropdown(el);
+
+    var generatedId = el.scope().$select.generatedId;
+    expect($(el).find('[id="ui-select-choices-row-' + generatedId + '-0"]').length).toEqual(1);
+  });
+
   it('should utilize wrapper directive ng-model', function() {
     var el = compileTemplate('<wrapper-ui-select ng-model="selection.selected"/>');
     scope.selection.selected =  { name: 'Samantha',  email: 'something different than array source',  group: 'bar', age: 30 };
