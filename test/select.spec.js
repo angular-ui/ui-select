@@ -212,6 +212,12 @@ describe('ui-select tests', function() {
     scope.$digest();
   }
 
+  function showChoicesForSearch(el, search) {
+    setSearchText(el, search);
+    el.scope().$select.searchInput.trigger('keyup');
+    scope.$digest();
+  }
+
 
   // Tests
   //uisRepeatParser
@@ -561,7 +567,7 @@ describe('ui-select tests', function() {
     var el = createUiSelect({tagging: 'taggingFunc'});
     clickMatch(el);
 
-    $(el).scope().$select.search = 'idontexist';
+    showChoicesForSearch(el, 'idontexist');
     $(el).scope().$select.activeIndex = 0;
     $(el).scope().$select.select('idontexist');
 
@@ -1581,7 +1587,8 @@ describe('ui-select tests', function() {
   describe('multi selection', function() {
 
     function createUiSelectMultiple(attrs) {
-        var attrsHtml = '';
+        var attrsHtml = '',
+            choicesAttrsHtml = '';
         if (attrs !== undefined) {
             if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
             if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
@@ -1590,12 +1597,13 @@ describe('ui-select tests', function() {
             if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
             if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
             if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
+            if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
         }
 
         return compileTemplate(
             '<ui-select multiple ng-model="selection.selectedMultiple"' + attrsHtml + ' theme="bootstrap" style="width: 800px;"> \
                 <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
-                <ui-select-choices repeat="person in people | filter: $select.search"> \
+                <ui-select-choices repeat="person in people | filter: $select.search"' + choicesAttrsHtml + '> \
                   <div ng-bind-html="person.name | highlight: $select.search"></div> \
                   <div ng-bind-html="person.email | highlight: $select.search"></div> \
                 </ui-select-choices> \
@@ -2204,6 +2212,69 @@ describe('ui-select tests', function() {
       );
 
       expect(el.scope().$select.multiple).toBe(true);
+    });
+
+    it('should not call tagging function needlessly', function() {
+      scope.slowTaggingFunc = function (name) {
+        // for (var i = 0; i < 100000000; i++);
+        return {name: name};
+      };
+      spyOn(scope, 'slowTaggingFunc').and.callThrough();
+
+      var el = createUiSelectMultiple({tagging: 'slowTaggingFunc'});
+
+      showChoicesForSearch(el, 'Foo');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(6);
+
+      showChoicesForSearch(el, 'a');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(9);
+
+      expect(scope.slowTaggingFunc.calls.count()).toBe(2);
+      expect(scope.slowTaggingFunc.calls.count()).not.toBe(15);
+    });
+
+    it('should allow decline tags when tagging function returns null in multiple select mode', function() {
+      scope.taggingFunc = function (name) {
+        if (name == 'idontexist') return null;
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
+
+      var el = createUiSelectMultiple({tagging: 'taggingFunc'});
+
+      showChoicesForSearch(el, 'amalie');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(2);
+      expect(el.scope().$select.items[0]).toEqual(jasmine.objectContaining({name: 'amalie', isTag: true}));
+      expect(el.scope().$select.items[1]).toEqual(jasmine.objectContaining({name: 'Amalie'}));
+
+      showChoicesForSearch(el, 'idoexist');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(1);
+      expect(el.find('.ui-select-choices-row-inner').is(':contains(idoexist@email.com)')).toBeTruthy();
+
+      showChoicesForSearch(el, 'idontexist');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(0);
+    });
+
+    it('should allow creating tag in multi select mode with tagging and group-by enabled', function() {
+      scope.taggingFunc = function (name) {
+        return {
+          name: name,
+          email: name + '@email.com',
+          group: 'Foo',
+          age: 12
+        };
+      };
+
+      var el = createUiSelectMultiple({tagging: 'taggingFunc', groupBy: "'age'"});
+
+      showChoicesForSearch(el, 'amal');
+      expect(el.find('.ui-select-choices-row-inner').size()).toBe(2);
+      expect(el.scope().$select.items[0]).toEqual(jasmine.objectContaining({name: 'amal', email: 'amal@email.com', isTag: true}));
+      expect(el.scope().$select.items[1]).toEqual(jasmine.objectContaining({name: 'Amalie', email: 'amalie@email.com'}));
     });
 
     it('should allow paste tag from clipboard', function() {

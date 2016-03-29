@@ -86,11 +86,11 @@
   <p>Selected: {{multipleDemo.colors2}}</p>
   <hr>
 
-  <h3>Object Tags</h3>
+  <h3>Object Tags (with groupBy)</h3>
   <ui-select multiple tagging="tagTransform" ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
-    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
-      <div ng-if="person.isTag" ng-bind-html="person.name +' <small>(new)</small>'| highlight: $select.search"></div>
+    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}" group-by="'country'">
+      <div ng-if="person.isTag" ng-bind-html="(person.name | highlight: $select.search) +' <small>(new)</small>'"></div>
       <div ng-if="!person.isTag" ng-bind-html="person.name + person.isTag| highlight: $select.search"></div>
       <small>
         email: {{person.email}}
@@ -120,7 +120,7 @@
   <ui-select tagging="tagTransform" ng-model="person.selected" theme="bootstrap" ng-disabled="disabled" style="width: 800px;" title="Choose a person">
   <ui-select-match placeholder="Select person...">{{$select.selected.name}} &lt;{{$select.selected.email}}&gt;</ui-select-match>
   <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
-    <div ng-if="person.isTag" ng-bind-html="person.name +' <small>(new)</small>'| highlight: $select.search"></div>
+    <div ng-if="person.isTag" ng-bind-html="(person.name | highlight: $select.search) +' <small>(new)</small>'"></div>
     <div ng-if="!person.isTag" ng-bind-html="person.name + person.isTag| highlight: $select.search"></div>
     <small>
       email: {{person.email}}
