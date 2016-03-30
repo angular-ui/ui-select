@@ -74,16 +74,15 @@ gulp.task('scripts', ['clean'], function() {
 
 gulp.task('styles', ['clean'], function() {
 
-  return gulp.src('src/common.css')
+  return gulp.src(['src/common.css'], {base: 'src'})
+    .pipe($.sourcemaps.init())
     .pipe($.header(config.banner, {
       timestamp: (new Date()).toISOString(), pkg: config.pkg
     }))
     .pipe($.concat('select.css'))
-    .pipe(gulp.dest('dist'))
-    .pipe($.sourcemaps.init())
     .pipe($.minifyCss())
     .pipe($.concat('select.min.css'))
-    .pipe($.sourcemaps.write('./', {debug: true}))
+    .pipe($.sourcemaps.write('../dist', {debug: true}))
     .pipe(gulp.dest('dist'));
 
 });
