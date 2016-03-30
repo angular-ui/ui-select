@@ -48,7 +48,7 @@ Make sure composer is install globally before we proceed. After that we need to 
 ### Prepare your environment
 * Install [Node.js](http://nodejs.org/) and NPM (should come with)
 * Install global dev dependencies: `npm install -g bower gulp`
-* Install local dev dependencies: `npm install && bower install` in repository directory
+* Install local dev dependencies: `npm install` in repository directory
 
 ### Development Commands
 
