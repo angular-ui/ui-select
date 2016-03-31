@@ -40,37 +40,39 @@ app.filter('propsFilter', function() {
   };
 });
 
-app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
-  $scope.disabled = undefined;
-  $scope.searchEnabled = undefined;
+app.controller('DemoCtrl', function ($scope, $http, $timeout, $interval) {
+  var vm = this;
 
-  $scope.setInputFocus = function (){
+  vm.disabled = undefined;
+  vm.searchEnabled = undefined;
+
+  vm.setInputFocus = function (){
     $scope.$broadcast('UiSelectDemo1');
   };
 
-  $scope.enable = function() {
-    $scope.disabled = false;
+  vm.enable = function() {
+    vm.disabled = false;
   };
 
-  $scope.disable = function() {
-    $scope.disabled = true;
+  vm.disable = function() {
+    vm.disabled = true;
   };
 
-  $scope.enableSearch = function() {
-    $scope.searchEnabled = true;
+  vm.enableSearch = function() {
+    vm.searchEnabled = true;
   };
 
-  $scope.disableSearch = function() {
-    $scope.searchEnabled = false;
+  vm.disableSearch = function() {
+    vm.searchEnabled = false;
   };
 
-  $scope.clear = function() {
-    $scope.person.selected = undefined;
-    $scope.address.selected = undefined;
-    $scope.country.selected = undefined;
+  vm.clear = function() {
+    vm.person.selected = undefined;
+    vm.address.selected = undefined;
+    vm.country.selected = undefined;
   };
 
-  $scope.someGroupFn = function (item){
+  vm.someGroupFn = function (item){
 
     if (item.name[0] >= 'A' && item.name[0] <= 'M')
         return 'From A - M';
@@ -80,19 +82,19 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
 
   };
 
-  $scope.firstLetterGroupFn = function (item){
+  vm.firstLetterGroupFn = function (item){
       return item.name[0];
   };
 
-  $scope.reverseOrderFilterFn = function(groups) {
+  vm.reverseOrderFilterFn = function(groups) {
     return groups.reverse();
   };
 
-  $scope.personAsync = {selected : "wladimir@email.com"};
-  $scope.peopleAsync = [];
+  vm.personAsync = {selected : "wladimir@email.com"};
+  vm.peopleAsync = [];
 
   $timeout(function(){
-   $scope.peopleAsync = [
+   vm.peopleAsync = [
         { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
         { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
         { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
@@ -106,20 +108,20 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
       ];
   },3000);
 
-  $scope.counter = 0;
-  $scope.onSelectCallback = function (item, model){
-    $scope.counter++;
-    $scope.eventResult = {item: item, model: model};
+  vm.counter = 0;
+  vm.onSelectCallback = function (item, model){
+    vm.counter++;
+    vm.eventResult = {item: item, model: model};
   };
 
-  $scope.removed = function (item, model) {
-    $scope.lastRemoved = {
+  vm.removed = function (item, model) {
+    vm.lastRemoved = {
         item: item,
         model: model
     };
   };
 
-  $scope.tagTransform = function (newTag) {
+  vm.tagTransform = function (newTag) {
     var item = {
         name: newTag,
         email: newTag.toLowerCase()+'@email.com',
@@ -130,7 +132,7 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     return item;
   };
 
-  $scope.peopleObj = {
+  vm.peopleObj = {
     '1' : { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
     '2' : { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
     '3' : { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
@@ -143,13 +145,13 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     '10' : { name: 'Nicolás',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
   };
 
-  $scope.person = {};
+  vm.person = {};
 
-  $scope.person.selectedValue = $scope.peopleObj[3];
-  $scope.person.selectedSingle = 'Samantha';
-  $scope.person.selectedSingleKey = '5';
+  vm.person.selectedValue = vm.peopleObj[3];
+  vm.person.selectedSingle = 'Samantha';
+  vm.person.selectedSingleKey = '5';
 
-  $scope.people = [
+  vm.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
     { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
     { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
@@ -162,23 +164,23 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     { name: 'Nicolás',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
   ];
 
-  $scope.availableColors = ['Red','Green','Blue','Yellow','Magenta','Maroon','Umbra','Turquoise'];
+  vm.availableColors = ['Red','Green','Blue','Yellow','Magenta','Maroon','Umbra','Turquoise'];
 
-  $scope.singleDemo = {};
-  $scope.singleDemo.color = '';
-  $scope.multipleDemo = {};
-  $scope.multipleDemo.colors = ['Blue','Red'];
-  $scope.multipleDemo.colors2 = ['Blue','Red'];
-  $scope.multipleDemo.selectedPeople = [$scope.people[5], $scope.people[4]];
-  $scope.multipleDemo.selectedPeople2 = $scope.multipleDemo.selectedPeople;
-  $scope.multipleDemo.selectedPeopleWithGroupBy = [$scope.people[8], $scope.people[6]];
-  $scope.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
+  vm.singleDemo = {};
+  vm.singleDemo.color = '';
+  vm.multipleDemo = {};
+  vm.multipleDemo.colors = ['Blue','Red'];
+  vm.multipleDemo.colors2 = ['Blue','Red'];
+  vm.multipleDemo.selectedPeople = [vm.people[5], vm.people[4]];
+  vm.multipleDemo.selectedPeople2 = vm.multipleDemo.selectedPeople;
+  vm.multipleDemo.selectedPeopleWithGroupBy = [vm.people[8], vm.people[6]];
+  vm.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
 
-  $scope.appendToBodyDemo = {
+  vm.appendToBodyDemo = {
     remainingToggleTime: 0,
     present: true,
     startToggleTimer: function() {
-      var scope = $scope.appendToBodyDemo;
+      var scope = vm.appendToBodyDemo;
       var promise = $interval(function() {
         if (scope.remainingTime < 1000) {
           $interval.cancel(promise);
@@ -192,26 +194,26 @@ app.controller('DemoCtrl', function($scope, $http, $timeout, $interval) {
     }
   };
 
-  $scope.address = {};
-  $scope.refreshAddresses = function(address) {
+  vm.address = {};
+  vm.refreshAddresses = function(address) {
     var params = {address: address, sensor: false};
     return $http.get(
       'http://maps.googleapis.com/maps/api/geocode/json',
       {params: params}
     ).then(function(response) {
-      $scope.addresses = response.data.results;
+      vm.addresses = response.data.results;
     });
   };
 
-  $scope.addPerson = function(item, model){
+  vm.addPerson = function(item, model){
     if(item.hasOwnProperty('isTag')) {
       delete item.isTag;
-      $scope.people.push(item);
+      vm.people.push(item);
     }
   }
 
-  $scope.country = {};
-  $scope.countries = [ // Taken from https://gist.github.com/unceus/6501985
+  vm.country = {};
+  vm.countries = [ // Taken from https://gist.github.com/unceus/6501985
     {name: 'Afghanistan', code: 'AF'},
     {name: 'Åland Islands', code: 'AX'},
     {name: 'Albania', code: 'AL'},
