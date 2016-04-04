@@ -25,9 +25,10 @@ section {
 .page-header h1 > small > a {
     color: #999;
 }
-.page-header h1 > small > a:hover {
-    text-decoration: none;
-}
+
+    .page-header h1 > small > a:hover {
+        text-decoration: none;
+    }
 
 .footer {
     text-align: center;
@@ -48,7 +49,6 @@ section {
     .bs-social {
         text-align: left;
     }
-
 }
 
 .nav, .pagination, .carousel, .panel-title a {
@@ -61,21 +61,22 @@ section {
     padding-left: 0;
     list-style: none;
 }
-.bs-social-buttons li {
-    display: inline-block;
-    padding: 5px 8px;
-    line-height: 1;
-}
+
+    .bs-social-buttons li {
+        display: inline-block;
+        padding: 5px 8px;
+        line-height: 1;
+    }
 
 @media (max-width: 767px) {
 
     .visible-xs.collapse.in {
-        display: block!important;
-    }
-    .visible-xs.collapse {
-        display: none!important;
+        display: block !important;
     }
 
+    .visible-xs.collapse {
+        display: none !important;
+    }
 }
 
 .navbar .collapse {
@@ -87,7 +88,7 @@ section {
 }
 
 .show-grid {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 /*
@@ -109,7 +110,7 @@ section {
  */
 
 .code .nav-tabs {
-border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .code pre, .code code {
@@ -118,10 +119,10 @@ border-bottom: 1px solid #ccc;
     border-top-right-radius: 0;
 }
 
-.code .nav-tabs>li.active>a, .code .nav-tabs>li.active>a:hover, .code .nav-tabs>li.active>a:focus {
-background-color: #f8f8f8;
-border: 1px solid #ccc;
-border-bottom-color: transparent;
+.code .nav-tabs > li.active > a, .code .nav-tabs > li.active > a:hover, .code .nav-tabs > li.active > a:focus {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-bottom-color: transparent;
 }
 
 /*
@@ -131,10 +132,10 @@ border-bottom-color: transparent;
  */
 
 .btn-outline-inverse {
-color: #fff;
-background-color: transparent;
-border-color: #cdbfe3;
-margin: 10px;
+    color: #fff;
+    background-color: transparent;
+    border-color: #cdbfe3;
+    margin: 10px;
 }
 
 @media (min-width: 768px) {
@@ -145,57 +146,61 @@ margin: 10px;
         padding: 18px 24px;
         font-size: 21px;
     }
-
 }
 
 .btn-outline-inverse:hover, .btn-outline-inverse:focus, .btn-outline-inverse:active {
-color: #563d7c;
-text-shadow: none;
-background-color: #fff;
-border-color: #fff;
+    color: #563d7c;
+    text-shadow: none;
+    background-color: #fff;
+    border-color: #fff;
 }
 
 
 /* Page headers */
 .bs-header {
-  padding: 30px 15px 40px; /* side padding builds on .container 15px, so 30px */
-  font-size: 16px;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(0,0,0,.15);
-  color: #cdbfe3;
-  background-color: #563d7c;
-  background-image: url(header.png);
-}
-.bs-header a {
-  color: #fff;
-  font-weight: normal;
-}
-.bs-header h1 {
-  color: #fff;
-}
-.bs-header p {
-  font-weight: 200;
-  line-height: 1.4;
-}
-.bs-header .container {
-  position: relative;
+    padding: 30px 15px 40px; /* side padding builds on .container 15px, so 30px */
+    font-size: 16px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(0,0,0,.15);
+    color: #cdbfe3;
+    background-color: #563d7c;
+    background-image: url(header.png);
 }
 
+    .bs-header a {
+        color: #fff;
+        font-weight: normal;
+    }
+
+    .bs-header h1 {
+        color: #fff;
+    }
+
+    .bs-header p {
+        font-weight: 200;
+        line-height: 1.4;
+    }
+
+    .bs-header .container {
+        position: relative;
+    }
+
 @media (min-width: 768px) {
-  .bs-header {
-    font-size: 30px;
-    text-align: left;
-  }
-  .bs-header h1 {
-    font-size: 100px;
-    line-height: 1;
-  }
+    .bs-header {
+        font-size: 30px;
+        text-align: left;
+    }
+
+        .bs-header h1 {
+            font-size: 100px;
+            line-height: 1;
+        }
 }
 
 @media (min-width: 992px) {
-  .bs-header p {
-    margin-right: 25%;
-  }
+    .bs-header p {
+        margin-right: 25%;
+    }
 }
 
 .navbar-inner {
@@ -212,82 +217,89 @@ border-color: #fff;
 
 /* By default it's not affixed in mobile views, so undo that */
 .bs-sidebar.affix {
-  position: static;
+    position: static;
 }
 
 /* First level of nav */
 .bs-sidenav {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  padding-top:    10px;
-  padding-bottom: 10px;
-  text-shadow: 0 1px 0 #fff;
-  background-color: #f7f5fa;
-  border-radius: 5px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-shadow: 0 1px 0 #fff;
+    background-color: #f7f5fa;
+    border-radius: 5px;
 }
 
 /* All levels of nav */
 .bs-sidebar .nav > li > a {
-  display: block;
-  color: #716b7a;
-  padding: 5px 20px;
+    display: block;
+    color: #716b7a;
+    padding: 5px 20px;
 }
-.bs-sidebar .nav > li > a:hover,
-.bs-sidebar .nav > li > a:focus {
-  text-decoration: none;
-  background-color: #e5e3e9;
-  border-right: 1px solid #dbd8e0;
-}
+
+    .bs-sidebar .nav > li > a:hover,
+    .bs-sidebar .nav > li > a:focus {
+        text-decoration: none;
+        background-color: #e5e3e9;
+        border-right: 1px solid #dbd8e0;
+    }
+
 .bs-sidebar .nav > .active > a,
 .bs-sidebar .nav > .active:hover > a,
 .bs-sidebar .nav > .active:focus > a {
-  font-weight: bold;
-  color: #563d7c;
-  background-color: transparent;
-  border-right: 1px solid #563d7c;
+    font-weight: bold;
+    color: #563d7c;
+    background-color: transparent;
+    border-right: 1px solid #563d7c;
 }
 
 /* Nav: second level (shown on .active) */
 .bs-sidebar .nav .nav {
-  display: none; /* Hide by default, but at >768px, show it */
-  margin-bottom: 8px;
+    display: none; /* Hide by default, but at >768px, show it */
+    margin-bottom: 8px;
 }
-.bs-sidebar .nav .nav > li > a {
-  padding-top:    3px;
-  padding-bottom: 3px;
-  padding-left: 30px;
-  font-size: 90%;
-}
+
+    .bs-sidebar .nav .nav > li > a {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        padding-left: 30px;
+        font-size: 90%;
+    }
 
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {
-  .bs-sidebar .nav > .active > ul {
-    display: block;
-  }
-  /* Widen the fixed sidebar */
-  .bs-sidebar.affix,
-  .bs-sidebar.affix-bottom {
-    width: 213px;
-  }
-  .bs-sidebar.affix {
-    position: fixed; /* Undo the static from mobile first approach */
-    top: 80px;
-  }
-  .bs-sidebar.affix-bottom {
-    position: absolute; /* Undo the static from mobile first approach */
-  }
-  .bs-sidebar.affix-bottom .bs-sidenav,
-  .bs-sidebar.affix .bs-sidenav {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+    .bs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-sidebar.affix,
+    .bs-sidebar.affix-bottom {
+        width: 213px;
+    }
+
+    .bs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 80px;
+    }
+
+    .bs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+
+        .bs-sidebar.affix-bottom .bs-sidenav,
+        .bs-sidebar.affix .bs-sidenav {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
 }
+
 @media (min-width: 1200px) {
-  /* Widen the fixed sidebar again */
-  .bs-sidebar.affix-bottom,
-  .bs-sidebar.affix {
-    width: 263px;
-  }
+    /* Widen the fixed sidebar again */
+    .bs-sidebar.affix-bottom,
+    .bs-sidebar.affix {
+        width: 263px;
+    }
 }
 
 
@@ -324,5 +336,4 @@ border-color: #fff;
         margin-right: 5px;
         margin-left: 10px;
     }
-
 }
