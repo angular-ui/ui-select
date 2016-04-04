@@ -1,15 +1,3 @@
-if (!String.prototype.endsWith) {
-  String.prototype.endsWith = function (searchString, position) {
-    var subjectString = this.toString();
-    if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
-      position = subjectString.length;
-    }
-    position -= searchString.length;
-    var lastIndex = subjectString.indexOf(searchString, position);
-    return lastIndex !== -1 && lastIndex === position;
-  };
-}
-
 angular.module('plunkr', [])
 .factory('formPostData', ['$document', function ($document) {
   return function (url, newWindow, fields) {
@@ -105,7 +93,7 @@ angular.module('plunkr', [])
 
           var content = response.data;
           // Should only be one html (the example)
-          if (filename.endsWith(".html")) {
+          if (filename.match(/.html$/)) {
             filename = "index.html";
             content = content.replace(/.\/assets\//g, './').replace(/.\/dist\//g, './');
           }
