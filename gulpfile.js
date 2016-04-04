@@ -6,6 +6,7 @@ var karma = require('karma').server;
 var $ = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
 var conventionalRecommendedBump = require('conventional-recommended-bump');
+var titleCase = require('title-case');
 
 var config = {
   pkg : JSON.parse(fs.readFileSync('./package.json')),
@@ -152,6 +153,40 @@ gulp.task('tag', function() {
 
 gulp.task('bump', function(done) {
   runSequence('recommendedBump', 'changelog', 'add', 'commit', 'tag', 'push', done);
+});
+
+gulp.task('docs', function (cb) {
+  runSequence('docs:clean', 'docs:examples', 'docs:assets', 'docs:index', cb);
+});
+
+gulp.task('docs:clean', function (cb) {
+  del(['docs-built'], cb)
+});
+
+gulp.task('docs:assets', function () {
+  gulp.src('./dist/*').pipe(gulp.dest('./docs-built/dist'));
+  return gulp.src('docs/assets/*').pipe(gulp.dest('./docs-built/assets'));
+});
+
+gulp.task('docs:examples', function () {
+  return gulp.src(['docs/examples/*.html'])
+    .pipe($.filenames('exampleFiles'))
+    .pipe($.header(fs.readFileSync('docs/partials/_header.html')))
+    .pipe($.footer(fs.readFileSync('docs/partials/_footer.html')))
+    .pipe(gulp.dest('./docs-built/'));
+});
+
+gulp.task('docs:index', function () {
+
+  var exampleFiles = $.filenames.get('exampleFiles');
+  exampleFiles = exampleFiles.map(function (filename) {
+    var cleaned = titleCase(filename.replace('demo-', '').replace('.html', ''));
+    return '<h4><a href="./' + filename + '">' + cleaned + '</a> <plnkr-opener example-path="' + filename + '"></plnkr-opener></h4>';
+  });
+
+  return gulp.src('docs/index.html')    
+    .pipe($.replace('<!-- INSERT EXAMPLES HERE -->', exampleFiles.join("\n")))        
+    .pipe(gulp.dest('./docs-built/'));
 });
 
 var handleError = function (err) {

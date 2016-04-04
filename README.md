@@ -1,53 +1,43 @@
-# AngularJS ui-select [![Build Status](https://travis-ci.org/angular-ui/ui-select.svg?branch=master)](https://travis-ci.org/angular-ui/ui-select)
+# AngularJS ui-select [![Build Status](https://travis-ci.org/angular-ui/ui-select.svg?branch=master)](https://travis-ci.org/angular-ui/ui-select) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angular-ui/ui-select?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angular-ui/ui-select?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [Selectize](http://brianreavis.github.io/selectize.js/). [http://angular-ui.github.io/ui-select/](http://angular-ui.github.io/ui-select/)
 
-AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [Selectize](http://brianreavis.github.io/selectize.js/).
+[Getting Started](https://github.com/angular-ui/ui-select/wiki/Getting-Started) 
 
-[Getting Started](https://github.com/angular-ui/ui-select/wiki/Getting-Started)  `bower install angular-ui-select`
-
-- [Demo](http://plnkr.co/edit/a3KlK8dKH3wwiiksDSn2?p=preview)
-- [Demo Multiselect](http://plnkr.co/edit/juqoNOt1z1Gb349XabQ2?p=preview)
-- [Examples](https://github.com/angular-ui/ui-select/blob/master/examples)
+- [Examples](http://angular-ui.github.io/ui-select/#examples)
+- [Examples Source](./docs/examples)
 - [Documentation](https://github.com/angular-ui/ui-select/wiki)
 
-## Last Changes
+## Latest Changes
 
 - Check [CHANGELOG.md](/CHANGELOG.md)
 
 ## Features
 
-- Search, Select, and Multi-select
-- Themes: Bootstrap, Select2 and Selectize
+- Search, Select, Multi-select and Tagging
+- Multiple Themes: Bootstrap, Select2 and Selectize
 - Keyboard support
-- jQuery not required (except for old browsers)
+- No jQuery required (except for old browsers)
 - Small code base: 4.57KB min/gzipped vs 20KB for select2
 
 For the roadmap, check [issue #3](https://github.com/angular-ui/ui-select/issues/3) and the [Wiki page](https://github.com/angular-ui/ui-select/wiki/Roadmap).
 
-## Installation using [Composer](http://getcomposer.org/)
+## Installation Methods
 
-Make sure composer is install globally before we proceed. After that we need to add below piece of code in `composer.json` file located inside your project root folder.
-
+### npm
 ```
-{
-    "require": {
-        "components/ui-select": "dev-master"
-    }
-}
+$ npm install angular-ui-select
 ```
-
-- Run `composer update` and composer will install the component.
-- Inside your HTML add below script and link tags.
-  - select.js: `<script src="components/ui-select/dist/select.min.js"></script>`
-  - select.css: `<link rel="stylesheet" href="components/ui-select/dist/select.min.css">`
-
+### bower
+```
+$ bower install angular-ui-select
+```
 
 ## Development
 
 ### Prepare your environment
 * Install [Node.js](http://nodejs.org/) and NPM (should come with)
-* Install global dev dependencies: `npm install -g bower gulp`
+* Install global dev dependencies: `npm install -g gulp`
 * Install local dev dependencies: `npm install` in repository directory
 
 ### Development Commands
@@ -56,11 +46,12 @@ Make sure composer is install globally before we proceed. After that we need to 
 * `gulp build` to jshint and build
 * `gulp test` for one-time test with karma (also build and jshint)
 * `gulp watch` to watch src files to jshint, build and test when changed
+* `gulp docs` build docs and examples
 
 ## Contributing
 
 - Check [CONTRIBUTING.md](/CONTRIBUTING.md)
 - Run the tests
-- Try the [examples](https://github.com/angular-ui/ui-select/blob/master/examples)
+- Try the [examples](./docs/examples)
 
 When issuing a pull request, please exclude changes from the "dist" folder to avoid merge conflicts.

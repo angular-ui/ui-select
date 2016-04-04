@@ -1,42 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="demo">
-<head>
-  <meta charset="utf-8">
-  <title>AngularJS ui-select</title>
-
-  <!--
-    IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
-    For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
-  -->
-  <!--[if lt IE 9]>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
-    <script>
-      document.createElement('ui-select');
-      document.createElement('ui-select-match');
-      document.createElement('ui-select-choices');
-    </script>
-  <![endif]-->
-
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular-sanitize.js"></script>
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
-
-  <!-- ui-select files -->
-  <script src="../dist/select.js"></script>
-  <link rel="stylesheet" href="../dist/select.css">
-
-  <style>
-    body {
-      padding: 15px;
-    }
-  </style>
-</head>
-
-<body ng-controller="DemoCtrl">
-  <script src="demo.js"></script>
-
-  <p>Selected: {{person.selected.name}}</p>
+﻿  <p>Selected: {{ctrl.person.selected.name}}</p>
 
   <form class="form-horizontal">
     <fieldset>
@@ -46,9 +8,9 @@
         <label class="col-sm-3 control-label">Default</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="bootstrap">
+          <ui-select ng-model="ctrl.person.selected" theme="bootstrap">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
-            <ui-select-choices repeat="item in people | filter: $select.search">
+            <ui-select-choices repeat="item in ctrl.people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
             </ui-select-choices>
@@ -61,9 +23,9 @@
         <label class="col-sm-3 control-label">Grouped</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="bootstrap">
+          <ui-select ng-model="ctrl.person.selected" theme="bootstrap">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
-            <ui-select-choices group-by="'country'" repeat="item in people | filter: $select.search">
+            <ui-select-choices group-by="'country'" repeat="item in ctrl.people | filter: $select.search">
               <span ng-bind-html="item.name | highlight: $select.search"></span>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
             </ui-select-choices>
@@ -77,16 +39,16 @@
         <div class="col-sm-6">
           <div class="input-group">
 
-            <ui-select allow-clear ng-model="person.selected" theme="bootstrap">
+            <ui-select allow-clear ng-model="ctrl.person.selected" theme="bootstrap">
               <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
-              <ui-select-choices repeat="item in people | filter: $select.search">
+              <ui-select-choices repeat="item in ctrl.people | filter: $select.search">
                 <span ng-bind-html="item.name | highlight: $select.search"></span>
                 <small ng-bind-html="item.email | highlight: $select.search"></small>
               </ui-select-choices>
             </ui-select>
 
             <span class="input-group-btn">
-              <button type="button" ng-click="person.selected = undefined" class="btn btn-default">
+              <button type="button" ng-click="ctrl.person.selected = undefined" class="btn btn-default">
                 <span class="glyphicon glyphicon-trash"></span>
               </button>
             </span>
@@ -99,9 +61,9 @@
         <label class="col-sm-3 control-label">Disabled</label>
         <div class="col-sm-6">
 
-          <ui-select ng-model="person.selected" theme="bootstrap" ng-disabled="true">
+          <ui-select ng-model="ctrl.person.selected" theme="bootstrap" ng-disabled="true">
             <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.name}}</ui-select-match>
-            <ui-select-choices repeat="item in people | filter: $select.search">
+            <ui-select-choices repeat="item in ctrl.people | filter: $select.search">
               <div ng-bind-html="item.name | highlight: $select.search"></div>
               <small ng-bind-html="item.email | highlight: $select.search"></small>
             </ui-select-choices>
@@ -112,6 +74,3 @@
 
     </fieldset>
   </form>
-
-</body>
-</html>
