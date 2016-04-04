@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.16.1 - 2016-04-04T19:32:31.129Z
+ * Version: 0.16.1 - 2016-04-04T20:08:12.528Z
  * License: MIT
  */
 
@@ -706,6 +706,7 @@ uis.controller('uiSelectCtrl',
   };
 
   var sizeWatch = null;
+  var updaterScheduled = false;
   ctrl.sizeSearchInput = function() {
 
     var input = ctrl.searchInput[0],
@@ -727,10 +728,16 @@ uis.controller('uiSelectCtrl',
     ctrl.searchInput.css('width', '10px');
     $timeout(function() { //Give tags time to render correctly
       if (sizeWatch === null && !updateIfVisible(calculateContainerWidth())) {
-        sizeWatch = $scope.$watch(calculateContainerWidth, function(containerWidth) {
-          if (updateIfVisible(containerWidth)) {
-            sizeWatch();
-            sizeWatch = null;
+        sizeWatch = $scope.$watch(angular.noop, function() {
+          if (!updaterScheduled) {
+            updaterScheduled = true;
+            $scope.$$postDigest(function() {
+              updaterScheduled = false;
+              if (updateIfVisible(calculateContainerWidth())) {
+                sizeWatch();
+                sizeWatch = null;
+              }
+            });
           }
         });
       }
