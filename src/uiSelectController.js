@@ -498,9 +498,7 @@ uis.controller('uiSelectCtrl',
         else if (ctrl.activeIndex > 0 || (ctrl.search.length === 0 && ctrl.tagging.isActivated && ctrl.activeIndex > -1)) { ctrl.activeIndex--; }
         break;
       case KEY.TAB:
-        if ((!ctrl.multiple || ctrl.open) && ctrl.activeIndex >=0) {
-          ctrl.select(ctrl.items[ctrl.activeIndex], true); 
-        }
+        if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
         break;
       case KEY.ENTER:
         if(ctrl.open && (ctrl.tagging.isActivated || ctrl.activeIndex >= 0)){
