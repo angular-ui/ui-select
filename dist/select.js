@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.16.1 - 2016-04-04T20:12:33.892Z
+ * Version: 0.16.1 - 2016-04-06T16:22:20.047Z
  * License: MIT
  */
 
@@ -527,7 +527,11 @@ uis.controller('uiSelectCtrl',
           //Remove already selected items (ex: while searching)
           //TODO Should add a test
           ctrl.refreshItems(items);
-          ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+
+          //update the view value with fresh data from items, if there is a valid model value
+          if(angular.isDefined(ctrl.ngModel.$modelValue)) {
+            ctrl.ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          }
         }
       }
     });
@@ -1492,7 +1496,10 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       //Watch for external model changes
       scope.$watchCollection(function(){ return ngModel.$modelValue; }, function(newValue, oldValue) {
         if (oldValue != newValue){
-          ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          //update the view value with fresh data from items, if there is a valid model value
+          if(angular.isDefined(ngModel.$modelValue)) {
+            ngModel.$modelValue = null; //Force scope model value and ngModel value to be out of sync to re-run formatters
+          }
           $selectMultiple.refreshComponent();
         }
       });
