@@ -170,9 +170,9 @@ gulp.task('docs:assets', function () {
 
 gulp.task('docs:examples', function () {
   return gulp.src(['docs/examples/*.html'])
-    .pipe($.filenames('exampleFiles'))
     .pipe($.header(fs.readFileSync('docs/partials/_header.html')))
     .pipe($.footer(fs.readFileSync('docs/partials/_footer.html')))
+    .pipe($.filenames('exampleFiles'))
     .pipe(gulp.dest('./docs-built/'));
 });
 
