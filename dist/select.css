@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.16.1 - 2016-04-07T16:20:19.852Z
+ * Version: 0.16.1 - 2016-04-07T21:44:31.996Z
  * License: MIT
  */
 
@@ -158,12 +158,6 @@ body > .select2-container.open {
   position: absolute;
   top: 45%;
   right: 15px;
-}
-
-.ui-select-bootstrap .ui-select-match-text {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* See Scrollable Menu with Bootstrap 3 http://stackoverflow.com/questions/19227496 */
