@@ -443,7 +443,7 @@ describe('ui-select tests', function() {
   });
 
   it('should correctly render initial state with track by $index', function () {
-    
+
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
         <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
@@ -774,6 +774,30 @@ describe('ui-select tests', function() {
     expect(getMatchLabel(el)).toEqual('Samantha');
     expect(scope.selection.selected).toBe('6');
 
+  });
+
+  it('should correctly render initial state (with object as source) differentiating between falsy values', function() {
+    scope.items = [{
+      label: '-- None Selected --',
+      value: ''
+    }, {
+      label: 'Yes',
+      value: true
+    }, {
+      label: 'No',
+      value: false
+    }];
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match>{{ $select.selected.label }}</ui-select-match> \
+        <ui-select-choices repeat="item.value as item in items track by item.value">{{ item.label }}</ui-select-choices> \
+      </ui-select>'
+    );
+
+    scope.selection.selected = '';
+    scope.$digest();
+    expect(getMatchLabel(el)).toEqual('-- None Selected --');
   });
 
   describe('disabled options', function() {
@@ -2310,7 +2334,7 @@ describe('ui-select tests', function() {
 
       expect(el.scope().$select.multiple).toBe(true);
     });
-    
+
     it('should preserve the model if tagging is enabled on select multiple', function() {
       scope.selection.selectedMultiple = ["I am not on the list of choices"];
 

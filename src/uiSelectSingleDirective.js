@@ -25,7 +25,7 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
           var checkFnSingle = function(d){
             locals[$select.parserResult.itemName] = d;
             result = $select.parserResult.modelMapper(scope, locals);
-            return result == inputValue;
+            return result === inputValue;
           };
           //If possible pass same object stored in $select.selected
           if ($select.selected && checkFnSingle($select.selected)) {
