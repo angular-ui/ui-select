@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.16.1 - 2016-04-07T21:55:41.550Z
+ * Version: 0.16.1 - 2016-04-16T12:43:50.203Z
  * License: MIT
  */
 
@@ -1835,7 +1835,7 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
           var checkFnSingle = function(d){
             locals[$select.parserResult.itemName] = d;
             result = $select.parserResult.modelMapper(scope, locals);
-            return result == inputValue;
+            return result === inputValue;
           };
           //If possible pass same object stored in $select.selected
           if ($select.selected && checkFnSingle($select.selected)) {
@@ -1932,6 +1932,7 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
     }
   };
 }]);
+
 // Make multiple matches sortable
 uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', function($timeout, uiSelectConfig, uiSelectMinErr) {
   return {
