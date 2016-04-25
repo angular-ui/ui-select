@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.16.1 - 2016-04-25T12:29:50.247Z
+ * Version: 0.16.1 - 2016-04-25T16:08:16.932Z
  * License: MIT
  */
 
@@ -200,11 +200,7 @@ body > .ui-select-bootstrap.open {
   position: relative;
 }
 
-.ui-select-multiple .ui-select-match-item.dropping .ui-select-match-close {
-  pointer-events: none;
-}
-
-.ui-select-multiple:hover .ui-select-match-item.dropping-before:before {
+.ui-select-multiple .ui-select-match-item.dropping-before:before {
   content: "";
   position: absolute;
   top: 0;
@@ -214,7 +210,7 @@ body > .ui-select-bootstrap.open {
   border-left: 1px solid #428bca;
 }
 
-.ui-select-multiple:hover .ui-select-match-item.dropping-after:after {
+.ui-select-multiple .ui-select-match-item.dropping-after:after {
   content: "";
   position: absolute;
   top: 0;
