@@ -2504,6 +2504,22 @@ describe('ui-select tests', function() {
       expect($(el).scope().$select.selected.length).toBe(3);
     });
 
+    it('should split pastes on tagging token that is not the first token', function() {
+      var el = createUiSelectMultiple({tagging: true, taggingTokens: ",|ENTER|TAB"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), "tag1\ntag2\ntag3\ntag4");
+
+      expect($(el).scope().$select.selected).toEqual(['tag1', 'tag2', 'tag3', 'tag4']);
+    });
+
+    it('should split pastes only on first tagging token found in paste string', function() {
+      var el = createUiSelectMultiple({tagging: true, taggingTokens: ",|ENTER|TAB"});
+      clickMatch(el);
+      triggerPaste(el.find('input'), "tag1\ntag2\ntag3\ttag4");
+
+      expect($(el).scope().$select.selected).toEqual(['tag1', 'tag2', 'tag3\ttag4']);
+    });
+
     it('should add an id to the search input field', function () {
       var el = createUiSelectMultiple({inputId: 'inid'});
       var searchEl = $(el).find('input.ui-select-search');
