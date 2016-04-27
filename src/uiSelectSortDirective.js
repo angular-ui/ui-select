@@ -1,11 +1,14 @@
 // Make multiple matches sortable
 uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', function($timeout, uiSelectConfig, uiSelectMinErr) {
   return {
-    require: '^^uiSelect',
-    link: function(scope, element, attrs, $select) {
+    require: ['^^uiSelect', '^ngModel'],
+    link: function(scope, element, attrs, ctrls) {
       if (scope[attrs.uiSelectSort] === null) {
         throw uiSelectMinErr('sort', 'Expected a list to sort');
       }
+
+      var $select = ctrls[0];
+      var $ngModel = ctrls[1];
 
       var options = angular.extend({
           axis: 'horizontal'
@@ -98,6 +101,8 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         }
 
         move.apply(theList, [droppedItemIndex, newIndex]);
+
+        $ngModel.$setViewValue(Date.now());
 
         scope.$apply(function() {
           scope.$emit('uiSelectSort:change', {
