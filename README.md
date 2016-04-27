@@ -26,7 +26,7 @@ For the roadmap, check [issue #3](https://github.com/angular-ui/ui-select/issues
 
 ### npm
 ```
-$ npm install angular-ui-select
+$ npm install ui-select
 ```
 ### bower
 ```
