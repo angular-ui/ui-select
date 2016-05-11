@@ -7,11 +7,11 @@
     "url": "git://github.com/angular-ui/ui-select.git"
   },
   "style": "dist/select.css",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "devDependencies": {
     "angular": "^1.2.18",
     "angular-mocks": "^1.2.18",
-    "angular-sanitize": "^1.2.18",    
+    "angular-sanitize": "^1.2.18",
     "conventional-changelog": "^0.5.3",
     "conventional-recommended-bump": "0.0.3",
     "del": "~0.1.1",

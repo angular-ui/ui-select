@@ -1,4 +1,41 @@
 <a name="0.16.1"></a>
+## [0.16.1](https://github.com/angular-ui/ui-select/compare/v0.16.1...v0.16.1) (2016-05-11)
+
+
+### Bug Fixes
+
+* **a11y:** prevent list from being focusable ([4e9ab7e](https://github.com/angular-ui/ui-select/commit/4e9ab7e)), closes [#898](https://github.com/angular-ui/ui-select/issues/898)
+* **autocomplete:** change to type="search" ([48cf1ba](https://github.com/angular-ui/ui-select/commit/48cf1ba)), closes [#991](https://github.com/angular-ui/ui-select/issues/991)
+* **bootstrap:** hide clear button if disabled ([fe0c0c1](https://github.com/angular-ui/ui-select/commit/fe0c0c1)), closes [#1388](https://github.com/angular-ui/ui-select/issues/1388) [#980](https://github.com/angular-ui/ui-select/issues/980)
+* **bootstrap:** hide dropdown if there are no items to show ([7c8b3a0](https://github.com/angular-ui/ui-select/commit/7c8b3a0)), closes [#1588](https://github.com/angular-ui/ui-select/issues/1588)
+* **build:** fix sourcemap logic ([6d4849f](https://github.com/angular-ui/ui-select/commit/6d4849f))
+* **demo-tagging:** error in Object Tags for input "a" ([7963684](https://github.com/angular-ui/ui-select/commit/7963684))
+* **sortable:** remove classes properly ([4b1ed47](https://github.com/angular-ui/ui-select/commit/4b1ed47)), closes [#902](https://github.com/angular-ui/ui-select/issues/902)
+* **tagging:** do not remove selected items when invalid ([331f819](https://github.com/angular-ui/ui-select/commit/331f819)), closes [#1359](https://github.com/angular-ui/ui-select/issues/1359)
+* **tagging groupBy:** fix group-by to work with tagging ([80be85b](https://github.com/angular-ui/ui-select/commit/80be85b))
+* **tagging multiple:** hide tagging item if null returned ([2f14045](https://github.com/angular-ui/ui-select/commit/2f14045))
+* **uiSelectCtrl:** correcting input focus ([6444d6b](https://github.com/angular-ui/ui-select/commit/6444d6b)), closes [#1253](https://github.com/angular-ui/ui-select/issues/1253)
+* **uiSelectSingleDirective:** strictly compare matching value ([a574cd4](https://github.com/angular-ui/ui-select/commit/a574cd4)), closes [#1328](https://github.com/angular-ui/ui-select/issues/1328)
+* **uiSelectSort:** update model on sort completion ([9a40b6f](https://github.com/angular-ui/ui-select/commit/9a40b6f)), closes [#974](https://github.com/angular-ui/ui-select/issues/974) [#1036](https://github.com/angular-ui/ui-select/issues/1036)
+* ensure highlighted before selecting on tab ([06bbd31](https://github.com/angular-ui/ui-select/commit/06bbd31)), closes [#1030](https://github.com/angular-ui/ui-select/issues/1030)
+* properly gc on destruction ([95692e7](https://github.com/angular-ui/ui-select/commit/95692e7))
+* show input when search is disabled ([83132b0](https://github.com/angular-ui/ui-select/commit/83132b0)), closes [#595](https://github.com/angular-ui/ui-select/issues/595) [#453](https://github.com/angular-ui/ui-select/issues/453)
+* show select element when search is disabled ([f37bafd](https://github.com/angular-ui/ui-select/commit/f37bafd)), closes [#861](https://github.com/angular-ui/ui-select/issues/861)
+
+### Features
+
+* **perf:** debounce resize callback ([115ebf4](https://github.com/angular-ui/ui-select/commit/115ebf4))
+* **perf:** optimize width resizing ([d78ba5f](https://github.com/angular-ui/ui-select/commit/d78ba5f))
+
+### Performance Improvements
+
+* **tagging multiple:** transform tagging item only once when filtering ([2b4a9ea](https://github.com/angular-ui/ui-select/commit/2b4a9ea))
+* **uiSelectCtrl:** moving activate events out of $timeout ([926f462](https://github.com/angular-ui/ui-select/commit/926f462))
+* change test in ctrl.isActive ([d6c14d4](https://github.com/angular-ui/ui-select/commit/d6c14d4))
+
+
+
+<a name="0.16.1"></a>
 # [0.16.1](https://github.com/angular-ui/ui-select/compare/v0.16.0...v0.16.1) (2016-03-23)
 
 ### Bug Fixes
