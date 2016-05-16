@@ -18,7 +18,7 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
 
       //From model --> view
       ngModel.$formatters.unshift(function (inputValue) {
-        var data = $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
+        var data = $select.parserResult && $select.parserResult.source (scope, { $select : {search:''}}), //Overwrite $search
             locals = {},
             result;
         if (data){
