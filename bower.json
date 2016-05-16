@@ -1,6 +1,5 @@
 {
-  "name": "angular-ui-select",
-  "version": "0.17.0",
+  "name": "angular-ui-select",  
   "homepage": "https://github.com/angular-ui/ui-select",
   "authors": [
     "AngularUI"

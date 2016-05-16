@@ -118,7 +118,7 @@ gulp.task('recommendedBump', function(done) {
 
   conventionalRecommendedBump({preset: 'angular'}, function(err, importance) {
     // Get all the files to bump version in
-    gulp.src(['./package.json', './bower.json'])
+    gulp.src(['./package.json'])
       .pipe($.bump({type: importance}))
       .pipe(gulp.dest('./'));
 
