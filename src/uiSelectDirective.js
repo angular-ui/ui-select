@@ -383,6 +383,7 @@ uis.directive('uiSelect',
             }
 
             // Reset the position of the dropdown.
+            dropdown[0].style.opacity = 0;
             dropdown[0].style.position = '';
             dropdown[0].style.top = '';
             element.removeClass(directionUpClassName);
