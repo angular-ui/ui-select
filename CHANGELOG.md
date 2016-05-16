@@ -1,5 +1,16 @@
+<a name="0.17.1"></a>
+## [0.17.1](https://github.com/angular-ui/ui-select/compare/v0.17.0...v0.17.1) (2016-05-16)
+
+
+### Bug Fixes
+
+* **parserResult:** Ignore undefined parserResult when using custom tpl ([cee24e5](https://github.com/angular-ui/ui-select/commit/cee24e5)), closes [#1597](https://github.com/angular-ui/ui-select/issues/1597)
+* **select2:** hide dropdown if there are no items to show (same as #1588 for bootstrap) ([4c561ac](https://github.com/angular-ui/ui-select/commit/4c561ac))
+
+
+
 <a name="0.16.1"></a>
-## [0.16.1](https://github.com/angular-ui/ui-select/compare/v0.16.1...v0.16.1) (2016-05-11)
+## [0.16.1](https://github.com/angular-ui/ui-select/compare/v0.16.1...v0.17.0) (2016-05-11)
 
 
 ### Bug Fixes
