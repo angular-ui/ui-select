@@ -175,6 +175,7 @@ app.controller('DemoCtrl', function ($scope, $http, $timeout, $interval) {
   vm.multipleDemo.selectedPeople2 = vm.multipleDemo.selectedPeople;
   vm.multipleDemo.selectedPeopleWithGroupBy = [vm.people[8], vm.people[6]];
   vm.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
+  vm.multipleDemo.removeSelectIsFalse = [vm.people[2], vm.people[0]];
 
   vm.appendToBodyDemo = {
     remainingToggleTime: 0,
