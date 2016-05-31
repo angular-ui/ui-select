@@ -476,7 +476,7 @@ uis.controller('uiSelectCtrl',
     ctrl.searchInput.css('width', '10px');
     $timeout(function() { //Give tags time to render correctly
       if (sizeWatch === null && !updateIfVisible(calculateContainerWidth())) {
-        sizeWatch = $scope.$watch(angular.noop, function() {
+        sizeWatch = $scope.$watch(function() {
           if (!updaterScheduled) {
             updaterScheduled = true;
             $scope.$$postDigest(function() {
@@ -487,7 +487,7 @@ uis.controller('uiSelectCtrl',
               }
             });
           }
-        });
+        }, angular.noop);
       }
     });
   };
