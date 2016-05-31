@@ -18,7 +18,7 @@ uis.controller('uiSelectCtrl',
   ctrl.refreshDelay = uiSelectConfig.refreshDelay;
   ctrl.paste = uiSelectConfig.paste;
 
-  ctrl.removeSelected = false; //If selected item(s) should be removed from dropdown list
+  ctrl.removeSelected = uiSelectConfig.removeSelected; //If selected item(s) should be removed from dropdown list
   ctrl.closeOnSelect = true; //Initialized inside uiSelect directive link function
   ctrl.skipFocusser = false; //Set to true to avoid returning focus to ctrl when item is selected
   ctrl.search = EMPTY_SEARCH;
@@ -240,9 +240,9 @@ uis.controller('uiSelectCtrl',
       }else{
         if ( data !== undefined ) {
           var filteredItems = data.filter(function(i) {
-            return selectedItems.every(function(selectedItem) {
+            return angular.isArray(selectedItems) ? selectedItems.every(function(selectedItem) {
               return !angular.equals(i, selectedItem);
-            });
+            }) : !angular.equals(i, selectedItems);
           });
           ctrl.setItemsFn(filteredItems);
         }
@@ -317,6 +317,11 @@ uis.controller('uiSelectCtrl',
     return isActive;
   };
 
+  var _isItemSelected = function (item) {
+    return (ctrl.selected && angular.isArray(ctrl.selected) &&
+        ctrl.selected.filter(function (selection) { return angular.equals(selection, item); }).length > 0);
+  };
+
   ctrl.isDisabled = function(itemScope) {
 
     if (!ctrl.open) return;
@@ -325,9 +330,9 @@ uis.controller('uiSelectCtrl',
     var isDisabled = false;
     var item;
 
-    if (itemIndex >= 0 && !angular.isUndefined(ctrl.disableChoiceExpression)) {
+    if (itemIndex >= 0 && (!angular.isUndefined(ctrl.disableChoiceExpression) || ctrl.multiple)) {
       item = ctrl.items[itemIndex];
-      isDisabled = !!(itemScope.$eval(ctrl.disableChoiceExpression)); // force the boolean value
+      isDisabled = !!(itemScope.$eval(ctrl.disableChoiceExpression)) || _isItemSelected(item); // force the boolean value
       item._uiSelectChoiceDisabled = isDisabled; // store this for later reference
     }
 
@@ -375,7 +380,7 @@ uis.controller('uiSelectCtrl',
             }
           }
           // search ctrl.selected for dupes potentially caused by tagging and return early if found
-          if ( ctrl.selected && angular.isArray(ctrl.selected) && ctrl.selected.filter( function (selection) { return angular.equals(selection, item); }).length > 0 ) {
+          if (_isItemSelected(item)) {
             ctrl.close(skipFocusser);
             return;
           }

@@ -101,6 +101,7 @@ var uis = angular.module('ui.select', [])
   closeOnSelect: true,
   skipFocusser: false,
   dropdownPosition: 'auto',
+  removeSelected: true,
   generateId: function() {
     return latestId++;
   },

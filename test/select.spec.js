@@ -1427,6 +1427,56 @@ describe('ui-select tests', function() {
     expect($(el).scope().$select.selected).toEqual(['idontexist']);
   });
 
+  it('should remove a choice when remove-selected is not given (default is true)', function () {
+
+    var el = compileTemplate(
+      '<ui-select multiple ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div class="person-name" ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    clickItem(el, 'Samantha');
+    clickItem(el, 'Adrian');
+
+    openDropdown(el);
+
+    var choicesEls = $(el).find('.ui-select-choices-row');
+    expect(choicesEls.length).toEqual(6);
+
+    ['Adam', 'Amalie', 'Estefanía', 'Wladimir', 'Nicole', 'Natasha'].forEach(function (name, index) {
+      expect($(choicesEls[index]).hasClass('disabled')).toBeFalsy();
+      expect($(choicesEls[index]).find('.person-name').text()).toEqual(name);
+    });
+  });
+
+  it('should disable a choice instead of removing it when remove-selected is false', function () {
+
+    var el = compileTemplate(
+      '<ui-select multiple remove-selected="false" ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    clickItem(el, 'Samantha');
+    clickItem(el, 'Adrian');
+
+    openDropdown(el);
+
+    var choicesEls = $(el).find('.ui-select-choices-row');
+    expect(choicesEls.length).toEqual(8);
+    [false, false, false, true /* Adrian */, false, true /* Samantha */, false, false].forEach(function (bool, index) {
+      expect($(choicesEls[index]).hasClass('disabled')).toEqual(bool);
+    });
+  });
+
   it('should append/transclude content (with correct scope) that users add at <match> tag', function () {
 
     var el = compileTemplate(
