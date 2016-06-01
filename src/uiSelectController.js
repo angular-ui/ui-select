@@ -250,6 +250,8 @@ uis.controller('uiSelectCtrl',
       if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
         $scope.calculateDropdownPos();
       }
+
+      $scope.$broadcast('uis:refresh');
     };
 
     // See https://github.com/angular/angular.js/blob/v1.2.15/src/ng/directive/ngRepeat.js#L259
