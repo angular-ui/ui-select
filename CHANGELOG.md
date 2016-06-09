@@ -1,4 +1,24 @@
 <a name="0.17.1"></a>
+## [0.17.1](https://github.com/angular-ui/ui-select/compare/v0.17.1...v0.17.1) (2016-06-09)
+
+
+### Bug Fixes
+
+* **positioning:** stop flicker when closed ([ca4d09e](https://github.com/angular-ui/ui-select/commit/ca4d09e))
+* **positioning:** wait for animation to complete ([aa90dd8](https://github.com/angular-ui/ui-select/commit/aa90dd8)), closes [#1593](https://github.com/angular-ui/ui-select/issues/1593)
+* search input width resizing ([5c8cf86](https://github.com/angular-ui/ui-select/commit/5c8cf86)), closes [#1575](https://github.com/angular-ui/ui-select/issues/1575)
+* **uiSelectCtrl:** Prevent error when using ngAnimate < v1.4 ([8becac3](https://github.com/angular-ui/ui-select/commit/8becac3)), closes [#1626](https://github.com/angular-ui/ui-select/issues/1626)
+* **uiSelectNoChoice:** make compatible with Angular 1.5 ([c944307](https://github.com/angular-ui/ui-select/commit/c944307)), closes [#1609](https://github.com/angular-ui/ui-select/issues/1609)
+* **uiSelectNoChoice:** support bootstrap-multiple ([9d29307](https://github.com/angular-ui/ui-select/commit/9d29307)), closes [#1614](https://github.com/angular-ui/ui-select/issues/1614) [#1615](https://github.com/angular-ui/ui-select/issues/1615)
+
+### Features
+
+* **limit:** Change multi-select limit attr (#1632) ([f5888fb](https://github.com/angular-ui/ui-select/commit/f5888fb))
+* **removeSelected:** Implement removeSelected property for multiple selects ([3ad084f](https://github.com/angular-ui/ui-select/commit/3ad084f))
+
+
+
+<a name="0.17.1"></a>
 ## [0.17.1](https://github.com/angular-ui/ui-select/compare/v0.17.0...v0.17.1) (2016-05-16)
 
 
