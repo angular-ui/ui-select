@@ -261,12 +261,3 @@ body > .ui-select-bootstrap.open {
 .ui-select-container[theme="bootstrap"].direction-up .ui-select-dropdown {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
 }
-
-/* fix ellipsis on placeholder and match text */
-.ui-select-placeholder, .ui-select-match-text {
-  width: 100%;
-  overflow: hidden;
-  display: inline-block;
-  text-overflow: ellipsis;
-  padding-right: 40px;
-}
