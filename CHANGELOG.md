@@ -1,5 +1,5 @@
-<a name="0.17.1"></a>
-## [0.17.1](https://github.com/angular-ui/ui-select/compare/v0.17.1...v0.17.1) (2016-06-09)
+<a name="0.18.0"></a>
+## [0.18.0](https://github.com/angular-ui/ui-select/compare/v0.17.1...v0.18.0) (2016-06-09)
 
 
 ### Bug Fixes
