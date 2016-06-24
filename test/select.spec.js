@@ -1728,6 +1728,7 @@ describe('ui-select tests', function() {
             if (attrs.closeOnSelect !== undefined) { attrsHtml += ' close-on-select="' + attrs.closeOnSelect + '"'; }
             if (attrs.tagging !== undefined) { attrsHtml += ' tagging="' + attrs.tagging + '"'; }
             if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
+            if (attrs.taggingLabel !== undefined) { attrsHtml += ' tagging-label="' + attrs.taggingLabel + '"'; }
             if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
             if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
         }
@@ -2568,6 +2569,14 @@ describe('ui-select tests', function() {
       triggerPaste(el.find('input'), "tag1\ntag2\ntag3\ttag4");
 
       expect($(el).scope().$select.selected).toEqual(['tag1', 'tag2', 'tag3\ttag4']);
+    });
+
+    it('should allow paste with tagging-tokens and tagging-label=="false"', function() {
+      var el = createUiSelectMultiple({tagging: true, taggingLabel: false, taggingTokens: ","});
+      clickMatch(el);
+      triggerPaste(el.find('input'), 'tag1');
+
+      expect($(el).scope().$select.selected).toEqual(['tag1']);
     });
 
     it('should add an id to the search input field', function () {
