@@ -7,10 +7,10 @@
   <p>Tagging allows the creation of new items not present in the item list</p>
 
   <h3>Simple String Tags <small>(With Custom Tag Label &amp; Sort Enabled)</small></h3>
-  
+
   <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="ctrl.multipleDemo.colors" theme="bootstrap" sortable="true" ng-disabled="ctrl.disabled" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
-    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+    <ui-select-choices repeat="color in ctrl.availableColors | filter:$select.search">
       {{color}}
     </ui-select-choices>
   </ui-select>
@@ -18,10 +18,10 @@
   <hr>
 
   <h3>Simple String Tags <small>(Predictive Search Model &amp; No Labels)</small></h3>
-  
+
   <ui-select multiple tagging tagging-label="false" ng-model="ctrl.multipleDemo.colors2" theme="bootstrap" ng-disabled="ctrl.disabled" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
-    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+    <ui-select-choices repeat="color in ctrl.availableColors | filter:$select.search">
       {{color}}
     </ui-select-choices>
   </ui-select>
@@ -78,7 +78,7 @@
   <h3>Tagging in Single select mode, with simple strings</h3>
   <ui-select tagging tagging-label="('new')" ng-model="ctrl.singleDemo.color" theme="bootstrap" style="width: 800px;" title="Choose a color">
     <ui-select-match placeholder="Select color...">{{$select.selected}}</ui-select-match>
-    <ui-select-choices repeat="color in availableColors | filter: $select.search">
+    <ui-select-choices repeat="color in ctrl.availableColors | filter: $select.search">
       <div ng-bind-html="color | highlight: $select.search"></div>
     </ui-select-choices>
   </ui-select>
