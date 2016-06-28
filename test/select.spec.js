@@ -1427,7 +1427,7 @@ describe('ui-select tests', function() {
     expect($(el).scope().$select.selected).toEqual(['idontexist']);
   });
 
-  it('should remove a choice when remove-selected is not given (default is true)', function () {
+  it('should remove a choice when multiple and remove-selected is not given (default is true)', function () {
 
     var el = compileTemplate(
       '<ui-select multiple ng-model="selection.selected"> \
@@ -1448,6 +1448,31 @@ describe('ui-select tests', function() {
     expect(choicesEls.length).toEqual(6);
 
     ['Adam', 'Amalie', 'Estefanía', 'Wladimir', 'Nicole', 'Natasha'].forEach(function (name, index) {
+      expect($(choicesEls[index]).hasClass('disabled')).toBeFalsy();
+      expect($(choicesEls[index]).find('.person-name').text()).toEqual(name);
+    });
+  });
+
+  it('should not remove a pre-selected choice when not multiple and remove-selected is not given (default is true)', function () {
+    scope.selection.selected = scope.people[5]; // Samantha
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div class="person-name" ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    expect(getMatchLabel(el)).toEqual("Samantha");
+    openDropdown(el);
+
+    var choicesEls = $(el).find('.ui-select-choices-row');
+    expect(choicesEls.length).toEqual(8);
+
+    ['Adam', 'Amalie', 'Estefanía', 'Adrian', 'Wladimir', 'Samantha', 'Nicole', 'Natasha'].forEach(function (name, index) {
       expect($(choicesEls[index]).hasClass('disabled')).toBeFalsy();
       expect($(choicesEls[index]).find('.person-name').text()).toEqual(name);
     });

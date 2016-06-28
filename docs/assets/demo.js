@@ -150,6 +150,8 @@ app.controller('DemoCtrl', function ($scope, $http, $timeout, $interval) {
   vm.person.selectedValue = vm.peopleObj[3];
   vm.person.selectedSingle = 'Samantha';
   vm.person.selectedSingleKey = '5';
+  // To run the demos with a preselected person object, uncomment the line below.
+  //vm.person.selected = vm.person.selectedValue;
 
   vm.people = [
     { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
