@@ -136,6 +136,20 @@ $model = {{ctrl.lastRemoved.model}}
   </ui-select>
   <p>Selected: {{multipleDemo.selectedPeopleWithGroupBy}}</p>
 
+  <hr>
+  <h3>Disabling instead of removing selected items</h3>
+  <ui-select multiple ng-model="ctrl.multipleDemo.removeSelectIsFalse" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person" remove-selected="false">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
+      <div ng-bind-html="person.name | highlight: $select.search"></div>
+      <small>
+        email: {{person.email}}
+        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+      </small>
+    </ui-select-choices>
+  </ui-select>
+  <p>Selected: {{multipleDemo.removeSelectIsFalse}}</p>
+
   <div style="height:500px"></div>
 </body>
 </html>
