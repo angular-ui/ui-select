@@ -26,8 +26,12 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
         //Remove already selected items
         //e.g. When user clicks on a selection, the selected array changes and
         //the dropdown should remove that item
-        $select.refreshItems();
-        $select.sizeSearchInput();
+        if($select.refreshItems){
+          $select.refreshItems();
+        }
+        if($select.sizeSearchInput){
+          $select.sizeSearchInput();
+        }
       };
 
       // Remove item from multiple select
