@@ -162,7 +162,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
         if(!angular.isArray(ngModel.$viewValue)){
           // Have tolerance for null or undefined values
           if(angular.isUndefined(ngModel.$viewValue) || ngModel.$viewValue === null){
-            $select.selected = [];
+            ngModel.$viewValue = [];
           } else {
             throw uiSelectMinErr('multiarr', "Expected model value to be array but got '{0}'", ngModel.$viewValue);
           }
