@@ -351,6 +351,8 @@ uis.controller('uiSelectCtrl',
     
     if (itemIndex >= 0 && (angular.isDefined(ctrl.disableChoiceExpression) || ctrl.multiple)) {
 
+      if (item.isTag) return false;
+
       if (ctrl.multiple) {
         isDisabled = _isItemSelected(item);
       }
