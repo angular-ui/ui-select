@@ -37,10 +37,10 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       // Remove item from multiple select
       ctrl.removeChoice = function(index){
 
-        var removedChoice = $select.selected[index];
+        // if the choice is locked, don't remove it
+        if($select.isLocked(null, index)) return false;
 
-        // if the choice is locked, can't remove it
-        if(removedChoice._uiSelectChoiceLocked) return;
+        var removedChoice = $select.selected[index];
 
         var locals = {};
         locals[$select.parserResult.itemName] = removedChoice;
@@ -59,6 +59,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
 
         ctrl.updateModel();
 
+        return true;
       };
 
       ctrl.getPlaceholder = function(){
@@ -246,11 +247,16 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             case KEY.BACKSPACE:
               // Remove selected item and select previous/first
               if(~$selectMultiple.activeMatchIndex){
-                $selectMultiple.removeChoice(curr);
-                return prev;
-              }
-              // Select last item
-              else return last;
+                if($selectMultiple.removeChoice(curr)) {
+                  return prev;
+                } else {
+                  return curr;
+                }
+                
+              } else {
+                // If nothing yet selected, select last item
+                return last;  
+              }              
               break;
             case KEY.DELETE:
               // Remove selected item and select next item

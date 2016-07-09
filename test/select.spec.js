@@ -1745,7 +1745,8 @@ describe('ui-select tests', function() {
 
     function createUiSelectMultiple(attrs) {
         var attrsHtml = '',
-            choicesAttrsHtml = '';
+            choicesAttrsHtml = '',
+            matchesAttrsHtml = '';
         if (attrs !== undefined) {
             if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
             if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
@@ -1756,11 +1757,12 @@ describe('ui-select tests', function() {
             if (attrs.taggingLabel !== undefined) { attrsHtml += ' tagging-label="' + attrs.taggingLabel + '"'; }
             if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
             if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
+            if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
         }
 
         return compileTemplate(
             '<ui-select multiple ng-model="selection.selectedMultiple"' + attrsHtml + ' theme="bootstrap" style="width: 800px;"> \
-                <ui-select-match placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+                <ui-select-match "' + matchesAttrsHtml + ' placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
                 <ui-select-choices repeat="person in people | filter: $select.search"' + choicesAttrsHtml + '> \
                   <div ng-bind-html="person.name | highlight: $select.search"></div> \
                   <div ng-bind-html="person.email | highlight: $select.search"></div> \
@@ -1921,6 +1923,37 @@ describe('ui-select tests', function() {
         expect(el.scope().$selectMultiple.activeMatchIndex).toBe(1);
 
     });
+
+    it('should NOT remove highlighted match when pressing BACKSPACE key on a locked choice', function() {
+
+        scope.selection.selectedMultiple = [scope.people[4], scope.people[5], scope.people[6]]; //Wladimir, Samantha & Nicole
+        var el = createUiSelectMultiple({lockChoice: "$item.name == '" + scope.people[6].name + "'"});
+        var searchInput = el.find('.ui-select-search');
+
+        expect(isDropdownOpened(el)).toEqual(false);
+        triggerKeydown(searchInput, Key.Left);
+        triggerKeydown(searchInput, Key.Backspace);
+        expect(el.scope().$select.selected).toEqual([scope.people[4], scope.people[5], scope.people[6]]); //Wladimir, Samantha & Nicole
+
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(scope.selection.selectedMultiple.length - 1);
+
+    });
+
+    it('should NOT remove highlighted match when pressing DELETE key on a locked choice', function() {
+
+        scope.selection.selectedMultiple = [scope.people[4], scope.people[5], scope.people[6]]; //Wladimir, Samantha & Nicole
+        var el = createUiSelectMultiple({lockChoice: "$item.name == '" + scope.people[6].name + "'"});
+        var searchInput = el.find('.ui-select-search');
+
+        expect(isDropdownOpened(el)).toEqual(false);
+        triggerKeydown(searchInput, Key.Left);
+        triggerKeydown(searchInput, Key.Delete);
+        expect(el.scope().$select.selected).toEqual([scope.people[4], scope.people[5], scope.people[6]]); //Wladimir, Samantha & Nicole
+
+        expect(el.scope().$selectMultiple.activeMatchIndex).toBe(scope.selection.selectedMultiple.length - 1);
+
+    });
+
 
     it('should move to last match when pressing LEFT key from search', function() {
 
