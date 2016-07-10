@@ -1,3 +1,25 @@
+<a name="0.18.1"></a>
+## [0.18.1](https://github.com/angular-ui/ui-select/compare/v0.18.0...v0.18.1) (2016-07-10)
+
+
+### Bug Fixes
+
+* **isDisabled:** do not modify item ([b95bf9f](https://github.com/angular-ui/ui-select/commit/b95bf9f)), closes [#1200](https://github.com/angular-ui/ui-select/issues/1200) [#1661](https://github.com/angular-ui/ui-select/issues/1661)
+* **isLocked:** do not modify item ([c01d363](https://github.com/angular-ui/ui-select/commit/c01d363)), closes [#1269](https://github.com/angular-ui/ui-select/issues/1269) [#514](https://github.com/angular-ui/ui-select/issues/514)
+* **removeSelected:** fix incorrect removal of preselected item  ([32b7924](https://github.com/angular-ui/ui-select/commit/32b7924)), closes [#1672](https://github.com/angular-ui/ui-select/issues/1672)
+* **searchEnabled:** watch evaluated attribute value  ([4503295](https://github.com/angular-ui/ui-select/commit/4503295)), closes [#505](https://github.com/angular-ui/ui-select/issues/505)
+* **select2:** Up-direction when using global theme  ([5336dc5](https://github.com/angular-ui/ui-select/commit/5336dc5)), closes [#1674](https://github.com/angular-ui/ui-select/issues/1674)
+* **Selectize:** hide input box when selected data is 0 ([e179dc6](https://github.com/angular-ui/ui-select/commit/e179dc6)), closes [#1304](https://github.com/angular-ui/ui-select/issues/1304)
+* **tagging:** infite digest loops when name is similar ([fcd9bc5](https://github.com/angular-ui/ui-select/commit/fcd9bc5)), closes [#1693](https://github.com/angular-ui/ui-select/issues/1693)
+* **tagging:** Support paste with tagging enabled and tagging-label="false" ([668a0f3](https://github.com/angular-ui/ui-select/commit/668a0f3)), closes [#1668](https://github.com/angular-ui/ui-select/issues/1668)
+* **uiSelectMultiple:** $select.refreshItems is not a function  ([a41a7fc](https://github.com/angular-ui/ui-select/commit/a41a7fc))
+* **uiSelectMultiple:** Allow duplicates in $select.selected ([9f5d6ec](https://github.com/angular-ui/ui-select/commit/9f5d6ec)), closes [#1688](https://github.com/angular-ui/ui-select/issues/1688)
+* **uiSelectMultiple:** tolerate null/undefined view value ([0c29b64](https://github.com/angular-ui/ui-select/commit/0c29b64))
+* **uiSelectNoChoice:** support Select2 theme  ([e59e008](https://github.com/angular-ui/ui-select/commit/e59e008)), closes [#1608](https://github.com/angular-ui/ui-select/issues/1608)
+* **uiSelectNoChoice:** support Selectize theme  ([a7210c4](https://github.com/angular-ui/ui-select/commit/a7210c4)), closes [#1692](https://github.com/angular-ui/ui-select/issues/1692)
+
+
+
 <a name="0.18.0"></a>
 ## [0.18.0](https://github.com/angular-ui/ui-select/compare/v0.17.1...v0.18.0) (2016-06-09)
 

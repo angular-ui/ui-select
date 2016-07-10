@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.17.1 - 2016-06-09T20:41:58.462Z
+ * Version: 0.18.1 - 2016-07-10T00:18:11.107Z
  * License: MIT
  */
 
@@ -54,12 +54,14 @@ body > .select2-container.open {
 }
 
 /* Handle up direction Select2 */
-.ui-select-container[theme="select2"].direction-up .ui-select-match {
+.ui-select-container[theme="select2"].direction-up .ui-select-match,
+.ui-select-container.select2.direction-up .ui-select-match {
     border-radius: 4px; /* FIXME hardcoded value :-/ */
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-.ui-select-container[theme="select2"].direction-up .ui-select-dropdown {
+.ui-select-container[theme="select2"].direction-up .ui-select-dropdown,
+.ui-select-container.select2.direction-up .ui-select-dropdown {
     border-radius: 4px; /* FIXME hardcoded value :-/ */
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -71,10 +73,12 @@ body > .select2-container.open {
 
     margin-top: -4px; /* FIXME hardcoded value :-/ */
 }
-.ui-select-container[theme="select2"].direction-up .ui-select-dropdown .select2-search {
+.ui-select-container[theme="select2"].direction-up .ui-select-dropdown .select2-search,
+.ui-select-container.select2.direction-up .ui-select-dropdown .select2-search {
     margin-top: 4px; /* FIXME hardcoded value :-/ */
 }
-.ui-select-container[theme="select2"].direction-up.select2-dropdown-open .ui-select-match {
+.ui-select-container[theme="select2"].direction-up.select2-dropdown-open .ui-select-match,
+.ui-select-container.select2.direction-up.select2-dropdown-open .ui-select-match {
     border-bottom-color: #5897fb;
 }
 
