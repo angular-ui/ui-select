@@ -77,7 +77,7 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
   };
 
   self.getGroupNgRepeatExpression = function() {
-    return '$group in $select.groups';
+    return '$group in $select.groups track by $group.name';
   };
 
 }]);
