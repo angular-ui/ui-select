@@ -1427,6 +1427,31 @@ describe('ui-select tests', function() {
     expect($(el).scope().$select.selected).toEqual(['idontexist']);
   });
 
+  it('should allow selecting an item (click) in single select mode with tagging enabled', function() {
+
+    scope.taggingFunc = function (name) {
+      return name;
+    };
+
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected" tagging="taggingFunc" tagging-label="false"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name" | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    clickMatch(el);
+    setSearchText(el, 'Sam');
+    clickItem(el, 'Samantha');
+
+    expect(scope.selection.selected).toBe(scope.people[5]);
+    expect(getMatchLabel(el)).toEqual('Samantha');
+  });
+
+
   it('should remove a choice when multiple and remove-selected is not given (default is true)', function () {
 
     var el = compileTemplate(
@@ -2527,7 +2552,7 @@ describe('ui-select tests', function() {
       expect(el.scope().$select.items[1]).toEqual(jasmine.objectContaining({name: 'Amalie', email: 'amalie@email.com'}));
     });
 
-    
+
     it('should have tolerance for undefined values', function () {
 
       scope.modelValue = undefined;
@@ -2563,7 +2588,7 @@ describe('ui-select tests', function() {
 
       expect($(el).scope().$select.selected).toEqual([]);
     });
-      
+
     it('should allow paste tag from clipboard', function() {
       scope.taggingFunc = function (name) {
         return {
