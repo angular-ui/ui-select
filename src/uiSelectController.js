@@ -333,7 +333,7 @@ uis.controller('uiSelectCtrl',
     }
 
     if (!isDisabled && disabledItemIndex > -1) {
-      disabledItems.splice(disabledItemIndex, 0);
+      disabledItems.splice(disabledItemIndex, 1);
     }
   }
 

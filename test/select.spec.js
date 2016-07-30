@@ -1809,6 +1809,7 @@ describe('ui-select tests', function() {
             if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
             if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
             if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
+            if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
         }
 
         return compileTemplate(
@@ -2743,6 +2744,16 @@ describe('ui-select tests', function() {
       clickItem(el, 'Samantha');
       expect(el.hasClass('ng-not-empty')).toBeTruthy();
     });
+
+    it('should be able to re-select the item with removeselected set to false', function() {
+         scope.selection.selectedMultiple = [scope.people[4], scope.people[5]]; //Wladimir & Samantha
+         var el = createUiSelectMultiple({removeSelected : true});
+         expect(el.scope().$select.selected.length).toBe(2);
+         el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+         expect(el.scope().$select.selected.length).toBe(1);
+         clickItem(el, 'Wladimir');
+         expect(el.scope().$select.selected.length).toBe(2);
+     });
   });
 
   it('should add an id to the search input field', function () {
