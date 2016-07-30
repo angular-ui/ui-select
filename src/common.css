@@ -220,7 +220,8 @@ body > .ui-select-bootstrap.open {
   border-right: 1px solid #428bca;
 }
 
-.ui-select-bootstrap .ui-select-choices-row>a {
+.ui-select-bootstrap .ui-select-choices-row>span {
+    cursor: pointer;
     display: block;
     padding: 3px 20px;
     clear: both;
@@ -230,21 +231,21 @@ body > .ui-select-bootstrap.open {
     white-space: nowrap;
 }
 
-.ui-select-bootstrap .ui-select-choices-row>a:hover, .ui-select-bootstrap .ui-select-choices-row>a:focus {
+.ui-select-bootstrap .ui-select-choices-row>span:hover, .ui-select-bootstrap .ui-select-choices-row>span:focus {
     text-decoration: none;
     color: #262626;
     background-color: #f5f5f5;
 }
 
-.ui-select-bootstrap .ui-select-choices-row.active>a {
+.ui-select-bootstrap .ui-select-choices-row.active>span {
     color: #fff;
     text-decoration: none;
     outline: 0;
     background-color: #428bca;
 }
 
-.ui-select-bootstrap .ui-select-choices-row.disabled>a,
-.ui-select-bootstrap .ui-select-choices-row.active.disabled>a {
+.ui-select-bootstrap .ui-select-choices-row.disabled>span,
+.ui-select-bootstrap .ui-select-choices-row.active.disabled>span {
     color: #777;
     cursor: not-allowed;
     background-color: #fff;
