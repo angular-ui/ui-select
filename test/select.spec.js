@@ -1375,6 +1375,32 @@ describe('ui-select tests', function() {
     expect(scope.$model).toBe(scope.$item);
   });
 
+  it('should call open-close callback with isOpen state as first argument on open and on close', function () {
+
+    var el = compileTemplate(
+      '<ui-select uis-open-close="onOpenCloseFn(isOpen)" ng-model="selection.selected"> \
+        <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.name as person in people | filter: $select.search"> \
+          <div ng-bind-html="person.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+
+    scope.onOpenCloseFn = function(){};
+    spyOn(scope, 'onOpenCloseFn');
+
+    openDropdown(el);
+    $timeout.flush();
+    expect(scope.onOpenCloseFn).toHaveBeenCalledWith(true);
+
+    closeDropdown(el);
+    $timeout.flush();
+    expect(scope.onOpenCloseFn).toHaveBeenCalledWith(false);
+
+    expect(scope.onOpenCloseFn.calls.count()).toBe(2);
+  });
+
   it('should allow creating tag in single select mode with tagging enabled', function() {
 
     scope.taggingFunc = function (name) {
