@@ -159,6 +159,8 @@ describe('ui-select tests', function() {
       if (attrs.allowClear !== undefined) { matchAttrsHtml += ' allow-clear="' + attrs.allowClear + '"';}
       if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
       if (attrs.ngClass !== undefined) { attrsHtml += ' ng-class="' + attrs.ngClass + '"'; }
+      if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
+      if (attrs.closeOnSelect !== undefined) { attrsHtml += ' close-on-select="' + attrs.closeOnSelect + '"'; }
     }
 
     return compileTemplate(
@@ -2820,7 +2822,60 @@ describe('ui-select tests', function() {
         expect(el.scope().$select.searchEnabled).not.toBe(true);
       });
     });
+  });
 
+   describe('resetSearchInput option', function () {
+      it('should be false by default', function () {
+        expect(createUiSelect().scope().$select.resetSearchInput).toBe(false);
+      });
+
+      it('should be overridden by inline option reset-search-input=true', function () {
+        expect(createUiSelect({ resetSearchInput: true }).scope().$select.resetSearchInput).toBe(true);
+      });
+
+      describe('Reset the search value', function () {
+        it('should clear the search input when resetSearchInput is true', function () {
+          var control = createUiSelect({ resetSearchInput: true });
+          setSearchText(control, 'idontexist');
+          clickMatch(control);
+          expect(control.scope().$select.search).toEqual('');
+        });
+
+        it('should not clear the search input', function () {
+          var control = createUiSelect();
+          setSearchText(control, 'idontexist');
+          clickMatch(control);
+          expect(control.scope().$select.search).toEqual('idontexist');
+        });
+
+        it('should clear the search input when resetSearchInput is true and closeOnSelect is true', function () {
+          var control = createUiSelect({ resetSearchInput: true, closeOnSelect: true });
+          setSearchText(control, 'idontexist');
+          clickMatch(control);
+          expect(control.scope().$select.search).toEqual('');
+        });
+
+        it('should clear the search input when resetSearchInput is true and closeOnSelect is false', function () {
+          var control = createUiSelect({ resetSearchInput: true, closeOnSelect: false });
+          setSearchText(control, 'idontexist');
+          clickMatch(control);
+          expect(control.scope().$select.search).toEqual('');
+        });
+
+        it('should not clear the search input when resetSearchInput is false and closeOnSelect is false', function () {
+          var control = createUiSelect({ resetSearchInput: false, closeOnSelect: false });
+          setSearchText(control, 'idontexist');
+          clickMatch(control);
+          expect(control.scope().$select.search).toEqual('idontexist');
+        });
+
+        it('should not clear the search input when resetSearchInput is false and closeOnSelect is true', function () {
+          var control = createUiSelect({ resetSearchInput: false, closeOnSelect: true });
+          setSearchText(control, 'idontexist');
+          clickMatch(control);
+          expect(control.scope().$select.search).toEqual('idontexist');
+        });
+      });
   });
 
   describe('accessibility', function() {
