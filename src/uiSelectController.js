@@ -156,6 +156,10 @@ uis.controller('uiSelectCtrl',
         });
       }
     }
+    else if (ctrl.open && !ctrl.searchEnabled) {
+      // Close the selection if we don't have search enabled, and we click on the select again
+      ctrl.close();
+    }
   };
 
   ctrl.focusSearchInput = function (initSearchValue) {
@@ -611,7 +615,10 @@ uis.controller('uiSelectCtrl',
       var tagged = false;
 
       if (ctrl.items.length > 0 || ctrl.tagging.isActivated) {
-        _handleDropDownSelection(key);
+        if(!_handleDropDownSelection(key) && !ctrl.searchEnabled) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
         if ( ctrl.taggingTokens.isActivated ) {
           for (var i = 0; i < ctrl.taggingTokens.tokens.length; i++) {
             if ( ctrl.taggingTokens.tokens[i] === KEY.MAP[e.keyCode] ) {

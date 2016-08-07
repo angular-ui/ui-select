@@ -1749,12 +1749,12 @@ describe('ui-select tests', function() {
 
       it('should show search input when true', function() {
         setupSelectComponent(true, 'selectize');
-        expect($(el).find('.ui-select-search')).not.toHaveClass('ng-hide');
+        expect($(el).find('.ui-select-search')).not.toHaveClass('ui-select-search-hidden');
       });
 
       it('should hide search input when false', function() {
         setupSelectComponent(false, 'selectize');
-        expect($(el).find('.ui-select-search')).toHaveClass('ng-hide');
+        expect($(el).find('.ui-select-search')).toHaveClass('ui-select-search-hidden');
       });
 
     });
@@ -1763,12 +1763,12 @@ describe('ui-select tests', function() {
 
       it('should show search input when true', function() {
         setupSelectComponent('true', 'select2');
-        expect($(el).find('.select2-search')).not.toHaveClass('ng-hide');
+        expect($(el).find('.search-container')).not.toHaveClass('ui-select-search-hidden');
       });
 
       it('should hide search input when false', function() {
         setupSelectComponent('false', 'select2');
-        expect($(el).find('.select2-search')).toHaveClass('ng-hide');
+        expect($(el).find('.search-container')).toHaveClass('ui-select-search-hidden');
       });
 
     });
@@ -1778,13 +1778,13 @@ describe('ui-select tests', function() {
       it('should show search input when true', function() {
         setupSelectComponent('true', 'bootstrap');
         clickMatch(el);
-        expect($(el).find('.ui-select-search')).not.toHaveClass('ng-hide');
+        expect($(el).find('.ui-select-search')).not.toHaveClass('ui-select-search-hidden');
       });
 
       it('should hide search input when false', function() {
         setupSelectComponent('false', 'bootstrap');
         clickMatch(el);
-        expect($(el).find('.ui-select-search')).toHaveClass('ng-hide');
+        expect($(el).find('.ui-select-search')).toHaveClass('ui-select-search-hidden');
       });
 
     });

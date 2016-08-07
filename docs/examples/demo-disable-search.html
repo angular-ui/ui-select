@@ -23,6 +23,18 @@
       </small>
     </ui-select-choices>
   </ui-select>
+  <hr />
+  <p>Number Selected: {{ctrl.multipleDemo.selectedPeople.length}}</p>
+  <ui-select multiple ng-model="ctrl.multipleDemo.selectedPeople" theme="bootstrap" search-enabled="ctrl.searchEnabled" ng-disabled="ctrl.disabled" style="min-width: 300px;" title="Choose a person">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
+      <div ng-bind-html="person.name | highlight: $select.search"></div>
+      <small>
+        email: {{person.email}}
+        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+      </small>
+    </ui-select-choices>
+  </ui-select>
 
   <h3>Select2 theme</h3>
   <p>Selected: {{ctrl.person.selected}}</p>
@@ -36,7 +48,18 @@
       </small>
     </ui-select-choices>
   </ui-select>
-
+  <hr />
+  <p>Number Selected: {{ctrl.multipleDemo.selectedPeople.length}}</p>
+  <ui-select multiple ng-model="ctrl.multipleDemo.selectedPeople" theme="select2" search-enabled="ctrl.searchEnabled" ng-disabled="ctrl.disabled" style="min-width: 300px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
+      <div ng-bind-html="person.name | highlight: $select.search"></div>
+      <small>
+        email: {{person.email}}
+        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+      </small>
+    </ui-select-choices>
+  </ui-select>
   <h3>Selectize theme</h3>
   <p>Selected: {{ctrl.country.selected}}</p>
   <ui-select ng-model="ctrl.country.selected" theme="selectize" search-enabled="ctrl.searchEnabled" ng-disabled="ctrl.disabled" style="width: 300px;">

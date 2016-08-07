@@ -74,6 +74,16 @@ body > .select2-container.open {
     border-bottom-color: #5897fb;
 }
 
+.ui-select-container[theme="select2"] .ui-select-dropdown .ui-select-search-hidden,
+.ui-select-container[theme="select2"] .ui-select-dropdown .ui-select-search-hidden input{
+    opacity: 0;
+    height: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border:0;
+}
+
 /* Selectize theme */
 
 /* Helper class to show styles when focus */
@@ -99,8 +109,17 @@ body > .select2-container.open {
 /* Handle up direction Selectize */
 .ui-select-container[theme="selectize"].direction-up .ui-select-dropdown {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
-
     margin-top: -2px; /* FIXME hardcoded value :-/ */
+}
+
+.ui-select-container[theme="selectize"] input.ui-select-search-hidden{
+    opacity: 0;
+    height: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border:0;
+    width: 0;
 }
 
 /* Bootstrap theme */
@@ -143,6 +162,15 @@ body > .select2-container.open {
   border-radius: 4px !important; /* FIXME hardcoded value :-/ */
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+}
+
+.ui-select-bootstrap .ui-select-search-hidden{
+    opacity: 0;
+    height: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border:0;
 }
 
 .ui-select-bootstrap > .ui-select-match > .btn{
