@@ -294,3 +294,19 @@ body > .ui-select-bootstrap.open {
 .ui-select-container[theme="bootstrap"].direction-up .ui-select-dropdown {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
 }
+
+.ui-select-bootstrap .ui-select-match-text {
+    width: 100%;
+    padding-right: 1em;
+}
+.ui-select-bootstrap .ui-select-match-text span {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+}
+.ui-select-bootstrap .ui-select-toggle > a.btn {
+  position: absolute;
+  height: 10px;
+  right: 10px;
+  margin-top: -2px;
+}
