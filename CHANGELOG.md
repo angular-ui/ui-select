@@ -1,4 +1,24 @@
 <a name="0.18.1"></a>
+## [0.18.1](https://github.com/angular-ui/ui-select/compare/v0.18.1...v0.18.1) (2016-08-07)
+
+
+### Bug Fixes
+
+* **bootstrap:** remove anchor tag in choices ([b15189d](https://github.com/angular-ui/ui-select/commit/b15189d))
+* **uiSelect:** remove flicker on search change ([81c33d0](https://github.com/angular-ui/ui-select/commit/81c33d0)), closes [#1298](https://github.com/angular-ui/ui-select/issues/1298) [#1594](https://github.com/angular-ui/ui-select/issues/1594) [#1557](https://github.com/angular-ui/ui-select/issues/1557)
+* **uiSelectController:** Select by click on non-multiple tagging (bis) (#1727) ([3dfde71](https://github.com/angular-ui/ui-select/commit/3dfde71))
+
+### Features
+
+* **events:** add open-close callback  ([21bcd5e](https://github.com/angular-ui/ui-select/commit/21bcd5e)), closes [#432](https://github.com/angular-ui/ui-select/issues/432) [#1153](https://github.com/angular-ui/ui-select/issues/1153)
+
+### Performance Improvements
+
+* **repeatParserService:** track groups by name  ([1770038](https://github.com/angular-ui/ui-select/commit/1770038)), closes [#1721](https://github.com/angular-ui/ui-select/issues/1721) [#1722](https://github.com/angular-ui/ui-select/issues/1722)
+
+
+
+<a name="0.18.1"></a>
 ## [0.18.1](https://github.com/angular-ui/ui-select/compare/v0.18.0...v0.18.1) (2016-07-10)
 
 
