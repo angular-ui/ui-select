@@ -1812,6 +1812,7 @@ describe('ui-select tests', function() {
             if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
             if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
             if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
+            if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
         }
 
         return compileTemplate(
@@ -2756,6 +2757,39 @@ describe('ui-select tests', function() {
          clickItem(el, 'Wladimir');
          expect(el.scope().$select.selected.length).toBe(2);
      });
+
+  describe('resetSearchInput option multiple', function () {
+      it('should be false by default', function () {
+        expect(createUiSelectMultiple().scope().$select.resetSearchInput).toBe(false);
+      });
+
+      it('should be true when set.', function () {
+        expect(createUiSelectMultiple({ resetSearchInput: true }).scope().$select.resetSearchInput).toBe(true);
+      });
+    });
+
+    describe('Reset the search value', function () {
+      it('should clear the search input when resetSearchInput is true', function () {
+        var el = createUiSelectMultiple({  resetSearchInput: true });
+        $(el).scope().$select.search = 'idontexist';
+        $(el).scope().$select.select('idontexist');
+        expect($(el).scope().$select.search).toEqual('');
+      });
+
+      it('should not clear the search input when resetSearchInput is false', function () {
+        var el = createUiSelectMultiple({  resetSearchInput: false });
+        $(el).scope().$select.search = 'idontexist';
+        $(el).scope().$select.select('idontexist');
+        expect($(el).scope().$select.search).toEqual('idontexist');
+      });
+
+      it('should not clear the search input when resetSearchInput is default set', function () {
+        var el = createUiSelectMultiple();
+        $(el).scope().$select.search = 'idontexist';
+        $(el).scope().$select.select('idontexist');
+        expect($(el).scope().$select.search).toEqual('idontexist');
+      });
+    });
   });
 
   it('should add an id to the search input field', function () {
