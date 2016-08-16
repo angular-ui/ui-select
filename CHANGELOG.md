@@ -1,3 +1,14 @@
+<a name="0.19.2"></a>
+## [0.19.2](https://github.com/angular-ui/ui-select/compare/v0.19.0...v0.19.2) (2016-08-16)
+
+
+### Bug Fixes
+
+* **bootstrap layout:** Restrict selected length to ui-select-container (#1680) ([01055c5](https://github.com/angular-ui/ui-select/commit/01055c5)), closes [#1576](https://github.com/angular-ui/ui-select/issues/1576)
+* **release:** bump version with built files ([76cf9c3](https://github.com/angular-ui/ui-select/commit/76cf9c3))
+
+
+
 <a name="0.19.1"></a>
 ## [0.19.1](https://github.com/angular-ui/ui-select/compare/v0.19.0...v0.19.1) (2016-08-09)
 
