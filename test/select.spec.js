@@ -2759,18 +2759,18 @@ describe('ui-select tests', function() {
      });
 
   describe('resetSearchInput option multiple', function () {
-      it('should be false by default', function () {
-        expect(createUiSelectMultiple().scope().$select.resetSearchInput).toBe(false);
+      it('should be true by default', function () {
+        expect(createUiSelectMultiple().scope().$select.resetSearchInput).toBe(true);
       });
 
-      it('should be true when set.', function () {
-        expect(createUiSelectMultiple({ resetSearchInput: true }).scope().$select.resetSearchInput).toBe(true);
+      it('should be false when set.', function () {
+        expect(createUiSelectMultiple({ resetSearchInput: false }).scope().$select.resetSearchInput).toBe(false);
       });
     });
 
     describe('Reset the search value', function () {
       it('should clear the search input when resetSearchInput is true', function () {
-        var el = createUiSelectMultiple({  resetSearchInput: true });
+        var el = createUiSelectMultiple();
         $(el).scope().$select.search = 'idontexist';
         $(el).scope().$select.select('idontexist');
         expect($(el).scope().$select.search).toEqual('');
@@ -2783,11 +2783,11 @@ describe('ui-select tests', function() {
         expect($(el).scope().$select.search).toEqual('idontexist');
       });
 
-      it('should not clear the search input when resetSearchInput is default set', function () {
+      it('should clear the search input when resetSearchInput is default set', function () {
         var el = createUiSelectMultiple();
         $(el).scope().$select.search = 'idontexist';
         $(el).scope().$select.select('idontexist');
-        expect($(el).scope().$select.search).toEqual('idontexist');
+        expect($(el).scope().$select.search).toEqual('');
       });
     });
   });
@@ -2859,38 +2859,38 @@ describe('ui-select tests', function() {
   });
 
    describe('resetSearchInput option', function () {
-      it('should be false by default', function () {
-        expect(createUiSelect().scope().$select.resetSearchInput).toBe(false);
+      it('should be true by default', function () {
+        expect(createUiSelect().scope().$select.resetSearchInput).toBe(true);
       });
 
-      it('should be overridden by inline option reset-search-input=true', function () {
-        expect(createUiSelect({ resetSearchInput: true }).scope().$select.resetSearchInput).toBe(true);
+      it('should be overridden by inline option reset-search-input=false', function () {
+        expect(createUiSelect({ resetSearchInput: false }).scope().$select.resetSearchInput).toBe(false);
       });
 
       describe('Reset the search value', function () {
         it('should clear the search input when resetSearchInput is true', function () {
-          var control = createUiSelect({ resetSearchInput: true });
+          var control = createUiSelect();
           setSearchText(control, 'idontexist');
           clickMatch(control);
           expect(control.scope().$select.search).toEqual('');
         });
 
         it('should not clear the search input', function () {
-          var control = createUiSelect();
+          var control = createUiSelect({ resetSearchInput: false });
           setSearchText(control, 'idontexist');
           clickMatch(control);
           expect(control.scope().$select.search).toEqual('idontexist');
         });
 
         it('should clear the search input when resetSearchInput is true and closeOnSelect is true', function () {
-          var control = createUiSelect({ resetSearchInput: true, closeOnSelect: true });
+          var control = createUiSelect({ closeOnSelect: true });
           setSearchText(control, 'idontexist');
           clickMatch(control);
           expect(control.scope().$select.search).toEqual('');
         });
 
         it('should clear the search input when resetSearchInput is true and closeOnSelect is false', function () {
-          var control = createUiSelect({ resetSearchInput: true, closeOnSelect: false });
+          var control = createUiSelect({ closeOnSelect: false });
           setSearchText(control, 'idontexist');
           clickMatch(control);
           expect(control.scope().$select.search).toEqual('');
