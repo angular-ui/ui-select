@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.1 - 2016-08-07T23:42:28.960Z
+ * Version: 0.19.4 - 2016-08-17T06:23:19.445Z
  * License: MIT
  */
 
@@ -112,7 +112,7 @@ var uis = angular.module('ui.select', [])
   skipFocusser: false,
   dropdownPosition: 'auto',
   removeSelected: true,
-  resetSearchInput: false,
+  resetSearchInput: true,
   generateId: function() {
     return latestId++;
   },
@@ -689,9 +689,8 @@ uis.controller('uiSelectCtrl',
             ctrl.close(skipFocusser);
             return;
           }
-          _resetSearchInput();
-        }
-
+        }        
+        _resetSearchInput();
         $scope.$broadcast('uis:select', item);
 
         var locals = {};
@@ -716,7 +715,7 @@ uis.controller('uiSelectCtrl',
     if (!ctrl.open) return;
     if (ctrl.ngModel && ctrl.ngModel.$setTouched) ctrl.ngModel.$setTouched();
     ctrl.open = false;
-
+    _resetSearchInput();
     $scope.$broadcast('uis:close', skipFocusser);
 
   };
