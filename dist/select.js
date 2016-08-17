@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.4 - 2016-08-17T06:23:19.445Z
+ * Version: 0.19.3 - 2016-08-17T06:24:46.001Z
  * License: MIT
  */
 
@@ -112,7 +112,7 @@ var uis = angular.module('ui.select', [])
   skipFocusser: false,
   dropdownPosition: 'auto',
   removeSelected: true,
-  resetSearchInput: true,
+  resetSearchInput: false,
   generateId: function() {
     return latestId++;
   },
