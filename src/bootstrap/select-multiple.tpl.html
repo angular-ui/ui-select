@@ -2,9 +2,9 @@
   <div>
     <div class="ui-select-match"></div>
     <input type="search"
-           autocomplete="off" 
-           autocorrect="off" 
-           autocapitalize="off" 
+           autocomplete="off"
+           autocorrect="off"
+           autocapitalize="off"
            spellcheck="false"
            class="ui-select-search input-xs"
            placeholder="{{$selectMultiple.getPlaceholder()}}"
@@ -12,7 +12,8 @@
            ng-click="$select.activate()"
            ng-model="$select.search"
            role="combobox"
-           aria-label="{{ $select.baseTitle }}"
+           aria-expanded="{{$select.open}}"
+           aria-label="{{$select.baseTitle}}"
            ondrop="return false;">
   </div>
   <div class="ui-select-choices"></div>
