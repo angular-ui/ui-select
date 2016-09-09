@@ -80,6 +80,14 @@ uis.directive('uiSelectChoices',
           var refreshDelay = scope.$eval(attrs.refreshDelay);
           $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
         });
+
+        scope.$watch('$select.open', function(open) {
+          if (open) {
+            tElement.attr('role', 'listbox');
+          } else {
+            tElement.removeAttr('role');
+          }
+        });
       };
     }
   };
