@@ -740,4 +740,16 @@ uis.controller('uiSelectCtrl',
     ctrl.searchInput.off('keyup keydown tagged blur paste');
     angular.element($window).off('resize', onResize);
   });
+
+  $scope.$watch('$select.activeIndex', function(activeIndex) {
+    if (activeIndex)
+      $element.find('input').attr(
+        'aria-activedescendant',
+        'ui-select-choices-row-' + ctrl.generatedId + '-' + activeIndex);
+  });
+
+  $scope.$watch('$select.open', function(open) {
+    if (!open)
+      $element.find('input').removeAttr('aria-activedescendant');
+  });
 }]);
