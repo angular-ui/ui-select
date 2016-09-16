@@ -92,8 +92,13 @@ body > .select2-container.open {
 }
 
 /* Fix input width for Selectize theme */
-.selectize-control > .selectize-input > input {
+.selectize-control.single > .selectize-input > input {
   width: 100%;
+}
+
+/* Fix line break when there's at least one item selected with the Selectize theme */
+.selectize-control.multi > .selectize-input > input {
+  margin: 0 !important;
 }
 
 /* Fix dropdown width for Selectize theme */
