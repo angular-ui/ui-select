@@ -2,6 +2,12 @@
 ## [0.19.4](https://github.com/angular-ui/ui-select/compare/v0.19.4...v0.19.4) (2016-10-19)
 
 
+
+
+<a name="0.19.4"></a>
+## [0.19.4](https://github.com/angular-ui/ui-select/compare/v0.19.4...v0.19.4) (2016-10-19)
+
+
 ### Bug Fixes
 
 * **bootstrap:** add aria-expanded to the multiple select ([6766754](https://github.com/angular-ui/ui-select/commit/6766754)), closes [#1775](https://github.com/angular-ui/ui-select/issues/1775)
