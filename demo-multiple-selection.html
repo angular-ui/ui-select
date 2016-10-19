@@ -71,7 +71,7 @@
   <h3>Array of strings</h3>
   <ui-select multiple ng-model="ctrl.multipleDemo.colors" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
-    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+    <ui-select-choices repeat="color in ctrl.availableColors | filter:$select.search">
       {{color}}
     </ui-select-choices>
   </ui-select>

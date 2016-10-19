@@ -76,7 +76,7 @@
              title="Choose an address">
     <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
     <ui-select-choices repeat="address in ctrl.addresses track by $index"
-             refresh="refreshAddresses($select.search)"
+             refresh="ctrl.refreshAddresses($select.search)"
              refresh-delay="0">
       <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
     </ui-select-choices>
