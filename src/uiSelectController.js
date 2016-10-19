@@ -18,6 +18,9 @@ uis.controller('uiSelectCtrl',
   ctrl.refreshDelay = uiSelectConfig.refreshDelay;
   ctrl.paste = uiSelectConfig.paste;
   ctrl.resetSearchInput = uiSelectConfig.resetSearchInput;
+  ctrl.refreshing = false;
+  ctrl.spinnerEnabled = uiSelectConfig.spinnerEnabled;
+  ctrl.spinnerClass = uiSelectConfig.spinnerClass;
 
   ctrl.removeSelected = uiSelectConfig.removeSelected; //If selected item(s) should be removed from dropdown list
   ctrl.closeOnSelect = true; //Initialized inside uiSelect directive link function
@@ -292,7 +295,6 @@ uis.controller('uiSelectCtrl',
    */
   ctrl.refresh = function(refreshAttr) {
     if (refreshAttr !== undefined) {
-
       // Debounce
       // See https://github.com/angular-ui/bootstrap/blob/0.10.0/src/typeahead/typeahead.js#L155
       // FYI AngularStrap typeahead does not have debouncing: https://github.com/mgcrea/angular-strap/blob/v2.0.0-rc.4/src/typeahead/typeahead.js#L177
@@ -300,8 +302,13 @@ uis.controller('uiSelectCtrl',
         $timeout.cancel(_refreshDelayPromise);
       }
       _refreshDelayPromise = $timeout(function() {
-        $scope.$eval(refreshAttr);
-      }, ctrl.refreshDelay);
+        var refreshPromise =  $scope.$eval(refreshAttr);
+        if (refreshPromise && angular.isFunction(refreshPromise.then) && !ctrl.refreshing) {
+          ctrl.refreshing = true;
+          refreshPromise.then(function() {
+            ctrl.refreshing = false;
+          });
+      }}, ctrl.refreshDelay);
     }
   };
 

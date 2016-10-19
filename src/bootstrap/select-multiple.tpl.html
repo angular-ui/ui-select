@@ -14,6 +14,7 @@
            role="combobox"
            aria-expanded="{{$select.open}}"
            aria-label="{{$select.baseTitle}}"
+           ng-class="{'spinner': $select.refreshing}"
            ondrop="return false;">
   </div>
   <div class="ui-select-choices"></div>

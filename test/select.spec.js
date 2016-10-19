@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ui-select tests', function() {
-  var scope, $rootScope, $compile, $timeout, $injector, uisRepeatParser;
+  var scope, $rootScope, $compile, $timeout, $injector, $q,uisRepeatParser ;
 
   var Key = {
     Enter: 13,
@@ -78,12 +78,13 @@ describe('ui-select tests', function() {
     });
   });
 
-  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_, _uisRepeatParser_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_,_$q_ , _uisRepeatParser_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
     $timeout = _$timeout_;
     $injector = _$injector_;
+    $q = _$q_;
     uisRepeatParser = _uisRepeatParser_;
     scope.selection = {};
 
@@ -146,7 +147,8 @@ describe('ui-select tests', function() {
 
   function createUiSelect(attrs) {
     var attrsHtml = '',
-        matchAttrsHtml = '';
+        matchAttrsHtml = '',
+        choicesAttrsHtml = ''
     if (attrs !== undefined) {
       if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
       if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
@@ -161,12 +163,16 @@ describe('ui-select tests', function() {
       if (attrs.ngClass !== undefined) { attrsHtml += ' ng-class="' + attrs.ngClass + '"'; }
       if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
       if (attrs.closeOnSelect !== undefined) { attrsHtml += ' close-on-select="' + attrs.closeOnSelect + '"'; }
+      if (attrs.spinnerEnabled !== undefined) { attrsHtml += ' spinner-enabled="' + attrs.spinnerEnabled + '"'; }
+      if (attrs.spinnerClass !== undefined) { attrsHtml += ' spinner-class="' + attrs.spinnerClass + '"'; }
+      if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
+      if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
     }
 
     return compileTemplate(
       '<ui-select ng-model="selection.selected"' + attrsHtml + '> \
         <ui-select-match placeholder="Pick one..."' + matchAttrsHtml + '>{{$select.selected.name}}</ui-select-match> \
-        <ui-select-choices repeat="person in people | filter: $select.search"> \
+        <ui-select-choices repeat="person in people | filter: $select.search"'+ choicesAttrsHtml + '"> \
           <div ng-bind-html="person.name | highlight: $select.search"></div> \
           <div ng-bind-html="person.email | highlight: $select.search"></div> \
         </ui-select-choices> \
@@ -3028,6 +3034,68 @@ describe('ui-select tests', function() {
       var item = 2015;
 
       expect(highlight(item, query)).toBe('20<span class="ui-select-highlight">15</span>');
+    });
+  });
+
+  describe('Test Spinner for promises',function(){
+    var deferred;
+    
+    function getFromServer(){
+        deferred = $q.defer();
+        return deferred.promise;
+    }
+    it('should have a default value of false', function () {
+      var control = createUiSelect();
+      expect(control.scope().$select.spinnerEnabled).toEqual(false);
+    });
+
+    it('should have a set a value of true', function () {
+      var control = createUiSelect({spinnerEnabled: true});
+      expect(control.scope().$select.spinnerEnabled).toEqual(true);
+    });
+
+    it('should have a default value of glyphicon-refresh ui-select-spin', function () {
+      var control = createUiSelect();
+      expect(control.scope().$select.spinnerClass).toEqual('glyphicon-refresh ui-select-spin');
+    });
+
+    it('should have set a custom class value of randomclass', function () {
+      var control = createUiSelect({spinnerClass: 'randomclass'});
+      expect(control.scope().$select.spinnerClass).toEqual('randomclass');
+    });   
+
+    it('should not display spinner when disabled', function() {
+      scope.getFromServer = getFromServer;
+      var el = createUiSelect({theme: 'bootstrap', refresh:"getFromServer($select.search)", refreshDelay:0});
+      openDropdown(el);
+      var spinner = el.find('.ui-select-refreshing');
+      expect(spinner.hasClass('ng-hide')).toBe(true);       
+      setSearchText(el, 'a');
+      expect(spinner.hasClass('ng-hide')).toBe(true);
+      deferred.resolve();
+      scope.$digest();
+      expect(spinner.hasClass('ng-hide')).toBe(true);
+    });
+
+    it('should display spinner when enabled', function() {
+      scope.getFromServer = getFromServer;
+      var el = createUiSelect({spinnerEnabled: true,theme: 'bootstrap', refresh:"getFromServer($select.search)", refreshDelay:0});
+      openDropdown(el);
+      var spinner = el.find('.ui-select-refreshing');
+      expect(spinner.hasClass('ng-hide')).toBe(true);       
+      setSearchText(el, 'a');
+      expect(spinner.hasClass('ng-hide')).toBe(false);
+      deferred.resolve();
+      scope.$digest();
+      expect(spinner.hasClass('ng-hide')).toBe(true);
+    });
+
+    it('should not display spinner when enabled', function() {
+      var el = createUiSelect({spinnerEnabled: true,theme: 'bootstrap', spinnerClass: 'randomclass'});
+      openDropdown(el);
+      var spinner = el.find('.ui-select-refreshing');
+      setSearchText(el, 'a');
+      expect(el.scope().$select.spinnerClass).toBe('randomclass');
     });
   });
 
