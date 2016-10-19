@@ -1,3 +1,20 @@
+<a name="0.19.4"></a>
+## [0.19.4](https://github.com/angular-ui/ui-select/compare/v0.19.4...v0.19.4) (2016-10-19)
+
+
+### Bug Fixes
+
+* **bootstrap:** add aria-expanded to the multiple select ([6766754](https://github.com/angular-ui/ui-select/commit/6766754)), closes [#1775](https://github.com/angular-ui/ui-select/issues/1775)
+* ensure aria-activedescendant is correct ([e3be4d1](https://github.com/angular-ui/ui-select/commit/e3be4d1))
+* only apply listbox role when open ([e902ffc](https://github.com/angular-ui/ui-select/commit/e902ffc))
+* **bootstrap:** add search role ([f3194bf](https://github.com/angular-ui/ui-select/commit/f3194bf))
+
+### Features
+
+* **selectize:** add support for multiple selection  ([ff8071d](https://github.com/angular-ui/ui-select/commit/ff8071d)), closes [#295](https://github.com/angular-ui/ui-select/issues/295) [#1787](https://github.com/angular-ui/ui-select/issues/1787)
+
+
+
 <a name="0.19.3"></a>
 ## [0.19.3](https://github.com/angular-ui/ui-select/compare/v0.19.3...v0.19.3) (2016-08-17)
 
