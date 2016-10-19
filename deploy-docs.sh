@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e 
+set -e
 
 [[ $TRAVIS_SECURE_ENV_VARS == "true" ]] || { echo "No github key avaliable, aborting publishing"; exit 0; }
 
@@ -27,5 +27,5 @@ git config user.email "travisci@users.noreply.github.com"
 git commit -m "docs(*): new deploy (angular-ui/ui-select@${ID_REF})"
 
 
-git push origin --quiet 
+git push origin --quiet
 #> /dev/null 2>&1
