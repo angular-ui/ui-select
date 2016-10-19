@@ -383,7 +383,7 @@ uis.controller('uiSelectCtrl',
   ctrl.select = function(item, skipFocusser, $event) {
     if (item === undefined || !_isItemDisabled(item)) {
 
-      if ( ! ctrl.items && ! ctrl.search && ! ctrl.tagging.isActivated) return;
+      if ( (!ctrl.items || !ctrl.items.length) && ! ctrl.search && ! ctrl.tagging.isActivated) return;
 
       if (!item || !_isItemDisabled(item)) {
         // if click is made on existing item, prevent from tagging, ctrl.search does not matter
@@ -645,6 +645,9 @@ uis.controller('uiSelectCtrl',
             });
           }
         }
+      }else{
+        e.preventDefault();
+        e.stopPropagation();
       }
 
     });
