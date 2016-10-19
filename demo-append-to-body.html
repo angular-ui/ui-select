@@ -82,9 +82,9 @@
                append-to-body="true">
       <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
       <ui-select-choices repeat="address in ctrl.addresses track by $index"
-               refresh="ctrl.refreshAddresses($select.search)"
+               refresh="refreshAddresses($select.search)"
                refresh-delay="0">
-        <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+        <div ng-bind-html="ctrl.address.formatted_address | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
     <p class="alert alert-info positioned">The select dropdown menu should be displayed above this element.</p>

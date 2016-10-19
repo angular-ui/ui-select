@@ -80,8 +80,8 @@
     .input-group > .selectize-control > .selectize-input {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0;
-    }
-  </style>
+    }    
+  </style>  
   <p>Selected: {{ctrl.person.selected.name}}</p>
 
   <form class="form-horizontal">
@@ -138,21 +138,6 @@
             </span>
 
           </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label">Multiple</label>
-        <div class="col-sm-6">
-
-          <ui-select ng-model="ctrl.person.selected" multiple theme="selectize" title="Choose a person">
-            <ui-select-match placeholder="Select or search a person in the list...">{{$item.name}}</ui-select-match>
-            <ui-select-choices repeat="item in ctrl.people | filter: $select.search">
-              <div ng-bind-html="item.name | highlight: $select.search"></div>
-              <small ng-bind-html="item.email | highlight: $select.search"></small>
-            </ui-select-choices>
-          </ui-select>
-
         </div>
       </div>
 
