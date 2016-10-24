@@ -1,0 +1,104 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'unpublish',
+1 verbose cli   'ui-select@0.19.5' ]
+2 info using npm@2.14.4
+3 info using node@v4.1.1
+4 silly unpublish args[0] ui-select@0.19.5
+5 silly unpublish thing Result {
+5 silly unpublish   raw: 'ui-select@0.19.5',
+5 silly unpublish   scope: null,
+5 silly unpublish   name: 'ui-select',
+5 silly unpublish   rawSpec: '0.19.5',
+5 silly unpublish   spec: '0.19.5',
+5 silly unpublish   type: 'version' }
+6 verbose getPublishConfig null
+7 silly ls normalized ui-select/0.19.5
+8 silly gentlyRm /Users/arob35/.npm/ui-select/0.19.5 is being purged
+9 verbose gentlyRm don't care about contents; nuking /Users/arob35/.npm/ui-select/0.19.5
+10 silly vacuum-fs purging /Users/arob35/.npm/ui-select/0.19.5
+11 silly vacuum-fs quitting because other entries in /Users/arob35/.npm/ui-select
+12 silly mapToRegistry name ui-select
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry uri https://registry.npmjs.org/ui-select
+16 verbose get GET as part of write; not caching result
+17 verbose request uri https://registry.npmjs.org/ui-select?write=true
+18 verbose request no auth needed
+19 info attempt registry request try #1 at 4:15:12 PM
+20 verbose request using bearer token for auth
+21 verbose request id 5ca39f33f3f44109
+22 http request GET https://registry.npmjs.org/ui-select?write=true
+23 http 200 https://registry.npmjs.org/ui-select?write=true
+24 silly get cb [ 200,
+24 silly get   { server: 'CouchDB/1.6.1 (Erlang OTP/R16B03)',
+24 silly get     etag: '"3PFJ7OP67OCII47YIYGTYZUSW"',
+24 silly get     'content-type': 'application/json',
+24 silly get     'content-encoding': 'gzip',
+24 silly get     'cache-control': 'max-age=0',
+24 silly get     'transfer-encoding': 'chunked',
+24 silly get     'accept-ranges': 'bytes',
+24 silly get     date: 'Mon, 24 Oct 2016 23:15:11 GMT',
+24 silly get     via: '1.1 varnish',
+24 silly get     connection: 'keep-alive',
+24 silly get     'x-served-by': 'cache-den6025-DEN',
+24 silly get     'x-cache': 'MISS',
+24 silly get     'x-cache-hits': '0',
+24 silly get     'x-timer': 'S1477350911.526110,VS0,VE239',
+24 silly get     vary: 'Accept-Encoding' } ]
+25 verbose get saving ui-select to /Users/arob35/.npm/registry.npmjs.org/ui-select_3Fwrite_3Dtrue/.cache.json
+26 verbose unpublish removing attachments { shasum: '95662d8e086ab7800553a9f11cf24523dcf8d7da',
+26 verbose unpublish   tarball: 'http://registry.npmjs.org/ui-select/-/ui-select-0.19.5.tgz' }
+27 verbose request uri https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+28 verbose request sending authorization for write operation
+29 info attempt registry request try #1 at 4:15:12 PM
+30 verbose request using bearer token for auth
+31 http request PUT https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+32 http 500 https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+33 info retry will retry, error on last attempt: Error: "cannot unpublish a version that is >24 hours old" : ui-select
+34 info attempt registry request try #2 at 4:15:24 PM
+35 verbose request using bearer token for auth
+36 http request PUT https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+37 http 500 https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+38 info retry will retry, error on last attempt: Error: "cannot unpublish a version that is >24 hours old" : ui-select
+39 info attempt registry request try #3 at 4:16:25 PM
+40 verbose request using bearer token for auth
+41 http request PUT https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+42 http 500 https://registry.npmjs.org/ui-select/-rev/33-46749c4a981bb9aba3d0bb0008a0117a
+43 verbose headers { 'content-type': 'application/json',
+43 verbose headers   'cache-control': 'max-age=0',
+43 verbose headers   'content-length': '80',
+43 verbose headers   'accept-ranges': 'bytes',
+43 verbose headers   date: 'Mon, 24 Oct 2016 23:16:25 GMT',
+43 verbose headers   via: '1.1 varnish',
+43 verbose headers   connection: 'keep-alive',
+43 verbose headers   'x-served-by': 'cache-dfw1830-DFW',
+43 verbose headers   'x-cache': 'MISS',
+43 verbose headers   'x-cache-hits': '0',
+43 verbose headers   'x-timer': 'S1477350984.944033,VS0,VE923' }
+44 verbose request invalidating /Users/arob35/.npm/registry.npmjs.org/ui-select on PUT
+45 error unpublish Failed to update data
+46 verbose stack Error: "cannot unpublish a version that is >24 hours old" : ui-select
+46 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:263:12)
+46 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:251:14)
+46 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:171:14)
+46 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:198:22)
+46 verbose stack     at emitTwo (events.js:87:13)
+46 verbose stack     at Request.emit (events.js:172:7)
+46 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1073:14)
+46 verbose stack     at emitOne (events.js:82:20)
+46 verbose stack     at Request.emit (events.js:169:7)
+46 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1019:12)
+47 verbose statusCode 500
+48 verbose pkgid ui-select
+49 verbose cwd /Users/arob35/Sites/forks/ui-select
+50 error Darwin 15.6.0
+51 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "unpublish" "ui-select@0.19.5"
+52 error node v4.1.1
+53 error npm  v2.14.4
+54 error code E500
+55 error "cannot unpublish a version that is >24 hours old" : ui-select
+56 error If you need help, you may report this error at:
+56 error     <https://github.com/npm/npm/issues>
+57 verbose exit [ 1, true ]

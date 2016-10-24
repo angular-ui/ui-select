@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.4 - 2016-10-19T19:26:25.444Z
+ * Version: 0.19.5 - 2016-10-24T23:13:59.551Z
  * License: MIT
  */
 
@@ -337,7 +337,7 @@ body > .ui-select-bootstrap.open {
     line-height: 1;
     -webkit-font-smoothing:antialiased;
  }
-
+ 
 @-webkit-keyframes ui-select-spin {
   0% {
     -webkit-transform: rotate(0deg);
@@ -366,4 +366,4 @@ body > .ui-select-bootstrap.open {
 
 .ui-select-refreshing.ng-animate {
   -webkit-animation: none 0s;
-}
+} 
