@@ -1,4 +1,4 @@
-﻿  <button class="btn btn-default btn-xs" ng-click="ctrl.enable()">Enable ui-select</button>
+  <button class="btn btn-default btn-xs" ng-click="ctrl.enable()">Enable ui-select</button>
   <button class="btn btn-default btn-xs" ng-click="ctrl.disable()">Disable ui-select</button>
   <button class="btn btn-default btn-xs" ng-click="ctrl.clear()">Clear ng-model</button>
 
@@ -11,7 +11,7 @@
       {{color}}
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.colors}}</p>
+  <p>Selected: {{ctrl.multipleDemo.colors}}</p>
   <hr>
   <h3>Array of objects (sorting enabled)</h3>
   <ui-select multiple ng-model="ctrl.multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="ctrl.disabled" sortable="true" close-on-select="false" style="width: 800px;">
@@ -24,11 +24,11 @@
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeople}}</p>
+  <p>Selected: {{ctrl.multipleDemo.selectedPeople}}</p>
 
   <hr>
   <h3>Deselect callback with single property binding</h3>
-  <ui-select multiple ng-model="ctrl.multipleDemo.deSelectedPeople" on-remove="removed($item, $model)" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
+  <ui-select multiple ng-model="ctrl.multipleDemo.deSelectedPeople" on-remove="ctrl.removed($item, $model)" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person.email as person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
@@ -56,13 +56,13 @@ $model = {{ctrl.lastRemoved.model}}
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeopleSimple}}</p>
+  <p>Selected: {{ctrl.multipleDemo.selectedPeopleSimple}}</p>
 
   <hr>
   <h3>Array of objects (with groupBy)</h3>
   <ui-select multiple ng-model="ctrl.multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
-    <ui-select-choices group-by="someGroupFn" repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
+    <ui-select-choices group-by="ctrl.someGroupFn" repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
       <small>
         email: {{person.email}}
@@ -70,7 +70,7 @@ $model = {{ctrl.lastRemoved.model}}
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeopleWithGroupBy}}</p>
+  <p>Selected: {{ctrl.multipleDemo.selectedPeopleWithGroupBy}}</p>
 
   <hr>
   <h3>Disabling instead of removing selected items</h3>
@@ -84,6 +84,6 @@ $model = {{ctrl.lastRemoved.model}}
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.removeSelectIsFalse}}</p>
+  <p>Selected: {{ctrl.multipleDemo.removeSelectIsFalse}}</p>
 
   <div style="height:500px"></div>
