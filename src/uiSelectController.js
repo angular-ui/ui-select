@@ -305,7 +305,7 @@ uis.controller('uiSelectCtrl',
         var refreshPromise =  $scope.$eval(refreshAttr);
         if (refreshPromise && angular.isFunction(refreshPromise.then) && !ctrl.refreshing) {
           ctrl.refreshing = true;
-          refreshPromise.then(function() {
+          refreshPromise.finally(function() {
             ctrl.refreshing = false;
           });
       }}, ctrl.refreshDelay);
