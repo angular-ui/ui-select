@@ -19,6 +19,8 @@ uis.controller('uiSelectCtrl',
   ctrl.paste = uiSelectConfig.paste;
   ctrl.resetSearchInput = uiSelectConfig.resetSearchInput;
   ctrl.refreshing = false;
+  ctrl.refreshOnActive = undefined;
+  ctrl.refreshIsActive = undefined;
   ctrl.spinnerEnabled = uiSelectConfig.spinnerEnabled;
   ctrl.spinnerClass = uiSelectConfig.spinnerClass;
 
@@ -109,6 +111,14 @@ uis.controller('uiSelectCtrl',
       return result;
     }
 
+    function _setrefreshIsActive(){
+      //only set a value if the refreshOnActive attr is set.
+      if(!angular.isUndefined(ctrl.refreshOnActive))
+      {
+        ctrl.refreshIsActive =  true;
+      }
+    }
+
   // When the user clicks on ui-select, displays the dropdown list
   ctrl.activate = function(initSearchValue, avoidReset) {
     if (!ctrl.disabled  && !ctrl.open) {
@@ -119,7 +129,8 @@ uis.controller('uiSelectCtrl',
       ctrl.open = true;
 
       ctrl.activeIndex = ctrl.activeIndex >= ctrl.items.length ? 0 : ctrl.activeIndex;
-
+      
+      _setrefreshIsActive();
       // ensure that the index is set to zero for tagging variants
       // that where first option is auto-selected
       if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false ) {
