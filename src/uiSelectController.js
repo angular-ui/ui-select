@@ -21,7 +21,6 @@ uis.controller('uiSelectCtrl',
   ctrl.refreshing = false;
   ctrl.spinnerEnabled = uiSelectConfig.spinnerEnabled;
   ctrl.spinnerClass = uiSelectConfig.spinnerClass;
-
   ctrl.removeSelected = uiSelectConfig.removeSelected; //If selected item(s) should be removed from dropdown list
   ctrl.closeOnSelect = true; //Initialized inside uiSelect directive link function
   ctrl.skipFocusser = false; //Set to true to avoid returning focus to ctrl when item is selected
@@ -433,17 +432,7 @@ uis.controller('uiSelectCtrl',
         }
         _resetSearchInput();
         $scope.$broadcast('uis:select', item);
-
-        var locals = {};
-        locals[ctrl.parserResult.itemName] = item;
-
-        $timeout(function(){
-          ctrl.onSelectCallback($scope, {
-            $item: item,
-            $model: ctrl.parserResult.modelMapper($scope, locals)
-          });
-        });
-
+        
         if (ctrl.closeOnSelect) {
           ctrl.close(skipFocusser);
         }

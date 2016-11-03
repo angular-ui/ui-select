@@ -51,6 +51,15 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
 
       scope.$on('uis:select', function (event, item) {
         $select.selected = item;
+        var locals = {};        
+        locals[$select.parserResult.itemName] = item;
+
+        $timeout(function(){
+          $select.onSelectCallback(scope, {
+            $item: item,
+            $model: $select.parserResult.modelMapper(scope, locals)
+          });
+        });
       });
 
       scope.$on('uis:close', function (event, skipFocusser) {
