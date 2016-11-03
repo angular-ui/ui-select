@@ -67,7 +67,7 @@ uis.directive('uiSelectChoices',
         scope.$watch('$select.search', function(newValue) {
           if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
-          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) && (!$select.refreshOnActive || ($select.refreshOnActive && $select.refreshIsActive))) {
+          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) && (!$select.refreshOnActive || ($select.refreshOnActive && $select.open))) {
             $select.refresh(attrs.refresh);
           } else {
             $select.items = [];
@@ -79,19 +79,14 @@ uis.directive('uiSelectChoices',
           var refreshDelay = scope.$eval(attrs.refreshDelay);
           $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
         });
-
-        if(!angular.isUndefined($select.refreshOnActive)){
-          //only add a watch when refreshonactive is set.
-          scope.$watch('$select.refreshIsActive', function(newValue, oldValue){
-            if(angular.isUndefined(oldValue) && newValue){
-              $select.refresh(attrs.refresh);
-            }
-          });
-        }
         
         scope.$watch('$select.open', function(open) {
           if (open) {
             tElement.attr('role', 'listbox');
+            if(!angular.isUndefined($select.refreshOnActive)){
+              //only add a watch when refreshonactive is set.
+              $select.refresh(attrs.refresh);
+            }
           } else {
             tElement.removeAttr('role');
           }
