@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.4 - 2016-10-19T19:45:17.219Z
+ * Version: 0.19.5 - 2016-10-24T23:13:59.551Z
  * License: MIT
  */
 
@@ -100,8 +100,13 @@ body > .select2-container.open {
 }
 
 /* Fix input width for Selectize theme */
-.selectize-control > .selectize-input > input {
+.selectize-control.single > .selectize-input > input {
   width: 100%;
+}
+
+/* Fix line break when there's at least one item selected with the Selectize theme */
+.selectize-control.multi > .selectize-input > input {
+  margin: 0 !important;
 }
 
 /* Fix dropdown width for Selectize theme */
@@ -318,3 +323,47 @@ body > .ui-select-bootstrap.open {
   right: 10px;
   margin-top: -2px;
 }
+
+/* Spinner */
+.ui-select-refreshing {
+    position: absolute;
+    right: 0;
+    padding: 8px 27px;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing:antialiased;
+ }
+ 
+@-webkit-keyframes ui-select-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes ui-select-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.ui-select-spin {
+  -webkit-animation: ui-select-spin 2s infinite linear;
+  animation: ui-select-spin 2s infinite linear;
+}
+
+.ui-select-refreshing.ng-animate {
+  -webkit-animation: none 0s;
+} 

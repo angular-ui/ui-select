@@ -5,12 +5,12 @@
     <title>AngularJS ui-select</title>
 
     <!--
-      IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
+      IE8 support, see AngularJS Internet Explorer Compatibility https://docs.angularjs.org/guide/ie
       For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
     -->
     <!--[if lt IE 9]>
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-      <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
       <script>
         document.createElement('ui-select');
         document.createElement('ui-select-match');
@@ -18,8 +18,8 @@
       </script>
     <![endif]-->
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>
 
     <!-- ui-select files -->
     <script src="./dist/select.js"></script>
@@ -28,11 +28,11 @@
     <script src="./assets/demo.js"></script>
 
     <!-- themes -->
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">    
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
-    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap2.css"> -->
-    <!--<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">--> 
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap2.css"> -->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">--> 
 
     <style>
         body {
@@ -71,11 +71,11 @@
   <h3>Array of strings</h3>
   <ui-select multiple ng-model="ctrl.multipleDemo.colors" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 300px;" title="Choose a color">
     <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
-    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+    <ui-select-choices repeat="color in ctrl.availableColors | filter:$select.search">
       {{color}}
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.colors}}</p>
+  <p>Selected: {{ctrl.multipleDemo.colors}}</p>
   <hr>
   <h3>Array of objects (sorting enabled)</h3>
   <ui-select multiple ng-model="ctrl.multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="ctrl.disabled" sortable="true" close-on-select="false" style="width: 800px;">
@@ -88,11 +88,11 @@
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeople}}</p>
+  <p>Selected: {{ctrl.multipleDemo.selectedPeople}}</p>
 
   <hr>
   <h3>Deselect callback with single property binding</h3>
-  <ui-select multiple ng-model="ctrl.multipleDemo.deSelectedPeople" on-remove="removed($item, $model)" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
+  <ui-select multiple ng-model="ctrl.multipleDemo.deSelectedPeople" on-remove="ctrl.removed($item, $model)" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
     <ui-select-choices repeat="person.email as person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
@@ -120,13 +120,13 @@ $model = {{ctrl.lastRemoved.model}}
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeopleSimple}}</p>
+  <p>Selected: {{ctrl.multipleDemo.selectedPeopleSimple}}</p>
 
   <hr>
   <h3>Array of objects (with groupBy)</h3>
   <ui-select multiple ng-model="ctrl.multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="ctrl.disabled" close-on-select="false" style="width: 800px;" title="Choose a person">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
-    <ui-select-choices group-by="someGroupFn" repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
+    <ui-select-choices group-by="ctrl.someGroupFn" repeat="person in ctrl.people | propsFilter: {name: $select.search, age: $select.search}">
       <div ng-bind-html="person.name | highlight: $select.search"></div>
       <small>
         email: {{person.email}}
@@ -134,7 +134,7 @@ $model = {{ctrl.lastRemoved.model}}
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.selectedPeopleWithGroupBy}}</p>
+  <p>Selected: {{ctrl.multipleDemo.selectedPeopleWithGroupBy}}</p>
 
   <hr>
   <h3>Disabling instead of removing selected items</h3>
@@ -148,7 +148,7 @@ $model = {{ctrl.lastRemoved.model}}
       </small>
     </ui-select-choices>
   </ui-select>
-  <p>Selected: {{multipleDemo.removeSelectIsFalse}}</p>
+  <p>Selected: {{ctrl.multipleDemo.removeSelectIsFalse}}</p>
 
   <div style="height:500px"></div>
 </body>

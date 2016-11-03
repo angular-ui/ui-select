@@ -14,7 +14,7 @@ app.filter('propsFilter', function() {
 
     if (angular.isArray(items)) {
       var keys = Object.keys(props);
-        
+
       items.forEach(function(item) {
         var itemMatches = false;
 
