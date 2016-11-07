@@ -55,7 +55,6 @@ uis.directive('uiSelectChoices',
 
        
         $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
-        $select.refreshOnActive = scope.$eval(attrs.refreshOnActive);
         $select.disableChoiceExpression = attrs.uiDisableChoice;
         $select.onHighlightCallback = attrs.onHighlight;
         $select.dropdownPosition = attrs.position ? attrs.position.toLowerCase() : uiSelectConfig.dropdownPosition;        
@@ -67,7 +66,7 @@ uis.directive('uiSelectChoices',
         scope.$watch('$select.search', function(newValue) {
           if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
-          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) && (!$select.refreshOnActive || ($select.refreshOnActive && $select.open))) {
+          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) && $select.open) {
             $select.refresh(attrs.refresh);
           } else {
             $select.items = [];
@@ -83,10 +82,7 @@ uis.directive('uiSelectChoices',
         scope.$watch('$select.open', function(open) {
           if (open) {
             tElement.attr('role', 'listbox');
-            if(!angular.isUndefined($select.refreshOnActive)){
-              //only add a watch when refreshonactive is set.
-              $select.refresh(attrs.refresh);
-            }
+            $select.refresh(attrs.refresh);
           } else {
             tElement.removeAttr('role');
           }
