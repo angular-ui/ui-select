@@ -168,7 +168,6 @@ describe('ui-select tests', function() {
       if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
       if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
       if (attrs.backspaceReset !== undefined) { attrsHtml += ' backspace-reset="' + attrs.backspaceReset + '"';}
-      if (attrs.refreshOnActive !== undefined) { choicesAttrsHtml += ' refresh-on-active="' + attrs.refreshOnActive + '"'; }
       
     }
 
@@ -3123,14 +3122,25 @@ describe('ui-select tests', function() {
   });
   
   describe('With refresh on active', function(){
-    it('should not refresh untill is activated', function(){
+    it('should refresh when is activated', function(){
        scope.fetchFromServer = function(){};
-       var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshOnActive:true,refreshDelay:0});
-       spyOn(scope, 'fetchFromServer');
-       $timeout.flush();
-       expect(scope.fetchFromServer.calls.any()).toEqual(false); 
+       var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshDelay:0});
+       spyOn(scope, 'fetchFromServer'); 
+       expect(el.scope().$select.open).toEqual(false);
        el.scope().$select.activate();
        $timeout.flush();
+       expect(el.scope().$select.open).toEqual(true);
+       expect(scope.fetchFromServer.calls.any()).toEqual(true);
+     });
+
+     it('should refresh when open is set to true', function(){
+       scope.fetchFromServer = function(){};
+       var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshDelay:0});
+       spyOn(scope, 'fetchFromServer'); 
+       expect(el.scope().$select.open).toEqual(false);
+       openDropdown(el);
+       $timeout.flush();
+       expect(el.scope().$select.open).toEqual(true);
        expect(scope.fetchFromServer.calls.any()).toEqual(true);
      });
    });

@@ -63,10 +63,10 @@ uis.directive('uiSelectChoices',
           choices.remove();
         });
 
-        scope.$watch('$select.search', function(newValue) {
-          if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
+        scope.$watch('$select.search', function(newValue, oldValue) {
+          if(newValue !== "" && newValue !== oldValue && !$select.open && $select.multiple) $select.activate(false, true);
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
-          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) && $select.open) {
+          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength)) {
             $select.refresh(attrs.refresh);
           } else {
             $select.items = [];
