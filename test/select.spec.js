@@ -3143,13 +3143,5 @@ describe('ui-select tests', function() {
        expect(el.scope().$select.open).toEqual(true);
        expect(scope.fetchFromServer.calls.any()).toEqual(true);
      });
-
-     it('should refresh when loaded', function(){
-       scope.fetchFromServer = function(){};
-       var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshDelay:0});
-       spyOn(scope, 'fetchFromServer'); 
-       $timeout.flush();
-       expect(scope.fetchFromServer.calls.any()).toEqual(true);
-     });
    });
 });

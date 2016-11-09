@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.6 - 2016-11-08T10:09:40.868Z
+ * Version: 0.19.5 - 2016-10-24T23:13:59.434Z
  * License: MIT
  */
 
@@ -118,8 +118,7 @@ var uis = angular.module('ui.select', [])
   },
   appendToBody: false,
   spinnerEnabled: false,
-  spinnerClass: 'glyphicon-refresh ui-select-spin',
-  backspaceReset: true
+  spinnerClass: 'glyphicon-refresh ui-select-spin'
 })
 
 // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -176,31 +175,6 @@ var uis = angular.module('ui.select', [])
       height: boundingClientRect.height || element.prop('offsetHeight'),
       top: boundingClientRect.top + ($window.pageYOffset || $document[0].documentElement.scrollTop),
       left: boundingClientRect.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft)
-    };
-  };
-}]);
-
-/**
- * Debounces functions
- *
- * Taken from UI Bootstrap $$debounce source code
- * See https://github.com/angular-ui/bootstrap/blob/master/src/debounce/debounce.js
- *
- */
-uis.factory('$$uisDebounce', ['$timeout', function($timeout) {
-  return function(callback, debounceTime) {
-    var timeoutPromise;
-
-    return function() {
-      var self = this;
-      var args = Array.prototype.slice.call(arguments);
-      if (timeoutPromise) {
-        $timeout.cancel(timeoutPromise);
-      }
-
-      timeoutPromise = $timeout(function() {
-        callback.apply(self, args);
-      }, debounceTime);
     };
   };
 }]);
@@ -262,8 +236,10 @@ uis.directive('uiSelectChoices',
 
        
         $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
+
         $select.disableChoiceExpression = attrs.uiDisableChoice;
         $select.onHighlightCallback = attrs.onHighlight;
+
         $select.dropdownPosition = attrs.position ? attrs.position.toLowerCase() : uiSelectConfig.dropdownPosition;        
 
         scope.$on('$destroy', function() {
@@ -273,7 +249,7 @@ uis.directive('uiSelectChoices',
         scope.$watch('$select.search', function(newValue) {
           if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
           $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
-          if ((!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength)) {
+          if (!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) {
             $select.refresh(attrs.refresh);
           } else {
             $select.items = [];
@@ -285,11 +261,10 @@ uis.directive('uiSelectChoices',
           var refreshDelay = scope.$eval(attrs.refreshDelay);
           $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
         });
-        
+
         scope.$watch('$select.open', function(open) {
           if (open) {
             tElement.attr('role', 'listbox');
-            $select.refresh(attrs.refresh);
           } else {
             tElement.removeAttr('role');
           }
@@ -416,8 +391,11 @@ uis.controller('uiSelectCtrl',
       if(!avoidReset) _resetSearchInput();
 
       $scope.$broadcast('uis:activate');
+
       ctrl.open = true;
+
       ctrl.activeIndex = ctrl.activeIndex >= ctrl.items.length ? 0 : ctrl.activeIndex;
+
       // ensure that the index is set to zero for tagging variants
       // that where first option is auto-selected
       if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false ) {
@@ -555,6 +533,7 @@ uis.controller('uiSelectCtrl',
       if (ctrl.dropdownPosition === 'auto' || ctrl.dropdownPosition === 'up'){
         $scope.calculateDropdownPos();
       }
+
       $scope.$broadcast('uis:refresh');
     };
 
@@ -602,7 +581,7 @@ uis.controller('uiSelectCtrl',
         var refreshPromise =  $scope.$eval(refreshAttr);
         if (refreshPromise && angular.isFunction(refreshPromise.then) && !ctrl.refreshing) {
           ctrl.refreshing = true;
-          refreshPromise.finally(function() {
+          refreshPromise.then(function() {
             ctrl.refreshing = false;
           });
       }}, ctrl.refreshDelay);
@@ -727,7 +706,7 @@ uis.controller('uiSelectCtrl',
             ctrl.close(skipFocusser);
             return;
           }
-        }
+        }        
         _resetSearchInput();
         $scope.$broadcast('uis:select', item);
 
@@ -803,7 +782,7 @@ uis.controller('uiSelectCtrl',
         }
 
       if (!isLocked && lockedItemIndex > -1) {
-        lockedItems.splice(lockedItemIndex, 1);
+        lockedItems.splice(lockedItemIndex, 0);
       }
     }
 
@@ -1136,12 +1115,6 @@ uis.directive('uiSelect',
         scope.$watch('sortable', function() {
             var sortable = scope.$eval(attrs.sortable);
             $select.sortable = sortable !== undefined ? sortable : uiSelectConfig.sortable;
-        });
-
-        attrs.$observe('backspaceReset', function() {
-          // $eval() is needed otherwise we get a string instead of a boolean
-          var backspaceReset = scope.$eval(attrs.backspaceReset);
-          $select.backspaceReset = backspaceReset !== undefined ? backspaceReset : true;
         });
 
         attrs.$observe('limit', function() {
@@ -2083,7 +2056,7 @@ uis.directive('uiSelectSingle', ['$timeout','$compile', function($timeout, $comp
       });
       focusser.bind("keydown", function(e){
 
-        if (e.which === KEY.BACKSPACE && $select.backspaceReset !== false) {
+        if (e.which === KEY.BACKSPACE) {
           e.preventDefault();
           e.stopPropagation();
           $select.select(undefined);
@@ -2267,6 +2240,31 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         element.off('drop', dropHandler);
       });
     }
+  };
+}]);
+
+/**
+ * Debounces functions
+ *
+ * Taken from UI Bootstrap $$debounce source code
+ * See https://github.com/angular-ui/bootstrap/blob/master/src/debounce/debounce.js
+ *
+ */
+uis.factory('$$uisDebounce', ['$timeout', function($timeout) {
+  return function(callback, debounceTime) {
+    var timeoutPromise;
+
+    return function() {
+      var self = this;
+      var args = Array.prototype.slice.call(arguments);
+      if (timeoutPromise) {
+        $timeout.cancel(timeoutPromise);
+      }
+
+      timeoutPromise = $timeout(function() {
+        callback.apply(self, args);
+      }, debounceTime);
+    };
   };
 }]);
 
