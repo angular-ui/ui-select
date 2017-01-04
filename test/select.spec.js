@@ -168,6 +168,8 @@ describe('ui-select tests', function() {
       if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
       if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
       if (attrs.backspaceReset !== undefined) { attrsHtml += ' backspace-reset="' + attrs.backspaceReset + '"';}
+      if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"';}
+      if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"';}
     }
 
     return compileTemplate(
@@ -1837,11 +1839,13 @@ describe('ui-select tests', function() {
             if (attrs.taggingLabel !== undefined) { attrsHtml += ' tagging-label="' + attrs.taggingLabel + '"'; }
             if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
             if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
+            if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"'; }
             if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
             if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
             if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
             if (attrs.limit !== undefined) { attrsHtml += ' limit="' + attrs.limit + '"'; }
             if (attrs.onSelect !== undefined) { attrsHtml += ' on-select="' + attrs.onSelect + '"'; }
+            if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"';}
         }
 
         return compileTemplate(
@@ -2832,6 +2836,61 @@ describe('ui-select tests', function() {
         expect(el.scope().$select.selected.length).toEqual(2);
     });
 
+  describe('Test key down key up and activeIndex should skip disabled choice for uiMultipleSelect',function(){
+      it('should ignored disabled items going up', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12"});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(2);
+        triggerKeydown(searchInput, Key.Up);
+        expect(el.scope().$select.activeIndex).toBe(0);
+      });
+
+      it('should ignored disabled items going up with tagging on', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12", tagging:true});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(-1);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(2);
+        triggerKeydown(searchInput, Key.Up);
+        expect(el.scope().$select.activeIndex).toBe(-1);
+      });
+
+      it('should ignored disabled items going down', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12"});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        triggerKeydown(searchInput, Key.Enter);
+        expect(el.scope().$select.activeIndex).toBe(2);
+      });
+
+      it('should ignored disabled items going down with tagging on', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12", tagging:true});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(-1);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(2);
+        triggerKeydown(searchInput, Key.Up);
+        expect(el.scope().$select.activeIndex).toBe(-1);
+      });
+
+      it('should ignore disabled items, going down with remove-selected on false', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12", removeSelected:false});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        triggerKeydown(searchInput, Key.Enter);
+        expect(el.scope().$select.activeIndex).toBe(2);
+      });
+  });
+
   describe('resetSearchInput option multiple', function () {
       it('should be true by default', function () {
         expect(createUiSelectMultiple().scope().$select.resetSearchInput).toBe(true);
@@ -2841,6 +2900,7 @@ describe('ui-select tests', function() {
         expect(createUiSelectMultiple({ resetSearchInput: false }).scope().$select.resetSearchInput).toBe(false);
       });
     });
+
 
     describe('Reset the search value', function () {
       it('should clear the search input when resetSearchInput is true', function () {
@@ -3107,7 +3167,7 @@ describe('ui-select tests', function() {
 
   describe('Test Spinner for promises',function(){
     var deferred;
-    
+
     function getFromServer(){
         deferred = $q.defer();
         return deferred.promise;
@@ -3130,14 +3190,14 @@ describe('ui-select tests', function() {
     it('should have set a custom class value of randomclass', function () {
       var control = createUiSelect({spinnerClass: 'randomclass'});
       expect(control.scope().$select.spinnerClass).toEqual('randomclass');
-    });   
+    });
 
     it('should not display spinner when disabled', function() {
       scope.getFromServer = getFromServer;
       var el = createUiSelect({theme: 'bootstrap', refresh:"getFromServer($select.search)", refreshDelay:0});
       openDropdown(el);
       var spinner = el.find('.ui-select-refreshing');
-      expect(spinner.hasClass('ng-hide')).toBe(true);       
+      expect(spinner.hasClass('ng-hide')).toBe(true);
       setSearchText(el, 'a');
       expect(spinner.hasClass('ng-hide')).toBe(true);
       deferred.resolve();
@@ -3150,7 +3210,7 @@ describe('ui-select tests', function() {
       var el = createUiSelect({spinnerEnabled: true,theme: 'bootstrap', refresh:"getFromServer($select.search)", refreshDelay:0});
       openDropdown(el);
       var spinner = el.find('.ui-select-refreshing');
-      expect(spinner.hasClass('ng-hide')).toBe(true);       
+      expect(spinner.hasClass('ng-hide')).toBe(true);
       setSearchText(el, 'a');
       expect(spinner.hasClass('ng-hide')).toBe(false);
       deferred.resolve();
@@ -3164,6 +3224,70 @@ describe('ui-select tests', function() {
       var spinner = el.find('.ui-select-refreshing');
       setSearchText(el, 'a');
       expect(el.scope().$select.spinnerClass).toBe('randomclass');
+    });
+  });
+
+   describe('Test key down key up and activeIndex should skip disabled choice',function(){
+    it('should ignore disabled items, going down', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12"});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(0);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+
+    it('should ignore disabled items, going up', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12"});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(0);
+      triggerKeydown(searchInput, Key.Down);
+      expect(el.scope().$select.activeIndex).toBe(2);
+      triggerKeydown(searchInput, Key.Up);
+      expect(el.scope().$select.activeIndex).toBe(0);
+    });
+
+    it('should ignored disabled items going up with tagging on', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", tagging:true});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(-1);
+      triggerKeydown(searchInput, Key.Down);
+      expect(el.scope().$select.activeIndex).toBe(2);
+      triggerKeydown(searchInput, Key.Up);
+      expect(el.scope().$select.activeIndex).toBe(-1);
+    });
+
+    it('should ignored disabled items in the down direction with tagging on', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", tagging:true});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(-1);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+
+    it('should ignored disabled items going up with tagging on and custom tag', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", tagging:true, taggingLabel:'custom tag'});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(-1);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+
+    it('should ignore disabled items, going down with remove-selected on false', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", removeSelected:false});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(0);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
     });
   });
 

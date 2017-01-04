@@ -432,7 +432,7 @@ uis.controller('uiSelectCtrl',
         }
         _resetSearchInput();
         $scope.$broadcast('uis:select', item);
-        
+
         if (ctrl.closeOnSelect) {
           ctrl.close(skipFocusser);
         }
@@ -565,11 +565,22 @@ uis.controller('uiSelectCtrl',
     switch (key) {
       case KEY.DOWN:
         if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-        else if (ctrl.activeIndex < ctrl.items.length - 1) { ctrl.activeIndex++; }
+        else if (ctrl.activeIndex < ctrl.items.length - 1) {
+          var idx = ++ctrl.activeIndex;
+          while(_isItemDisabled(ctrl.items[idx]) && idx < ctrl.items.length) {
+            ctrl.activeIndex = ++idx;
+          }
+        }
         break;
       case KEY.UP:
+        var minActiveIndex = (ctrl.search.length === 0 && ctrl.tagging.isActivated) ? -1 : 0;
         if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-        else if (ctrl.activeIndex > 0 || (ctrl.search.length === 0 && ctrl.tagging.isActivated && ctrl.activeIndex > -1)) { ctrl.activeIndex--; }
+        else if (ctrl.activeIndex > minActiveIndex) {
+          var idxmin = --ctrl.activeIndex;
+          while(_isItemDisabled(ctrl.items[idxmin]) && idxmin > minActiveIndex) {
+            ctrl.activeIndex = --idxmin;
+          }
+        }
         break;
       case KEY.TAB:
         if (!ctrl.multiple || ctrl.open) ctrl.select(ctrl.items[ctrl.activeIndex], true);
