@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ui-select tests', function() {
-  var scope, $rootScope, $compile, $timeout, $injector, $q,uisRepeatParser ;
+  var scope, $rootScope, $compile, $timeout, $injector, $q,uisRepeatParser, $exceptionHandler;
 
   var Key = {
     Enter: 13,
@@ -78,13 +78,14 @@ describe('ui-select tests', function() {
     });
   });
 
-  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_,_$q_ , _uisRepeatParser_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_,_$q_ , _uisRepeatParser_, _$exceptionHandler_) {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
     $timeout = _$timeout_;
     $injector = _$injector_;
     $q = _$q_;
+    $exceptionHandler = _$exceptionHandler_;
     uisRepeatParser = _uisRepeatParser_;
     scope.selection = {};
 
@@ -168,6 +169,8 @@ describe('ui-select tests', function() {
       if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
       if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
       if (attrs.backspaceReset !== undefined) { attrsHtml += ' backspace-reset="' + attrs.backspaceReset + '"';}
+      if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"';}
+      if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"';}
     }
 
     return compileTemplate(
@@ -1110,45 +1113,49 @@ describe('ui-select tests', function() {
 
 
   it('should throw when no ui-select-choices found', function() {
-    expect(function() {
-      compileTemplate(
-        '<ui-select ng-model="selection.selected"> \
-          <ui-select-match></ui-select-match> \
-        </ui-select>'
-      );
-    }).toThrow(new Error('[ui.select:transcluded] Expected 1 .ui-select-choices but got \'0\'.'));
+    compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match></ui-select-match> \
+      </ui-select>'
+    );
+    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
+    var expectedError = new Error('[ui.select:transcluded] Expected 1 .ui-select-choices but got \'0\'.');
+    expect(lastError).toEqual(expectedError);
   });
 
   it('should throw when no repeat attribute is provided to ui-select-choices', function() {
-    expect(function() {
-      compileTemplate(
-        '<ui-select ng-model="selection.selected"> \
-          <ui-select-match></ui-select-match> \
-          <ui-select-choices></ui-select-choices> \
-        </ui-select>'
-      );
-    }).toThrow(new Error('[ui.select:repeat] Expected \'repeat\' expression.'));
+    compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match></ui-select-match> \
+        <ui-select-choices></ui-select-choices> \
+      </ui-select>'
+    );
+    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
+    var expectedError = new Error('[ui.select:repeat] Expected \'repeat\' expression.');
+    expect(lastError).toEqual(expectedError);
   });
 
   it('should throw when repeat attribute has incorrect format ', function() {
-    expect(function() {
-      compileTemplate(
-        '<ui-select ng-model="selection.selected"> \
-          <ui-select-match></ui-select-match> \
-          <ui-select-choices repeat="incorrect format people"></ui-select-choices> \
-      </ui-select>'
-      );
-    }).toThrow(new Error('[ui.select:iexp] Expected expression in form of \'_item_ in _collection_[ track by _id_]\' but got \'incorrect format people\'.'));
+    compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-match></ui-select-match> \
+        <ui-select-choices repeat="incorrect format people"></ui-select-choices> \
+    </ui-select>'
+    );
+    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
+    var expectedError = new Error('[ui.select:iexp] Expected expression in form of \'_item_ in _collection_[ track by _id_]\' but got \'incorrect format people\'.');
+    expect(lastError).toEqual(expectedError);
   });
 
   it('should throw when no ui-select-match found', function() {
-    expect(function() {
-      compileTemplate(
-        '<ui-select ng-model="selection.selected"> \
-          <ui-select-choices repeat="item in items"></ui-select-choices> \
-        </ui-select>'
-      );
-    }).toThrow(new Error('[ui.select:transcluded] Expected 1 .ui-select-match but got \'0\'.'));
+    compileTemplate(
+      '<ui-select ng-model="selection.selected"> \
+        <ui-select-choices repeat="item in items"></ui-select-choices> \
+      </ui-select>'
+    );
+    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
+    var expectedError = new Error('[ui.select:transcluded] Expected 1 .ui-select-match but got \'0\'.');
+    expect(lastError).toEqual(expectedError);
   });
 
   it('should format the model correctly using alias', function() {
@@ -1837,9 +1844,13 @@ describe('ui-select tests', function() {
             if (attrs.taggingLabel !== undefined) { attrsHtml += ' tagging-label="' + attrs.taggingLabel + '"'; }
             if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
             if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
+            if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"'; }
             if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
             if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
             if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
+            if (attrs.limit !== undefined) { attrsHtml += ' limit="' + attrs.limit + '"'; }
+            if (attrs.onSelect !== undefined) { attrsHtml += ' on-select="' + attrs.onSelect + '"'; }
+            if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"';}
         }
 
         return compileTemplate(
@@ -2785,6 +2796,106 @@ describe('ui-select tests', function() {
          expect(el.scope().$select.selected.length).toBe(2);
      });
 
+     it('should set only 1 item in the selected items when limit = 1', function () {
+         var el = createUiSelectMultiple({limit: 1});
+         clickItem(el, 'Wladimir');
+         clickItem(el, 'Natasha');
+         expect(el.scope().$select.selected.length).toEqual(1);
+    });
+
+    it('should only have 1 item selected and onSelect function should only be handled once.',function(){
+        scope.onSelectFn = function ($item, $model) {
+          scope.$item = $item;
+          scope.$model = $model;
+        };
+        var el = createUiSelectMultiple({limit:1,onSelect:'onSelectFn($item, $model)'});
+
+        expect(scope.$item).toBeFalsy();
+        expect(scope.$model).toBeFalsy();
+
+        clickItem(el, 'Samantha');
+        $timeout.flush();
+        clickItem(el, 'Natasha');
+        $timeout.flush();
+        expect(scope.selection.selectedMultiple[0].name).toBe('Samantha');
+        expect(scope.$model.name).toEqual('Samantha');
+        expect(el.scope().$select.selected.length).toEqual(1);
+    });
+
+    it('should only have 2 items selected and onSelect function should be handeld.',function(){
+        scope.onSelectFn = function ($item, $model) {
+          scope.$item = $item;
+          scope.$model = $model;
+        };
+        var el = createUiSelectMultiple({onSelect:'onSelectFn($item, $model)'});
+
+        expect(scope.$item).toBeFalsy();
+        expect(scope.$model).toBeFalsy();
+
+        clickItem(el, 'Samantha');
+        $timeout.flush();
+        expect(scope.$model.name).toEqual('Samantha');
+        clickItem(el, 'Natasha');
+        $timeout.flush();
+        expect(scope.$model.name).toEqual('Natasha');
+        expect(el.scope().$select.selected.length).toEqual(2);
+    });
+
+  describe('Test key down key up and activeIndex should skip disabled choice for uiMultipleSelect',function(){
+      it('should ignored disabled items going up', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12"});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(2);
+        triggerKeydown(searchInput, Key.Up);
+        expect(el.scope().$select.activeIndex).toBe(0);
+      });
+
+      it('should ignored disabled items going up with tagging on', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12", tagging:true});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(-1);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(2);
+        triggerKeydown(searchInput, Key.Up);
+        expect(el.scope().$select.activeIndex).toBe(-1);
+      });
+
+      it('should ignored disabled items going down', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12"});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        triggerKeydown(searchInput, Key.Enter);
+        expect(el.scope().$select.activeIndex).toBe(2);
+      });
+
+      it('should ignored disabled items going down with tagging on', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12", tagging:true});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(-1);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(2);
+        triggerKeydown(searchInput, Key.Up);
+        expect(el.scope().$select.activeIndex).toBe(-1);
+      });
+
+      it('should ignore disabled items, going down with remove-selected on false', function() {
+        var el = createUiSelectMultiple({uiDisableChoice:"person.age == 12", removeSelected:false});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        triggerKeydown(searchInput, Key.Enter);
+        expect(el.scope().$select.activeIndex).toBe(2);
+      });
+  });
+
   describe('resetSearchInput option multiple', function () {
       it('should be true by default', function () {
         expect(createUiSelectMultiple().scope().$select.resetSearchInput).toBe(true);
@@ -2794,6 +2905,7 @@ describe('ui-select tests', function() {
         expect(createUiSelectMultiple({ resetSearchInput: false }).scope().$select.resetSearchInput).toBe(false);
       });
     });
+
 
     describe('Reset the search value', function () {
       it('should clear the search input when resetSearchInput is true', function () {
@@ -3060,7 +3172,7 @@ describe('ui-select tests', function() {
 
   describe('Test Spinner for promises',function(){
     var deferred;
-    
+
     function getFromServer(){
         deferred = $q.defer();
         return deferred.promise;
@@ -3083,14 +3195,14 @@ describe('ui-select tests', function() {
     it('should have set a custom class value of randomclass', function () {
       var control = createUiSelect({spinnerClass: 'randomclass'});
       expect(control.scope().$select.spinnerClass).toEqual('randomclass');
-    });   
+    });
 
     it('should not display spinner when disabled', function() {
       scope.getFromServer = getFromServer;
       var el = createUiSelect({theme: 'bootstrap', refresh:"getFromServer($select.search)", refreshDelay:0});
       openDropdown(el);
       var spinner = el.find('.ui-select-refreshing');
-      expect(spinner.hasClass('ng-hide')).toBe(true);       
+      expect(spinner.hasClass('ng-hide')).toBe(true);
       setSearchText(el, 'a');
       expect(spinner.hasClass('ng-hide')).toBe(true);
       deferred.resolve();
@@ -3103,7 +3215,7 @@ describe('ui-select tests', function() {
       var el = createUiSelect({spinnerEnabled: true,theme: 'bootstrap', refresh:"getFromServer($select.search)", refreshDelay:0});
       openDropdown(el);
       var spinner = el.find('.ui-select-refreshing');
-      expect(spinner.hasClass('ng-hide')).toBe(true);       
+      expect(spinner.hasClass('ng-hide')).toBe(true);
       setSearchText(el, 'a');
       expect(spinner.hasClass('ng-hide')).toBe(false);
       deferred.resolve();
@@ -3132,6 +3244,7 @@ describe('ui-select tests', function() {
        expect(scope.fetchFromServer.calls.any()).toEqual(true);
      });
 
+
      it('should refresh when open is set to true', function(){
        scope.fetchFromServer = function(){};
        var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshDelay:0});
@@ -3143,4 +3256,67 @@ describe('ui-select tests', function() {
        expect(scope.fetchFromServer.calls.any()).toEqual(true);
      });
    });
+   describe('Test key down key up and activeIndex should skip disabled choice',function(){
+    it('should ignore disabled items, going down', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12"});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(0);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+
+    it('should ignore disabled items, going up', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12"});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(0);
+      triggerKeydown(searchInput, Key.Down);
+      expect(el.scope().$select.activeIndex).toBe(2);
+      triggerKeydown(searchInput, Key.Up);
+      expect(el.scope().$select.activeIndex).toBe(0);
+    });
+
+    it('should ignored disabled items going up with tagging on', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", tagging:true});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(-1);
+      triggerKeydown(searchInput, Key.Down);
+      expect(el.scope().$select.activeIndex).toBe(2);
+      triggerKeydown(searchInput, Key.Up);
+      expect(el.scope().$select.activeIndex).toBe(-1);
+    });
+
+    it('should ignored disabled items in the down direction with tagging on', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", tagging:true});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(-1);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+
+    it('should ignored disabled items going up with tagging on and custom tag', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", tagging:true, taggingLabel:'custom tag'});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(-1);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+
+    it('should ignore disabled items, going down with remove-selected on false', function() {
+      var el = createUiSelect({uiDisableChoice:"person.age == 12", removeSelected:false});
+      openDropdown(el);
+      var searchInput = el.find('.ui-select-search');
+      expect(el.scope().$select.activeIndex).toBe(0);
+      triggerKeydown(searchInput, Key.Down);
+      triggerKeydown(searchInput, Key.Enter);
+      expect(el.scope().$select.activeIndex).toBe(2);
+    });
+  });
 });
