@@ -317,17 +317,10 @@ body > .ui-select-bootstrap.open {
 }
 
 /* Spinner */
-.ui-select-refreshing {
+.ui-select-refreshing.glyphicon {
     position: absolute;
     right: 0;
     padding: 8px 27px;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing:antialiased;
  }
  
 @-webkit-keyframes ui-select-spin {
