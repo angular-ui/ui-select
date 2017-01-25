@@ -55,10 +55,8 @@ uis.directive('uiSelectChoices',
 
        
         $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
-
         $select.disableChoiceExpression = attrs.uiDisableChoice;
         $select.onHighlightCallback = attrs.onHighlight;
-
         $select.dropdownPosition = attrs.position ? attrs.position.toLowerCase() : uiSelectConfig.dropdownPosition;        
 
         scope.$watch('$select.search', function(newValue) {
@@ -79,7 +77,8 @@ uis.directive('uiSelectChoices',
 
         scope.$watch('$select.open', function(open) {
           if (open) {
-            element.attr('role', 'listbox');
+            tElement.attr('role', 'listbox');
+            $select.refresh(attrs.refresh);
           } else {
             element.removeAttr('role');
           }
