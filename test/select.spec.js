@@ -260,6 +260,13 @@ describe('ui-select tests', function() {
     scope.$digest();
   }
 
+  it('should initialize selected choices with an array if choices source is undefined', function(){
+    var el = createUiSelect(),
+        ctrl = el.scope().$select;
+
+    ctrl.setItemsFn(); // setPlainItems
+    expect(ctrl.items).toEqual([]);
+  });
 
   // Tests
   //uisRepeatParser
@@ -1864,6 +1871,14 @@ describe('ui-select tests', function() {
         );
     }
 
+    it('should initialize selected choices with an empty array when choices source is undefined', function(){
+      var el = createUiSelectMultiple({groupBy: "'age'"}),
+          ctrl = el.scope().$select;
+
+      ctrl.setItemsFn(); // updateGroups
+      expect(ctrl.items).toEqual([]);
+    });
+
     it('should render initial state', function() {
         var el = createUiSelectMultiple();
         expect(el).toHaveClass('ui-select-multiple');
@@ -3231,12 +3246,12 @@ describe('ui-select tests', function() {
       expect(el.scope().$select.spinnerClass).toBe('randomclass');
     });
   });
-  
+
   describe('With refresh on active', function(){
     it('should refresh when is activated', function(){
        scope.fetchFromServer = function(){};
        var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshDelay:0});
-       spyOn(scope, 'fetchFromServer'); 
+       spyOn(scope, 'fetchFromServer');
        expect(el.scope().$select.open).toEqual(false);
        el.scope().$select.activate();
        $timeout.flush();
@@ -3248,7 +3263,7 @@ describe('ui-select tests', function() {
      it('should refresh when open is set to true', function(){
        scope.fetchFromServer = function(){};
        var el = createUiSelect({refresh:"fetchFromServer($select.search)",refreshDelay:0});
-       spyOn(scope, 'fetchFromServer'); 
+       spyOn(scope, 'fetchFromServer');
        expect(el.scope().$select.open).toEqual(false);
        openDropdown(el);
        $timeout.flush();
