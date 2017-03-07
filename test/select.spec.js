@@ -1925,6 +1925,31 @@ describe('ui-select tests', function() {
 
     });
 
+    it('should update size of search input use container width', function() {
+      scope.selection.selectedMultiple = [scope.people[4], scope.people[5]]; //Wladimir & Samantha
+      var el = createUiSelectMultiple({
+        appendToBody: true
+      });
+
+      angular.element(document.body).css("width", "100%");
+      angular.element(document.body).css("height", "100%");
+      angular.element(document.body).append(el);
+
+      spyOn(el.scope().$select, 'sizeSearchInput');
+
+      var searchInput = el.find('.ui-select-search');
+      el.find('.ui-select-match-item').first().find('.ui-select-match-close').click();
+
+      expect(el.scope().$select.sizeSearchInput).toHaveBeenCalled();
+
+      $timeout.flush();
+
+      var newWidth = searchInput[0].clientWidth + searchInput[0].offsetLeft;
+      var containerWidth = el[0].clientWidth;
+      expect(containerWidth - newWidth).toBeLessThan(10);
+
+    });
+
     it('should move to last match when pressing BACKSPACE key from search', function() {
 
         var el = createUiSelectMultiple();
