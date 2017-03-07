@@ -3141,7 +3141,7 @@ describe('ui-select tests', function() {
 
     it('should have a default value of glyphicon-refresh ui-select-spin', function () {
       var control = createUiSelect();
-      expect(control.scope().$select.spinnerClass).toEqual('glyphicon-refresh ui-select-spin');
+      expect(control.scope().$select.spinnerClass).toEqual('glyphicon glyphicon-refresh ui-select-spin');
     });
 
     it('should have set a custom class value of randomclass', function () {
