@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ui-select tests', function() {
-  var scope, $rootScope, $compile, $timeout, $injector, $q,uisRepeatParser, $exceptionHandler;
+  var scope, $rootScope, $compile, $timeout, $injector, $q,uisRepeatParser;
 
   var Key = {
     Enter: 13,
@@ -78,14 +78,13 @@ describe('ui-select tests', function() {
     });
   });
 
-  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_,_$q_ , _uisRepeatParser_, _$exceptionHandler_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_, _$injector_,_$q_ , _uisRepeatParser_){
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
     $compile = _$compile_;
     $timeout = _$timeout_;
     $injector = _$injector_;
     $q = _$q_;
-    $exceptionHandler = _$exceptionHandler_;
     uisRepeatParser = _uisRepeatParser_;
     scope.selection = {};
 
@@ -1109,53 +1108,6 @@ describe('ui-select tests', function() {
         return this.textContent;
       }).toArray()).toEqual(["Foo"]);
     });
-  });
-
-
-  it('should throw when no ui-select-choices found', function() {
-    compileTemplate(
-      '<ui-select ng-model="selection.selected"> \
-        <ui-select-match></ui-select-match> \
-      </ui-select>'
-    );
-    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
-    var expectedError = new Error('[ui.select:transcluded] Expected 1 .ui-select-choices but got \'0\'.');
-    expect(lastError).toEqual(expectedError);
-  });
-
-  it('should throw when no repeat attribute is provided to ui-select-choices', function() {
-    compileTemplate(
-      '<ui-select ng-model="selection.selected"> \
-        <ui-select-match></ui-select-match> \
-        <ui-select-choices></ui-select-choices> \
-      </ui-select>'
-    );
-    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
-    var expectedError = new Error('[ui.select:repeat] Expected \'repeat\' expression.');
-    expect(lastError).toEqual(expectedError);
-  });
-
-  it('should throw when repeat attribute has incorrect format ', function() {
-    compileTemplate(
-      '<ui-select ng-model="selection.selected"> \
-        <ui-select-match></ui-select-match> \
-        <ui-select-choices repeat="incorrect format people"></ui-select-choices> \
-    </ui-select>'
-    );
-    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
-    var expectedError = new Error('[ui.select:iexp] Expected expression in form of \'_item_ in _collection_[ track by _id_]\' but got \'incorrect format people\'.');
-    expect(lastError).toEqual(expectedError);
-  });
-
-  it('should throw when no ui-select-match found', function() {
-    compileTemplate(
-      '<ui-select ng-model="selection.selected"> \
-        <ui-select-choices repeat="item in items"></ui-select-choices> \
-      </ui-select>'
-    );
-    var lastError = $exceptionHandler.errors[$exceptionHandler.errors.length-1];
-    var expectedError = new Error('[ui.select:transcluded] Expected 1 .ui-select-match but got \'0\'.');
-    expect(lastError).toEqual(expectedError);
   });
 
   it('should format the model correctly using alias', function() {
@@ -3189,7 +3141,7 @@ describe('ui-select tests', function() {
 
     it('should have a default value of glyphicon-refresh ui-select-spin', function () {
       var control = createUiSelect();
-      expect(control.scope().$select.spinnerClass).toEqual('glyphicon-refresh ui-select-spin');
+      expect(control.scope().$select.spinnerClass).toEqual('glyphicon glyphicon-refresh ui-select-spin');
     });
 
     it('should have set a custom class value of randomclass', function () {
