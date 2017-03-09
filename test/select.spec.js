@@ -3402,18 +3402,18 @@ describe('ui-select tests', function () {
       el = compileTemplate(
         '<ui-select ng-model="selection.selected" theme="' + theme + '"' + multi + '> \
           <ui-select-match placeholder="Pick one...">{{$select.selected.name}}</ui-select-match> \
-          <ui-select-header>{{'+ selectedStr +'.name}}</ui-select-header>\
+          <ui-select-header>{{' + selectedStr + '.name}}</ui-select-header>\
           <ui-select-choices repeat="person in people | filter: $select.search"> \
             <div ng-bind-html="person.name | highlight: $select.search"></div> \
             <div ng-bind-html="person.email | highlight: $select.search"></div> \
           </ui-select-choices> \
-          <ui-select-footer>{{'+ selectedStr +'.name}}</ui-select-footer> \
+          <ui-select-footer>{{' + selectedStr + '.name}}</ui-select-footer> \
         </ui-select>'
       );
     }
 
-    ['selectize', 'bootstrap', 'select2'].forEach(function(theme){
-      describe(theme +' theme', function () {
+    ['selectize', 'bootstrap', 'select2'].forEach(function (theme) {
+      describe(theme + ' theme', function () {
         it('should show the header', function () {
           setupSelectComponent(theme);
           expect($(el).find('.ui-select-header').text().trim()).toBe(scope.selection.selected.name);

@@ -370,10 +370,10 @@ body > .ui-select-bootstrap.open {
 
 /* Spinner */
 .ui-select-refreshing.glyphicon {
-    position: absolute;
-    right: 0;
-    padding: 8px 27px;
- }
+  position: absolute;
+  right: 0;
+  padding: 8px 27px;
+}
 
 @-webkit-keyframes ui-select-spin {
   0% {
