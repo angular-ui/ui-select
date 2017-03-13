@@ -33,6 +33,7 @@ We are excited to have you working on the project and cordially request that you
  The best part is that you don't need to create plunks from scratch - you can use one from our [demo page](http://plnkr.co/edit/a3KlK8dKH3wwiiksDSn2?p=preview).
  
  Unfortunately we are not able to investigate / fix bugs without a minimal reproduce scenario using http://plnkr.co/, so if we don't hear back from you we are going to close an issue that don't have enough info to be reproduced.
+
  
 ## <a name="rules"></a> Coding Rules
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
@@ -41,6 +42,8 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 * All public API methods **must be documented** with ngdoc, an extended version of jsdoc (we added
   support for markdown and templating via @ngdoc tag). To see how we document our APIs, please check
   out the existing ngdocs and see [this wiki page][ngDocs].
+
+**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
 
 ## <a name="commit"></a> Git Commit Guidelines
 
