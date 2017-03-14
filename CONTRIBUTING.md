@@ -33,7 +33,6 @@ We are excited to have you working on the project and cordially request that you
  The best part is that you don't need to create plunks from scratch - you can use one from our [demo page](http://plnkr.co/edit/a3KlK8dKH3wwiiksDSn2?p=preview).
  
  Unfortunately we are not able to investigate / fix bugs without a minimal reproduce scenario using http://plnkr.co/, so if we don't hear back from you we are going to close an issue that don't have enough info to be reproduced.
-
  
 ## <a name="rules"></a> Coding Rules
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
