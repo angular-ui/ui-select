@@ -259,6 +259,13 @@ describe('ui-select tests', function() {
     scope.$digest();
   }
 
+  it('should initialize selected choices with an array if choices source is undefined', function(){
+    var el = createUiSelect(),
+        ctrl = el.scope().$select;
+
+    ctrl.setItemsFn(); // setPlainItems
+    expect(ctrl.items).toEqual([]);
+  });
 
   // Tests
   //uisRepeatParser
@@ -1815,6 +1822,14 @@ describe('ui-select tests', function() {
             </ui-select>'
         );
     }
+
+    it('should initialize selected choices with an empty array when choices source is undefined', function(){
+      var el = createUiSelectMultiple({groupBy: "'age'"}),
+          ctrl = el.scope().$select;
+
+      ctrl.setItemsFn(); // updateGroups
+      expect(ctrl.items).toEqual([]);
+    });
 
     it('should render initial state', function() {
         var el = createUiSelectMultiple();
