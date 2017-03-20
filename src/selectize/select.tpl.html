@@ -13,6 +13,11 @@
            ng-disabled="$select.disabled"
            aria-label="{{ $select.baseTitle }}">
   </div>
-  <div class="ui-select-choices"></div>
+  <div ng-show="$select.open" class="ui-select-dropdown selectize-dropdown"
+       ng-class="{'single': !$select.multiple, 'multi': $select.multiple}">
+    <div class="ui-select-header"></div>
+    <div class="ui-select-choices"></div>
+    <div class="ui-select-footer"></div>
+  </div>
   <div class="ui-select-no-choice"></div>
 </div>
