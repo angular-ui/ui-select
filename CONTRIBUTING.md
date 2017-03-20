@@ -42,6 +42,8 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
   support for markdown and templating via @ngdoc tag). To see how we document our APIs, please check
   out the existing ngdocs and see [this wiki page][ngDocs].
 
+**Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
 ## <a name="commit"></a> Git Commit Guidelines
 
 We have very precise rules over how our git commit messages can be formatted for maintenance of the changelog and semvar versioning.  This leads to **more
