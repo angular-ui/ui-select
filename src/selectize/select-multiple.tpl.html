@@ -11,7 +11,7 @@
            ng-disabled="$select.disabled"
            aria-expanded="{{$select.open}}"
            aria-label="{{ $select.baseTitle }}"
-           ondrop="return false;">
+           data-disallow-drop=data-disallow-drop>
   </div>
   <div ng-show="$select.open" class="ui-select-dropdown selectize-dropdown"
        ng-class="{'single': !$select.multiple, 'multi': $select.multiple}">

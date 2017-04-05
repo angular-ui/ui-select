@@ -31,6 +31,10 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         }
       });
 
+      if (element.data('disallowDrop')) {
+        return;
+      }
+
       element.on('dragstart', function(event) {
         element.addClass(draggingClassName);
 
