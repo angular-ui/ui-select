@@ -15,6 +15,10 @@ describe('ui-select tests', function () {
     Escape: 27
   };
 
+  function isNil(value) {
+    return angular.isUndefined(value) || value === null;
+  }
+
   //create a directive that wraps ui-select
   angular.module('wrapperDirective', ['ui.select']);
   angular.module('wrapperDirective').directive('wrapperUiSelect', function () {
@@ -49,8 +53,8 @@ describe('ui-select tests', function () {
       restrict: 'A',
       require: 'ngModel',
       link: function (scope, element, attrs, ngModel) {
-        ngModel.$validators.testValidator = function (modelValue, viewValue) {
-          if (angular.isUndefined(modelValue) || modelValue === null) {
+        ngModel.$validators.testValidator = function(modelValue, viewValue) {
+          if (isNil(modelValue)) {
             return true;
           } else if (angular.isArray(modelValue)) {
             var allValid = true, idx = modelValue.length;
@@ -611,11 +615,10 @@ describe('ui-select tests', function () {
 
     // Trigger clear.
     el.find('.select2-search-choice-close').click();
-    expect(scope.selection.selected).toEqual(undefined);
+    expect(scope.selection.selected).toEqual(null);
 
-    // If there is no selection it the X icon should be gone.
+    // If there is no selection the X icon should be gone.
     expect(el.find('.select2-search-choice-close').length).toEqual(0);
-
   });
 
   it('should toggle allow-clear directive', function () {
@@ -636,6 +639,31 @@ describe('ui-select tests', function () {
     expect(el.find('.select2-search-choice-close').length).toEqual(1);
   });
 
+  it('should clear selection (with object as source)', function() {
+    var el = compileTemplate(
+      '<ui-select ng-model="selection.selected" theme="select2"> \
+        <ui-select-match placeholder="Pick one..." allow-clear="true">{{$select.selected.value.name}}</ui-select-match> \
+        <ui-select-choices repeat="person.value.name as (key,person) in peopleObj | filter: $select.search"> \
+          <div ng-bind-html="person.value.name | highlight: $select.search"></div> \
+          <div ng-bind-html="person.value.email | highlight: $select.search"></div> \
+        </ui-select-choices> \
+      </ui-select>'
+    );
+    var $select = el.scope().$select;
+
+    clickItem(el, 'Samantha');
+    expect(scope.selection.selected).toEqual('Samantha');
+
+    // allowClear should be true.
+    expect($select.allowClear).toEqual(true);
+
+    // Trigger clear.
+    el.find('.select2-search-choice-close').click();
+    expect(scope.selection.selected).toEqual(null);
+
+    // If there is no selection the X icon should be gone.
+    expect(el.find('.select2-search-choice-close').length).toEqual(0);
+  });
 
   it('should pass tabindex to focusser', function () {
     var el = createUiSelect({tabindex: 5});
