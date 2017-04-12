@@ -103,9 +103,9 @@ gulp.task('pull', function(done) {
   done();
 });
 
-gulp.task('add', function() {
-  return gulp.src(['./*', '!./node_modules', '!./bower_components'])
-    .pipe($.git.add());
+gulp.task('add', function(done) {
+  $.git.add();
+  done();
 });
 
 gulp.task('recommendedBump', function(done) {

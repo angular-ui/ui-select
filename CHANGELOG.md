@@ -1,3 +1,25 @@
+<a name="0.19.6"></a>
+## [0.19.6](https://github.com/angular-ui/ui-select/compare/v0.19.6...v0.19.6) (2017-04-12)
+
+
+### Bug Fixes
+
+* **lockedItems:** Properly unlock locked items when lock conditions change ([10ee076](https://github.com/angular-ui/ui-select/commit/10ee076)), closes [#1824](https://github.com/angular-ui/ui-select/issues/1824)
+* **select-spinner:** fix spec test ([2d62e0b](https://github.com/angular-ui/ui-select/commit/2d62e0b))
+* **spec:** Use exceptionHandler to test errors. (#1879) ([b549db9](https://github.com/angular-ui/ui-select/commit/b549db9)), closes [#1877](https://github.com/angular-ui/ui-select/issues/1877)
+* **spinner-class:** add glyphicon to default spinner class, update css. Fixes #1893. ([c8f69db](https://github.com/angular-ui/ui-select/commit/c8f69db)), closes [#1893](https://github.com/angular-ui/ui-select/issues/1893)
+* **uiSelectChoices:** prevent template element from being modified (#1850) ([7aabdc4](https://github.com/angular-ui/ui-select/commit/7aabdc4)), closes [#1851](https://github.com/angular-ui/ui-select/issues/1851)
+* **uiSelectCtrl:** Reset refreshing flag even if async request errors ([be60430](https://github.com/angular-ui/ui-select/commit/be60430)), closes [#1833](https://github.com/angular-ui/ui-select/issues/1833)
+* **uiSelectMatch:** set model value to `null` when cleared ([f711ec2](https://github.com/angular-ui/ui-select/commit/f711ec2)), closes [#863](https://github.com/angular-ui/ui-select/issues/863)
+* **uiSelectMultiple:** Don't call onSelectCallback if limit already reached ([b7ac99a](https://github.com/angular-ui/ui-select/commit/b7ac99a)), closes [#1836](https://github.com/angular-ui/ui-select/issues/1836)
+
+### Features
+
+* **Header & Footer:** Add header & footer to the dropdown list. ([f65bad1](https://github.com/angular-ui/ui-select/commit/f65bad1))
+* **uiSelectSingle:** add option to avoid backspace resetting the model ([7413321](https://github.com/angular-ui/ui-select/commit/7413321)), closes [#926](https://github.com/angular-ui/ui-select/issues/926) [#525](https://github.com/angular-ui/ui-select/issues/525)
+
+
+
 <a name="0.19.5"></a>
 ## [0.19.5](https://github.com/angular-ui/ui-select/compare/v0.19.5...v0.19.5) (2016-10-24)
 
