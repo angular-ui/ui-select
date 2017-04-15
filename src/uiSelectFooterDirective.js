@@ -1,4 +1,4 @@
-uis.directive('uiSelectFooter', ['uiSelectConfig' ,function(uiSelectConfig){
+uis.directive('uiSelectFooter', function(uiSelectConfig){
   return {
     templateUrl: function (tElement) {
       // Needed so the uiSelect can detect the transcluded content
@@ -12,4 +12,4 @@ uis.directive('uiSelectFooter', ['uiSelectConfig' ,function(uiSelectConfig){
     transclude: true,
     replace: true
   };
-}]);
+});
