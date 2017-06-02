@@ -253,7 +253,7 @@ body > .ui-select-bootstrap.open {
   border-right: 1px solid #428bca;
 }
 
-.ui-select-bootstrap .ui-select-choices-group:hover {
+.ui-select-bootstrap .ui-select-choices-group-label.dropdown-header:hover {
   background-color: #f5f5f5;
 }
 
