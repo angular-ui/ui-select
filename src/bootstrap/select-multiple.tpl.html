@@ -16,7 +16,7 @@
            aria-expanded="{{$select.open}}"
            aria-label="{{$select.baseTitle}}"
            ng-class="{'spinner': $select.refreshing}"
-           ondrop="return false;">
+           data-disallow-drop=data-disallow-drop>
   </div>
   <div class="ui-select-choices"></div>
   <div class="ui-select-no-choice"></div>
