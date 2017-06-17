@@ -15,6 +15,14 @@ describe('ui-select tests', function () {
     Escape: 27
   };
 
+  var multipleTagsTmpl =
+    '<ui-select multiple tagging tagging-label="" ng-model="selection.selected"> \
+      <ui-select-match ng-attr-placeholder="{{::placeholderText}}">{{$select.selected}}</ui-select-match> \
+      <ui-select-choices repeat="item in items | filter: $select.search"> \
+        <div ng-bind-html="item | highlight: $select.search"></div> \
+      </ui-select-choices> \
+    </ui-select>';
+
   function isNil(value) {
     return angular.isUndefined(value) || value === null;
   }
@@ -189,6 +197,10 @@ describe('ui-select tests', function () {
 
   function getMatchLabel(el) {
     return $(el).find('.ui-select-match > span:first > span[ng-transclude]:not(.ng-hide)').text();
+  }
+
+  function getMatchPlaceholder(el) {
+    return el.find('.ui-select-search').attr('placeholder')
   }
 
   function clickItem(el, text) {
@@ -719,6 +731,60 @@ describe('ui-select tests', function () {
 
     expect(el.scope().$select.selected).toEqual('false');
     expect(getMatchLabel(el)).toEqual('false');
+  });
+
+  it('should not display the placeholder when tag is selected (by default)', function () {
+    scope.items = ['tag1', 'tag2', 'tag3'];
+    scope.placeholderText = 'placeholder text';
+
+    var el = compileTemplate(multipleTagsTmpl);
+    var $select = el.scope().$select; // uiSelectCtrl
+
+    expect($select.selected).toEqual([]);
+    expect($select.getPlaceholder()).toEqual(scope.placeholderText);
+    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText); // get placeholder
+
+    clickItem(el, 'tag1');
+    expect($select.selected).toEqual(['tag1']);
+    expect(getMatchLabel(el)).toEqual(''); // empty text
+    expect(getMatchPlaceholder(el)).toEqual(''); // empty placeholder
+
+    clickItem(el, 'tag2');
+    expect($select.selected).toEqual(['tag1', 'tag2']);
+    expect(getMatchLabel(el)).toEqual('');
+    expect(getMatchPlaceholder(el)).toEqual('');
+  });
+
+  // Could be needed when e.g. tag is shown below the input
+  it('should display the placeholder when tag is selected (if user overrides .getPlaceholder())', function () {
+    scope.items = ['tag1', 'tag2', 'tag3'];
+    scope.placeholderText = 'placeholder text';
+
+    var el = compileTemplate(multipleTagsTmpl);
+    var $select = el.scope().$select;
+
+    /**
+     * In case user wants to show placeholder when the text is empty - they can override $select.getPlaceholder.
+     * Cannot do this with $selectMultiple, bc <ui-select-multiple is appended inside the library
+     * This override closes #1796
+     */
+    $select.getPlaceholder = function() {
+      return $select.placeholder;
+    };
+
+    expect($select.selected).toEqual([]);
+    expect(getMatchLabel(el)).toEqual('');
+    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText);
+
+    clickItem(el, 'tag1');
+    expect($select.selected).toEqual(['tag1']);
+    expect(getMatchLabel(el)).toEqual(''); // empty text
+    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText); // show placeholder
+
+    clickItem(el, 'tag2');
+    expect($select.selected).toEqual(['tag1', 'tag2']);
+    expect(getMatchLabel(el)).toEqual('');
+    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText);
   });
 
   it('should close an opened select when another one is opened', function () {

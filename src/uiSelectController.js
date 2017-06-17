@@ -65,6 +65,12 @@ uis.controller('uiSelectCtrl',
     return isNil(ctrl.selected) || ctrl.selected === '' || (ctrl.multiple && ctrl.selected.length === 0);
   };
 
+  ctrl.getPlaceholder = function(){
+    //Refactor single?
+    if(ctrl.selected && ctrl.selected.length) return;
+    return ctrl.placeholder;
+  };
+
   function _findIndex(collection, predicate, thisArg){
     if (collection.findIndex){
       return collection.findIndex(predicate, thisArg);
