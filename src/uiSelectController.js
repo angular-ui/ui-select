@@ -62,9 +62,15 @@ uis.controller('uiSelectCtrl',
   }
 
   ctrl.headerClick = function(g) {
+    function sendItem(item) {
+      $timeout(function() {
+        ctrl.select(item, false, ' ');
+      });
+    }
+
     var items = g.items;
     for(var i = 0; i < items.length; i++) {
-      ctrl.select(items[i], false, ' ');
+        sendItem(items[i]);
     }
   };
 
