@@ -846,6 +846,20 @@ describe('ui-select tests', function () {
     expect(getMatchLabel(el)).toEqual('-- None Selected --');
   });
 
+  it('should not have active option when model cleared', function () {
+    var el = createUiSelect();
+
+    clickItem(el, 'Samantha');
+    expect(el.scope().$select.activeIndex).toBe(5);
+
+    scope.selection.selected = null;
+    scope.$digest();
+
+    el.find(".ui-select-toggle").click();
+
+    expect(el.scope().$select.activeIndex).toBe(0);
+  });
+
   describe('backspace reset option', function () {
     it('should undefined model when pressing BACKSPACE key if backspaceReset=true', function () {
       var el = createUiSelect();
