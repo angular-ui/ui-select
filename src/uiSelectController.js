@@ -465,11 +465,11 @@ uis.controller('uiSelectCtrl',
   ctrl.toggle = function(e) {
     if (ctrl.open) {
       ctrl.close();
-      e.preventDefault();
-      e.stopPropagation();
     } else {
       ctrl.activate();
     }
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   // Set default function for locked choices - avoids unnecessary
