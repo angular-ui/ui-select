@@ -88,10 +88,14 @@ uis.controller('uiSelectCtrl',
     if (ctrl.resetSearchInput) {
       ctrl.search = EMPTY_SEARCH;
       //reset activeIndex
-      if (ctrl.selected && ctrl.items.length && !ctrl.multiple) {
-        ctrl.activeIndex = _findIndex(ctrl.items, function(item){
-          return angular.equals(this, item);
-        }, ctrl.selected);
+      if (!ctrl.multiple) {
+        if (ctrl.selected && ctrl.items.length) {
+          ctrl.activeIndex = _findIndex(ctrl.items, function(item){
+            return angular.equals(this, item);
+          }, ctrl.selected);
+        } else {
+          ctrl.activeIndex = 0;
+        }
       }
     }
   }
