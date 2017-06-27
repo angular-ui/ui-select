@@ -15,13 +15,7 @@ describe('ui-select tests', function () {
     Escape: 27
   };
 
-  var multipleTagsTmpl =
-    '<ui-select multiple tagging tagging-label="" ng-model="selection.selected"> \
-      <ui-select-match ng-attr-placeholder="{{::placeholderText}}">{{$select.selected}}</ui-select-match> \
-      <ui-select-choices repeat="item in items | filter: $select.search"> \
-        <div ng-bind-html="item | highlight: $select.search"></div> \
-      </ui-select-choices> \
-    </ui-select>';
+  var defaultPlaceholder = 'Pick one...';
 
   function isNil(value) {
     return angular.isUndefined(value) || value === null;
@@ -731,60 +725,6 @@ describe('ui-select tests', function () {
 
     expect(el.scope().$select.selected).toEqual('false');
     expect(getMatchLabel(el)).toEqual('false');
-  });
-
-  it('should not display the placeholder when tag is selected (by default)', function () {
-    scope.items = ['tag1', 'tag2', 'tag3'];
-    scope.placeholderText = 'placeholder text';
-
-    var el = compileTemplate(multipleTagsTmpl);
-    var $select = el.scope().$select; // uiSelectCtrl
-
-    expect($select.selected).toEqual([]);
-    expect($select.getPlaceholder()).toEqual(scope.placeholderText);
-    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText); // get placeholder
-
-    clickItem(el, 'tag1');
-    expect($select.selected).toEqual(['tag1']);
-    expect(getMatchLabel(el)).toEqual(''); // empty text
-    expect(getMatchPlaceholder(el)).toEqual(''); // empty placeholder
-
-    clickItem(el, 'tag2');
-    expect($select.selected).toEqual(['tag1', 'tag2']);
-    expect(getMatchLabel(el)).toEqual('');
-    expect(getMatchPlaceholder(el)).toEqual('');
-  });
-
-  // Could be needed when e.g. tag is shown below the input
-  it('should display the placeholder when tag is selected (if user overrides .getPlaceholder())', function () {
-    scope.items = ['tag1', 'tag2', 'tag3'];
-    scope.placeholderText = 'placeholder text';
-
-    var el = compileTemplate(multipleTagsTmpl);
-    var $select = el.scope().$select;
-
-    /**
-     * In case user wants to show placeholder when the text is empty - they can override $select.getPlaceholder.
-     * Cannot do this with $selectMultiple, bc <ui-select-multiple is appended inside the library
-     * This override closes #1796
-     */
-    $select.getPlaceholder = function() {
-      return $select.placeholder;
-    };
-
-    expect($select.selected).toEqual([]);
-    expect(getMatchLabel(el)).toEqual('');
-    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText);
-
-    clickItem(el, 'tag1');
-    expect($select.selected).toEqual(['tag1']);
-    expect(getMatchLabel(el)).toEqual(''); // empty text
-    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText); // show placeholder
-
-    clickItem(el, 'tag2');
-    expect($select.selected).toEqual(['tag1', 'tag2']);
-    expect(getMatchLabel(el)).toEqual('');
-    expect(getMatchPlaceholder(el)).toEqual(scope.placeholderText);
   });
 
   it('should close an opened select when another one is opened', function () {
@@ -1926,7 +1866,9 @@ describe('ui-select tests', function () {
     function createUiSelectMultiple(attrs) {
       var attrsHtml = '',
         choicesAttrsHtml = '',
-        matchesAttrsHtml = '';
+        matchesAttrsHtml = '',
+        matchesPlaceholder = defaultPlaceholder;
+
       if (attrs !== undefined) {
         if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
         if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
@@ -1936,23 +1878,27 @@ describe('ui-select tests', function () {
         if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
         if (attrs.taggingLabel !== undefined) { attrsHtml += ' tagging-label="' + attrs.taggingLabel + '"'; }
         if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
-        if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
-        if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"'; }
-        if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
         if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
         if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
         if (attrs.limit !== undefined) { attrsHtml += ' limit="' + attrs.limit + '"'; }
         if (attrs.onSelect !== undefined) { attrsHtml += ' on-select="' + attrs.onSelect + '"'; }
         if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
-        if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
-        if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
         if (attrs.spinnerEnabled !== undefined) { attrsHtml += ' spinner-enabled="' + attrs.spinnerEnabled + '"'; }
         if (attrs.spinnerClass !== undefined) { attrsHtml += ' spinner-class="' + attrs.spinnerClass + '"'; }
+
+        if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
+        if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"'; }
+        if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
+        if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
+
+        if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
       }
+
+      matchesAttrsHtml += ' placeholder="' +  matchesPlaceholder + '"';
 
       return compileTemplate(
         '<ui-select multiple ng-model="selection.selectedMultiple"' + attrsHtml + ' theme="bootstrap" style="width: 800px;"> \
-                <ui-select-match "' + matchesAttrsHtml + ' placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+                <ui-select-match ' + matchesAttrsHtml + '>{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
                 <ui-select-choices repeat="person in people | filter: $select.search"' + choicesAttrsHtml + '> \
                   <div ng-bind-html="person.name | highlight: $select.search"></div> \
                   <div ng-bind-html="person.email | highlight: $select.search"></div> \
@@ -3022,6 +2968,65 @@ describe('ui-select tests', function () {
         triggerKeydown(searchInput, Key.Down);
         triggerKeydown(searchInput, Key.Enter);
         expect(el.scope().$select.activeIndex).toBe(2);
+      });
+
+      it('should not display the placeholder when tag is selected (by default)', function () {
+        var placeholderText = defaultPlaceholder;
+
+        var el = createUiSelectMultiple({
+          tagging: '',
+          taggingLabel: ''
+        });
+
+        var $select = el.scope().$select; // uiSelectCtrl
+
+        expect($select.selected).toEqual([]);
+        expect($select.getPlaceholder()).toEqual(placeholderText);
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText); // get placeholder
+
+        clickItem(el, scope.people[0].name);
+        expect($select.selected).toEqual([scope.people[0]]);
+        expect(getMatchLabel(el)).toEqual(''); // empty text
+        expect(getMatchPlaceholder(el)).toEqual(''); // empty placeholder
+
+        clickItem(el, scope.people[1].name);
+        expect($select.selected).toEqual([scope.people[0], scope.people[1]]);
+        expect(getMatchLabel(el)).toEqual('');
+        expect(getMatchPlaceholder(el)).toEqual('');
+      });
+
+      // Could be needed when e.g. tag is shown below the input
+      it('should display the placeholder when tag is selected (if user overrides .getPlaceholder())', function () {
+        var placeholderText = defaultPlaceholder;
+
+        var el = createUiSelectMultiple({
+          tagging: '',
+          taggingLabel: ''
+        });
+        var $select = el.scope().$select;
+
+        /**
+         * In case user wants to show placeholder when the text is empty - they can override $select.getPlaceholder.
+         * Cannot do this with $selectMultiple, bc <ui-select-multiple is appended inside the library
+         * This override closes #1796
+         */
+        $select.getPlaceholder = function() {
+          return $select.placeholder;
+        };
+
+        expect($select.selected).toEqual([]);
+        expect(getMatchLabel(el)).toEqual('');
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText);
+
+        clickItem(el, scope.people[0].name);
+        expect($select.selected).toEqual([scope.people[0]]);
+        expect(getMatchLabel(el)).toEqual(''); // empty text
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText); // show placeholder
+
+        clickItem(el, scope.people[1].name);
+        expect($select.selected).toEqual([scope.people[0], scope.people[1]]);
+        expect(getMatchLabel(el)).toEqual('');
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText);
       });
     });
 
