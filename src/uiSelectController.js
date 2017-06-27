@@ -66,7 +66,6 @@ uis.controller('uiSelectCtrl',
   };
 
   ctrl.getPlaceholder = function(){
-    //Refactor single?
     if(ctrl.selected && ctrl.selected.length) return;
     return ctrl.placeholder;
   };
