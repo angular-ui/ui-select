@@ -746,6 +746,28 @@ describe('ui-select tests', function () {
     el2.remove();
   });
 
+  it('should close an opened select clicking outside with stopPropagation()', function () {
+    var el1 = createUiSelect();
+    var el2 = $('<div></div>');
+    el1.appendTo(document.body);
+    el2.appendTo(document.body);
+
+    el2.on('click', function (e) {
+      e.stopPropagation()
+    });
+
+    expect(isDropdownOpened(el1)).toEqual(false);
+    clickMatch(el1);
+    expect(isDropdownOpened(el1)).toEqual(true);
+
+    // Using a native dom click() to make sure the test fails when it should.
+    el2[0].click();
+
+    expect(isDropdownOpened(el1)).toEqual(false);
+    el1.remove();
+    el2.remove();
+  });
+
   it('should bind model correctly (with object as source)', function () {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
