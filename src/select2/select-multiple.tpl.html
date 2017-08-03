@@ -16,7 +16,7 @@
         aria-label="{{ $select.baseTitle }}"
         aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}"
         class="select2-input ui-select-search"
-        placeholder="{{$selectMultiple.getPlaceholder()}}"
+        placeholder="{{$select.getPlaceholder()}}"
         ng-disabled="$select.disabled"
         ng-hide="$select.disabled"
         ng-model="$select.search"
