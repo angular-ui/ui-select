@@ -158,7 +158,7 @@ uis.controller('uiSelectCtrl',
       } else {
         $timeout(function () {
           ctrl.focusSearchInput(initSearchValue);
-          if(!ctrl.tagging.isActivated && ctrl.items.length > 1) {
+          if(!ctrl.tagging.isActivated && ctrl.items.length > 1 && ctrl.open) {
             _ensureHighlightVisible();
           }
         });
