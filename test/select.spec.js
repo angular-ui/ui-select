@@ -1882,6 +1882,7 @@ describe('ui-select tests', function () {
         if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
         if (attrs.spinnerEnabled !== undefined) { attrsHtml += ' spinner-enabled="' + attrs.spinnerEnabled + '"'; }
         if (attrs.spinnerClass !== undefined) { attrsHtml += ' spinner-class="' + attrs.spinnerClass + '"'; }
+        if (attrs.uiSelectHeaderGroupSelectable !== undefined) { choicesAttrsHtml += ' ui-select-header-group-selectable'; }
       }
 
       return compileTemplate(
@@ -3054,6 +3055,23 @@ describe('ui-select tests', function () {
         expect(el.scope().$select.spinnerClass).toBe('randomclass');
       });
     });
+
+    describe('uiSelectHeaderGroupSelectable directive', function () {
+      it('should have a default value of false', function () {
+        var el = createUiSelectMultiple({ groupBy: "'age'", uiSelectHeaderGroupSelectable: true });
+        var ctrl = el.scope().$select;
+
+        showChoicesForSearch(el, '');
+        expect(ctrl.multiple).toEqual(true);
+        expect(ctrl.groups.length).toEqual(5);
+        openDropdown(el);
+
+        $(el).find('div.ui-select-header-group-selectable').first().click();
+        showChoicesForSearch(el, '');
+
+        expect(ctrl.selected.length).toEqual(2);
+      });
+    })
   });
 
   it('should add an id to the search input field', function () {
