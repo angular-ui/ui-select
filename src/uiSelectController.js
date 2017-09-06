@@ -61,19 +61,6 @@ uis.controller('uiSelectCtrl',
     throw uiSelectMinErr('searchInput', "Expected 1 input.ui-select-search but got '{0}'.", ctrl.searchInput.length);
   }
 
-  ctrl.headerClick = function(g) {
-    function sendItem(item) {
-      $timeout(function() {
-        ctrl.select(item, false, ' ');
-      });
-    }
-
-    var items = g.items;
-    for(var i = 0; i < items.length; i++) {
-        sendItem(items[i]);
-    }
-  };
-
   ctrl.isEmpty = function() {
     return isNil(ctrl.selected) || ctrl.selected === '' || (ctrl.multiple && ctrl.selected.length === 0);
   };
