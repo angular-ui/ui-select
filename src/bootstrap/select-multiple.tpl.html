@@ -8,7 +8,7 @@
            autocapitalize="off"
            spellcheck="false"
            class="ui-select-search input-xs"
-           placeholder="{{$selectMultiple.getPlaceholder()}}"
+           placeholder="{{$select.getPlaceholder()}}"
            ng-disabled="$select.disabled"
            ng-click="$select.activate()"
            ng-model="$select.search"
@@ -16,7 +16,7 @@
            aria-expanded="{{$select.open}}"
            aria-label="{{$select.baseTitle}}"
            ng-class="{'spinner': $select.refreshing}"
-           ondrop="return false;">
+           data-disallow-drop=data-disallow-drop>
   </div>
   <div class="ui-select-choices"></div>
   <div class="ui-select-no-choice"></div>

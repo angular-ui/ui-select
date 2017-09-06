@@ -65,6 +65,11 @@ uis.controller('uiSelectCtrl',
     return isNil(ctrl.selected) || ctrl.selected === '' || (ctrl.multiple && ctrl.selected.length === 0);
   };
 
+  ctrl.getPlaceholder = function(){
+    if(ctrl.selected && ctrl.selected.length) return;
+    return ctrl.placeholder;
+  };
+
   function _findIndex(collection, predicate, thisArg){
     if (collection.findIndex){
       return collection.findIndex(predicate, thisArg);
@@ -88,10 +93,14 @@ uis.controller('uiSelectCtrl',
     if (ctrl.resetSearchInput) {
       ctrl.search = EMPTY_SEARCH;
       //reset activeIndex
-      if (ctrl.selected && ctrl.items.length && !ctrl.multiple) {
-        ctrl.activeIndex = _findIndex(ctrl.items, function(item){
-          return angular.equals(this, item);
-        }, ctrl.selected);
+      if (!ctrl.multiple) {
+        if (ctrl.selected && ctrl.items.length) {
+          ctrl.activeIndex = _findIndex(ctrl.items, function(item){
+            return angular.equals(this, item);
+          }, ctrl.selected);
+        } else {
+          ctrl.activeIndex = 0;
+        }
       }
     }
   }
@@ -468,11 +477,11 @@ uis.controller('uiSelectCtrl',
   ctrl.toggle = function(e) {
     if (ctrl.open) {
       ctrl.close();
-      e.preventDefault();
-      e.stopPropagation();
     } else {
       ctrl.activate();
     }
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   // Set default function for locked choices - avoids unnecessary
