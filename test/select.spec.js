@@ -1926,7 +1926,7 @@ describe('ui-select tests', function () {
         if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
         if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
         if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
-        if (attrs.uiSelectHeaderGroupSelectable !== undefined) { choicesAttrsHtml += ' ui-select-header-group-selectable'; }
+        if (attrs.uiSelectHeaderGroupSelectable !== undefined) { choicesAttrsHtml += ' ui-select-header-group-selectable="' + attrs.uiSelectHeaderGroupSelectable + '"'; }
       }
 
       matchesAttrsHtml += ' placeholder="' +  matchesPlaceholder + '"';
@@ -2083,6 +2083,7 @@ describe('ui-select tests', function () {
       expect(containerWidth - newWidth).toBeLessThan(10);
 
     });
+
     it('should move to last match when pressing BACKSPACE key from search', function () {
 
       var el = createUiSelectMultiple();
@@ -2156,7 +2157,6 @@ describe('ui-select tests', function () {
       expect(el.scope().$selectMultiple.activeMatchIndex).toBe(scope.selection.selectedMultiple.length - 1);
 
     });
-
 
     it('should move to last match when pressing LEFT key from search', function () {
 
@@ -3176,7 +3176,22 @@ describe('ui-select tests', function () {
 
         expect(ctrl.selected.length).toEqual(2);
       });
-    })
+
+      it('should don\'t work with false attribute', function () {
+        var el = createUiSelectMultiple({ groupBy: "'age'", uiSelectHeaderGroupSelectable: false });
+        var ctrl = el.scope().$select;
+
+        showChoicesForSearch(el, '');
+        expect(ctrl.multiple).toEqual(true);
+        expect(ctrl.groups.length).toEqual(5);
+        openDropdown(el);
+
+        $(el).find('div.ui-select-header-group-selectable').first().click();
+        showChoicesForSearch(el, '');
+
+        expect(ctrl.selected.length).toEqual(0);
+      });
+    });
   });
 
   it('should add an id to the search input field', function () {
