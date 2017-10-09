@@ -3173,7 +3173,6 @@ describe('ui-select tests', function () {
 
         $(el).find('div.ui-select-header-group-selectable').first().click();
         showChoicesForSearch(el, '');
-
         expect(ctrl.selected.length).toEqual(2);
       });
 
