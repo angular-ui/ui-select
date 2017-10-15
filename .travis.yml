@@ -7,13 +7,15 @@ env:
     - GH_REF: github.com/angular-ui/ui-select.git
     - GH_PAGES_BRANCH: gh-pages
     - secure: "PkIhXXwrR5fHh7fH+2WizaY0MmK1l1Dr7PCqs112PkEimVPcntRJeA5pjTwGRwHm+RSkFVtfo38EY/GUwzhLSRTO7WZ+id+vIMGQLgiofqrOwi0nq93esG6qI8Jg5K0GUt8mzg5m9B2tgm2I91RAojEhIukKcbsDsq3hNAUy71Y="
-
 addons:
+  firefox: "31.0"
+
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+
 
 before_script:
   - export DISPLAY=:99.0
