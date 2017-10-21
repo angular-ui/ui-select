@@ -15,6 +15,8 @@ describe('ui-select tests', function () {
     Escape: 27
   };
 
+  var defaultPlaceholder = 'Pick one...';
+
   function isNil(value) {
     return angular.isUndefined(value) || value === null;
   }
@@ -189,6 +191,10 @@ describe('ui-select tests', function () {
 
   function getMatchLabel(el) {
     return $(el).find('.ui-select-match > span:first > span[ng-transclude]:not(.ng-hide)').text();
+  }
+
+  function getMatchPlaceholder(el) {
+    return el.find('.ui-select-search').attr('placeholder')
   }
 
   function clickItem(el, text) {
@@ -740,6 +746,28 @@ describe('ui-select tests', function () {
     el2.remove();
   });
 
+  it('should close an opened select clicking outside with stopPropagation()', function () {
+    var el1 = createUiSelect();
+    var el2 = $('<div></div>');
+    el1.appendTo(document.body);
+    el2.appendTo(document.body);
+
+    el2.on('click', function (e) {
+      e.stopPropagation()
+    });
+
+    expect(isDropdownOpened(el1)).toEqual(false);
+    clickMatch(el1);
+    expect(isDropdownOpened(el1)).toEqual(true);
+
+    // Using a native dom click() to make sure the test fails when it should.
+    el2[0].click();
+
+    expect(isDropdownOpened(el1)).toEqual(false);
+    el1.remove();
+    el2.remove();
+  });
+
   it('should bind model correctly (with object as source)', function () {
     var el = compileTemplate(
       '<ui-select ng-model="selection.selected"> \
@@ -844,6 +872,20 @@ describe('ui-select tests', function () {
     scope.selection.selected = '';
     scope.$digest();
     expect(getMatchLabel(el)).toEqual('-- None Selected --');
+  });
+
+  it('should not have active option when model cleared', function () {
+    var el = createUiSelect();
+
+    clickItem(el, 'Samantha');
+    expect(el.scope().$select.activeIndex).toBe(5);
+
+    scope.selection.selected = null;
+    scope.$digest();
+
+    el.find(".ui-select-toggle").click();
+
+    expect(el.scope().$select.activeIndex).toBe(0);
   });
 
   describe('backspace reset option', function () {
@@ -1860,7 +1902,9 @@ describe('ui-select tests', function () {
     function createUiSelectMultiple(attrs) {
       var attrsHtml = '',
         choicesAttrsHtml = '',
-        matchesAttrsHtml = '';
+        matchesAttrsHtml = '',
+        matchesPlaceholder = defaultPlaceholder;
+
       if (attrs !== undefined) {
         if (attrs.disabled !== undefined) { attrsHtml += ' ng-disabled="' + attrs.disabled + '"'; }
         if (attrs.required !== undefined) { attrsHtml += ' ng-required="' + attrs.required + '"'; }
@@ -1870,19 +1914,26 @@ describe('ui-select tests', function () {
         if (attrs.taggingTokens !== undefined) { attrsHtml += ' tagging-tokens="' + attrs.taggingTokens + '"'; }
         if (attrs.taggingLabel !== undefined) { attrsHtml += ' tagging-label="' + attrs.taggingLabel + '"'; }
         if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
-        if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
-        if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"'; }
-        if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
         if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
         if (attrs.resetSearchInput !== undefined) { attrsHtml += ' reset-search-input="' + attrs.resetSearchInput + '"'; }
         if (attrs.limit !== undefined) { attrsHtml += ' limit="' + attrs.limit + '"'; }
         if (attrs.onSelect !== undefined) { attrsHtml += ' on-select="' + attrs.onSelect + '"'; }
         if (attrs.removeSelected !== undefined) { attrsHtml += ' remove-selected="' + attrs.removeSelected + '"'; }
+        if (attrs.spinnerEnabled !== undefined) { attrsHtml += ' spinner-enabled="' + attrs.spinnerEnabled + '"'; }
+        if (attrs.spinnerClass !== undefined) { attrsHtml += ' spinner-class="' + attrs.spinnerClass + '"'; }
+        if (attrs.groupBy !== undefined) { choicesAttrsHtml += ' group-by="' + attrs.groupBy + '"'; }
+        if (attrs.uiDisableChoice !== undefined) { choicesAttrsHtml += ' ui-disable-choice="' + attrs.uiDisableChoice + '"'; }
+        if (attrs.refresh !== undefined) { choicesAttrsHtml += ' refresh="' + attrs.refresh + '"'; }
+        if (attrs.refreshDelay !== undefined) { choicesAttrsHtml += ' refresh-delay="' + attrs.refreshDelay + '"'; }
+        if (attrs.lockChoice !== undefined) { matchesAttrsHtml += ' ui-lock-choice="' + attrs.lockChoice + '"'; }
+        if (attrs.uiSelectHeaderGroupSelectable !== undefined) { choicesAttrsHtml += ' ui-select-header-group-selectable="' + attrs.uiSelectHeaderGroupSelectable + '"'; }
       }
+
+      matchesAttrsHtml += ' placeholder="' +  matchesPlaceholder + '"';
 
       return compileTemplate(
         '<ui-select multiple ng-model="selection.selectedMultiple"' + attrsHtml + ' theme="bootstrap" style="width: 800px;"> \
-                <ui-select-match "' + matchesAttrsHtml + ' placeholder="Pick one...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
+                <ui-select-match ' + matchesAttrsHtml + '>{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match> \
                 <ui-select-choices repeat="person in people | filter: $select.search"' + choicesAttrsHtml + '> \
                   <div ng-bind-html="person.name | highlight: $select.search"></div> \
                   <div ng-bind-html="person.email | highlight: $select.search"></div> \
@@ -2032,6 +2083,7 @@ describe('ui-select tests', function () {
       expect(containerWidth - newWidth).toBeLessThan(10);
 
     });
+
     it('should move to last match when pressing BACKSPACE key from search', function () {
 
       var el = createUiSelectMultiple();
@@ -2105,7 +2157,6 @@ describe('ui-select tests', function () {
       expect(el.scope().$selectMultiple.activeMatchIndex).toBe(scope.selection.selectedMultiple.length - 1);
 
     });
-
 
     it('should move to last match when pressing LEFT key from search', function () {
 
@@ -2953,6 +3004,65 @@ describe('ui-select tests', function () {
         triggerKeydown(searchInput, Key.Enter);
         expect(el.scope().$select.activeIndex).toBe(2);
       });
+
+      it('should not display the placeholder when tag is selected (by default)', function () {
+        var placeholderText = defaultPlaceholder;
+
+        var el = createUiSelectMultiple({
+          tagging: '',
+          taggingLabel: ''
+        });
+
+        var $select = el.scope().$select; // uiSelectCtrl
+
+        expect($select.selected).toEqual([]);
+        expect($select.getPlaceholder()).toEqual(placeholderText);
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText); // get placeholder
+
+        clickItem(el, scope.people[0].name);
+        expect($select.selected).toEqual([scope.people[0]]);
+        expect(getMatchLabel(el)).toEqual(''); // empty text
+        expect(getMatchPlaceholder(el)).toEqual(''); // empty placeholder
+
+        clickItem(el, scope.people[1].name);
+        expect($select.selected).toEqual([scope.people[0], scope.people[1]]);
+        expect(getMatchLabel(el)).toEqual('');
+        expect(getMatchPlaceholder(el)).toEqual('');
+      });
+
+      // Could be needed when e.g. tag is shown below the input
+      it('should display the placeholder when tag is selected (if user overrides .getPlaceholder())', function () {
+        var placeholderText = defaultPlaceholder;
+
+        var el = createUiSelectMultiple({
+          tagging: '',
+          taggingLabel: ''
+        });
+        var $select = el.scope().$select;
+
+        /**
+         * In case user wants to show placeholder when the text is empty - they can override $select.getPlaceholder.
+         * Cannot do this with $selectMultiple, bc <ui-select-multiple is appended inside the library
+         * This override closes #1796
+         */
+        $select.getPlaceholder = function() {
+          return $select.placeholder;
+        };
+
+        expect($select.selected).toEqual([]);
+        expect(getMatchLabel(el)).toEqual('');
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText);
+
+        clickItem(el, scope.people[0].name);
+        expect($select.selected).toEqual([scope.people[0]]);
+        expect(getMatchLabel(el)).toEqual(''); // empty text
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText); // show placeholder
+
+        clickItem(el, scope.people[1].name);
+        expect($select.selected).toEqual([scope.people[0], scope.people[1]]);
+        expect(getMatchLabel(el)).toEqual('');
+        expect(getMatchPlaceholder(el)).toEqual(placeholderText);
+      });
     });
 
     describe('resetSearchInput option multiple', function () {
@@ -2986,6 +3096,99 @@ describe('ui-select tests', function () {
         $(el).scope().$select.search = 'idontexist';
         $(el).scope().$select.select('idontexist');
         expect($(el).scope().$select.search).toEqual('');
+      });
+    });
+
+    describe('Test Spinner for promises', function () {
+      var deferred;
+
+      function getFromServer() {
+        deferred = $q.defer();
+        return deferred.promise;
+      }
+      it('should have a default value of false', function () {
+        var control = createUiSelectMultiple();
+        expect(control.scope().$select.spinnerEnabled).toEqual(false);
+      });
+
+      it('should have a set a value of true', function () {
+        var control = createUiSelectMultiple({ spinnerEnabled: true });
+        expect(control.scope().$select.spinnerEnabled).toEqual(true);
+      });
+
+      it('should have a default value of glyphicon-refresh ui-select-spin', function () {
+        var control = createUiSelectMultiple();
+        expect(control.scope().$select.spinnerClass).toEqual('glyphicon glyphicon-refresh ui-select-spin');
+      });
+
+      it('should have set a custom class value of randomclass', function () {
+        var control = createUiSelectMultiple({ spinnerClass: 'randomclass' });
+        expect(control.scope().$select.spinnerClass).toEqual('randomclass');
+      });
+
+      it('should not display spinner when disabled', function () {
+        scope.getFromServer = getFromServer;
+        var el = createUiSelectMultiple({ theme: 'bootstrap', refresh: "getFromServer($select.search)", refreshDelay: 0 });
+        openDropdown(el);
+        var spinner = el.find('.ui-select-refreshing');
+        expect(spinner.hasClass('ng-hide')).toBe(true);
+        setSearchText(el, 'a');
+        expect(spinner.hasClass('ng-hide')).toBe(true);
+        deferred.resolve();
+        scope.$digest();
+        expect(spinner.hasClass('ng-hide')).toBe(true);
+      });
+
+      it('should display spinner when enabled', function () {
+        scope.getFromServer = getFromServer;
+        var el = createUiSelectMultiple({ spinnerEnabled: true, theme: 'bootstrap', refresh: "getFromServer($select.search)", refreshDelay: 0 });
+        openDropdown(el);
+        var spinner = el.find('.ui-select-refreshing');
+        expect(spinner.hasClass('ng-hide')).toBe(true);
+        setSearchText(el, 'a');
+        expect(spinner.hasClass('ng-hide')).toBe(false);
+        deferred.resolve();
+        scope.$digest();
+        expect(spinner.hasClass('ng-hide')).toBe(true);
+      });
+
+      it('should not display spinner when enabled', function () {
+        var el = createUiSelectMultiple({ spinnerEnabled: true, theme: 'bootstrap', spinnerClass: 'randomclass' });
+        openDropdown(el);
+        var spinner = el.find('.ui-select-refreshing');
+        setSearchText(el, 'a');
+        expect(el.scope().$select.spinnerClass).toBe('randomclass');
+      });
+    });
+
+    describe('uiSelectHeaderGroupSelectable directive', function () {
+      it('should have a default value of false', function () {
+        var el = createUiSelectMultiple({ groupBy: "'age'", uiSelectHeaderGroupSelectable: true });
+        var ctrl = el.scope().$select;
+
+        showChoicesForSearch(el, '');
+        expect(ctrl.multiple).toEqual(true);
+        expect(ctrl.groups.length).toEqual(5);
+        openDropdown(el);
+
+        $(el).find('div.ui-select-header-group-selectable').first().click();
+        showChoicesForSearch(el, '');
+        expect(ctrl.selected.length).toEqual(2);
+      });
+
+      it('should don\'t work with false attribute', function () {
+        var el = createUiSelectMultiple({ groupBy: "'age'", uiSelectHeaderGroupSelectable: false });
+        var ctrl = el.scope().$select;
+
+        showChoicesForSearch(el, '');
+        expect(ctrl.multiple).toEqual(true);
+        expect(ctrl.groups.length).toEqual(5);
+        openDropdown(el);
+
+        $(el).find('div.ui-select-header-group-selectable').first().click();
+        showChoicesForSearch(el, '');
+
+        expect(ctrl.selected.length).toEqual(0);
       });
     });
   });

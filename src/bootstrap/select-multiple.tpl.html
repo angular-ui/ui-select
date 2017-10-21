@@ -1,13 +1,14 @@
 <div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}">
   <div>
     <div class="ui-select-match"></div>
+    <span ng-show="$select.open && $select.refreshing && $select.spinnerEnabled" class="ui-select-refreshing {{$select.spinnerClass}}"></span>
     <input type="search"
            autocomplete="off"
            autocorrect="off"
            autocapitalize="off"
            spellcheck="false"
            class="ui-select-search input-xs"
-           placeholder="{{$selectMultiple.getPlaceholder()}}"
+           placeholder="{{$select.getPlaceholder()}}"
            ng-disabled="$select.disabled"
            ng-click="$select.activate()"
            ng-model="$select.search"
@@ -15,7 +16,7 @@
            aria-expanded="{{$select.open}}"
            aria-label="{{$select.baseTitle}}"
            ng-class="{'spinner': $select.refreshing}"
-           ondrop="return false;">
+           data-disallow-drop=data-disallow-drop>
   </div>
   <div ng-show="$select.open && $select.items.length > 0" class="ui-select-dropdown dropdown-menu">
     <div class="ui-select-header"></div>

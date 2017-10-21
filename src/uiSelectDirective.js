@@ -1,6 +1,6 @@
 uis.directive('uiSelect',
-  ['$document', 'uiSelectConfig', 'uiSelectMinErr', 'uisOffset', '$compile', '$parse', '$timeout',
-  function($document, uiSelectConfig, uiSelectMinErr, uisOffset, $compile, $parse, $timeout) {
+  ['$document', 'uiSelectConfig', 'uiSelectMinErr', 'uisOffset', '$compile', '$parse', '$timeout', '$window',
+  function($document, uiSelectConfig, uiSelectMinErr, uisOffset, $compile, $parse, $timeout, $window) {
 
   return {
     restrict: 'EA',
@@ -206,11 +206,15 @@ uis.directive('uiSelect',
           $select.clickTriggeredSelect = false;
         }
 
-        // See Click everywhere but here event http://stackoverflow.com/questions/12931369
-        $document.on('click', onDocumentClick);
+        // See Click everywhere but here. Similar approach to http://stackoverflow.com/questions/12931369
+        // but using the capture phase instead of bubble phase of the event propagation.
+        //
+        // Using the capture phase avoids problems that araise when event.stopPropatagion()
+        // is called before the event reaches the `document`.
+        $window.document.addEventListener('click', onDocumentClick, true);
 
         scope.$on('$destroy', function() {
-          $document.off('click', onDocumentClick);
+          $window.document.removeEventListener('click', onDocumentClick, true);
         });
 
         // Move transcluded elements to their correct position in main template

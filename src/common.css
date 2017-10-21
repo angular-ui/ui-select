@@ -155,6 +155,15 @@ body > .select2-container.open {
   width: 0;
 }
 
+.ui-select-container[theme="selectize"] .ui-select-header-group-selectable:hover {
+    background-color: #f5f5f5;
+}
+
+.ui-select-container[theme="selectize"] .ui-select-header-group-selectable {
+    cursor: pointer;
+    padding-left: 15px;
+}
+
 /* Bootstrap theme */
 
 /* Helper class to show styles when focus */
@@ -283,10 +292,31 @@ body > .ui-select-bootstrap.open {
   border-right: 1px solid #428bca;
 }
 
+
 .ui-select-bootstrap .ui-select-choices {
   padding: 5px 0;
   margin: 0;
   list-style: none;
+
+.ui-select-bootstrap .ui-select-header-group-selectable:hover {
+    background-color: #f5f5f5;
+}
+
+.ui-select-bootstrap .ui-select-header-group-selectable {
+    color: black;
+    cursor: pointer;
+    padding: 3px 10px;
+}
+
+.ui-select-bootstrap .ui-select-choices-row>span {
+    cursor: pointer;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
 }
 
 .ui-select-bootstrap .ui-select-choices-row > span {
