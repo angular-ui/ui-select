@@ -18,6 +18,10 @@
            ng-class="{'spinner': $select.refreshing}"
            data-disallow-drop=data-disallow-drop>
   </div>
-  <div class="ui-select-choices"></div>
+  <div ng-show="$select.open && $select.items.length > 0" class="ui-select-dropdown dropdown-menu">
+    <div class="ui-select-header"></div>
+    <div class="ui-select-choices"></div>
+    <div class="ui-select-footer"></div>
+  </div>
   <div class="ui-select-no-choice"></div>
 </div>
