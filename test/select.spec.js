@@ -2971,7 +2971,7 @@ describe('ui-select tests', function () {
         triggerKeydown(searchInput, Key.Down);
         expect(el.scope().$select.activeIndex).toBe(2);
         triggerKeydown(searchInput, Key.Up);
-        expect(el.scope().$select.activeIndex).toBe(-1);
+        expect(el.scope().$select.activeIndex).toBe(0);
       });
 
       it('should ignored disabled items going down', function () {
@@ -2992,7 +2992,7 @@ describe('ui-select tests', function () {
         triggerKeydown(searchInput, Key.Down);
         expect(el.scope().$select.activeIndex).toBe(2);
         triggerKeydown(searchInput, Key.Up);
-        expect(el.scope().$select.activeIndex).toBe(-1);
+        expect(el.scope().$select.activeIndex).toBe(0);
       });
 
       it('should ignore disabled items, going down with remove-selected on false', function () {
@@ -3548,7 +3548,7 @@ describe('ui-select tests', function () {
       triggerKeydown(searchInput, Key.Down);
       expect(el.scope().$select.activeIndex).toBe(2);
       triggerKeydown(searchInput, Key.Up);
-      expect(el.scope().$select.activeIndex).toBe(-1);
+      expect(el.scope().$select.activeIndex).toBe(0);
     });
 
     it('should ignored disabled items in the down direction with tagging on', function () {

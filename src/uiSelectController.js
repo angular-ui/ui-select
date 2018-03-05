@@ -584,11 +584,10 @@ uis.controller('uiSelectCtrl',
         }
         break;
       case KEY.UP:
-        var minActiveIndex = (ctrl.search.length === 0 && ctrl.tagging.isActivated) ? -1 : 0;
         if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-        else if (ctrl.activeIndex > minActiveIndex) {
+        else if (ctrl.activeIndex > 0) {
           var idxmin = --ctrl.activeIndex;
-          while(_isItemDisabled(ctrl.items[idxmin]) && idxmin > minActiveIndex) {
+          while(_isItemDisabled(ctrl.items[idxmin]) && idxmin > 0) {
             ctrl.activeIndex = --idxmin;
           }
         }
