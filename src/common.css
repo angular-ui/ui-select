@@ -195,6 +195,16 @@ body > .select2-container.open {
   position: static;
 }
 
+.input-group .ui-select-bootstrap:first-child .form-control {
+  border-top-left-radius: 4px; /* FIXME hardcoded value :-/ */
+  border-bottom-left-radius: 4px; /* FIXME hardcoded value :-/ */
+}
+
+.input-group .ui-select-bootstrap:last-child .form-control {
+  border-top-right-radius: 4px; /* FIXME hardcoded value :-/ */
+  border-bottom-right-radius: 4px; /* FIXME hardcoded value :-/ */
+}
+
 .input-group > .ui-select-bootstrap > input.ui-select-search.form-control {
   border-radius: 4px; /* FIXME hardcoded value :-/ */
   border-top-right-radius: 0;
